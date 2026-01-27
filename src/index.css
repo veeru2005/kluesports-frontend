@@ -1,0 +1,552 @@
+@import url('https://fonts.googleapis.com/css2?family=Iceland&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core dark theme - obsidian blacks */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 95%;
+
+    /* Cards - slightly elevated dark */
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 95%;
+
+    /* Popovers */
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Primary - Blood crimson red */
+    --primary: 0 85% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Darker ember */
+    --secondary: 0 70% 20%;
+    --secondary-foreground: 0 0% 95%;
+
+    /* Muted - Dark charcoal */
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 55%;
+
+    /* Accent - Flame orange red */
+    --accent: 15 90% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders and inputs */
+    --border: 0 0% 15%;
+    --input: 0 0% 12%;
+    --ring: 0 85% 50%;
+
+    --radius: 0.5rem;
+
+    /* Custom flame gradients */
+    --flame-primary: linear-gradient(135deg, hsl(0, 85%, 45%) 0%, hsl(20, 100%, 50%) 50%, hsl(0, 85%, 35%) 100%);
+    --flame-intense: linear-gradient(180deg, hsl(0, 100%, 50%) 0%, hsl(30, 100%, 50%) 50%, hsl(0, 85%, 30%) 100%);
+    --ember-glow: 0 0 30px hsl(0, 85%, 50%, 0.5), 0 0 60px hsl(15, 100%, 50%, 0.3);
+    --card-glow: 0 0 20px hsl(0, 85%, 45%, 0.2);
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 6%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 0 85% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 70% 20%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 0 85% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  html {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+
+  /* Flame text effect */
+  .flame-text {
+    background: linear-gradient(180deg, hsl(0, 100%, 70%) 0%, hsl(0, 85%, 50%) 50%, hsl(20, 100%, 50%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 10px hsl(0, 85%, 50%, 0.5));
+  }
+
+  /* Ember glow effect */
+  .ember-glow {
+    box-shadow: 0 0 20px hsl(0, 85%, 50%, 0.4),
+      0 0 40px hsl(15, 100%, 50%, 0.2),
+      inset 0 0 20px hsl(0, 85%, 50%, 0.1);
+  }
+
+  /* Flame border animation */
+  .flame-border {
+    position: relative;
+    border: 2px solid transparent;
+    background-origin: border-box;
+    background-clip: padding-box;
+  }
+
+  .flame-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg,
+        hsl(0, 85%, 45%),
+        hsl(20, 100%, 50%),
+        hsl(0, 85%, 35%),
+        hsl(15, 90%, 50%),
+        hsl(0, 85%, 45%));
+    background-size: 300% 300%;
+    border-radius: inherit;
+    z-index: -2;
+    animation: flame-flow 4s ease infinite;
+  }
+
+  .flame-border::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: hsl(0, 0%, 7%);
+    border-radius: calc(var(--radius) - 2px);
+    z-index: -1;
+    transition: background 0.3s ease;
+  }
+
+  .flame-border:hover::after {
+    background: hsl(var(--primary));
+  }
+
+  @keyframes flame-flow {
+
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Pulsing ember */
+  .ember-pulse {
+    animation: ember-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes ember-pulse {
+
+    0%,
+    100% {
+      box-shadow: 0 0 20px hsl(0, 85%, 50%, 0.4),
+        0 0 40px hsl(0, 85%, 50%, 0.2);
+    }
+
+    50% {
+      box-shadow: 0 0 30px hsl(0, 85%, 50%, 0.6),
+        0 0 60px hsl(15, 100%, 50%, 0.3);
+    }
+  }
+
+  /* Member action button icon+label cycle (2s loop) */
+  .action-cycle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .action-cycle-icon {
+    animation: action-icon 2s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  .action-cycle-label {
+    animation: action-label 2s ease-in-out infinite;
+  }
+
+  .action-cycle-delay-1 .action-cycle-icon,
+  .action-cycle-delay-1 .action-cycle-label {
+    animation-delay: 1s;
+  }
+
+  @keyframes action-icon {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+      opacity: 0.85;
+    }
+
+    12% {
+      transform: translateY(-2px) scale(1.12);
+      opacity: 1;
+    }
+
+    24% {
+      transform: translateY(0) scale(1);
+      opacity: 0.9;
+    }
+
+    50% {
+      opacity: 0.85;
+    }
+  }
+
+  @keyframes action-label {
+    0%,
+    45%,
+    100% {
+      transform: translateX(0);
+      opacity: 0.85;
+    }
+
+    60% {
+      transform: translateX(2px);
+      opacity: 1;
+    }
+
+    75% {
+      transform: translateX(0);
+      opacity: 0.9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .action-cycle-icon,
+    .action-cycle-label {
+      animation: none !important;
+    }
+  }
+
+  /* Member "View" button swap (View <-> Edit) */
+  .action-swap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .action-swap-item {
+    position: absolute;
+    inset: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    will-change: opacity, transform;
+    pointer-events: none;
+  }
+
+  .action-swap-a {
+    animation: action-swap-a 4s ease-in-out infinite;
+  }
+
+  .action-swap-b {
+    animation: action-swap-b 4s ease-in-out infinite;
+  }
+
+  @keyframes action-swap-a {
+    /* View */
+    0%,
+    40% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    55% {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+
+    85% {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes action-swap-b {
+    /* Edit */
+    0%,
+    40% {
+      opacity: 0;
+      transform: translateY(-2px);
+    }
+
+    55% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    85% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateY(-2px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .action-swap-a,
+    .action-swap-b {
+      animation: none !important;
+    }
+
+    .action-swap-a {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .action-swap-b {
+      opacity: 0 !important;
+      transform: none !important;
+    }
+  }
+
+  /* Glowing red button */
+  .btn-flame {
+    background: linear-gradient(135deg, hsl(0, 85%, 45%) 0%, hsl(0, 70%, 35%) 100%);
+    border: 1px solid hsl(0, 85%, 50%);
+    box-shadow: 0 0 15px hsl(0, 85%, 50%, 0.3),
+      inset 0 1px 0 hsl(0, 85%, 60%);
+    transition: all 0.3s ease;
+  }
+
+  .btn-flame:hover {
+    background: linear-gradient(135deg, hsl(0, 85%, 50%) 0%, hsl(15, 90%, 45%) 100%);
+    box-shadow: 0 0 25px hsl(0, 85%, 50%, 0.5),
+      0 0 50px hsl(15, 100%, 50%, 0.2),
+      inset 0 1px 0 hsl(0, 85%, 65%);
+    transform: translateY(-2px);
+  }
+
+  /* Dark glass card */
+  .glass-dark {
+    background: linear-gradient(135deg,
+        hsl(0, 0%, 8%, 0.9) 0%,
+        hsl(0, 0%, 5%, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid hsl(0, 0%, 15%);
+  }
+
+  /* Animated background particles */
+  .ember-particles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Hero gradient overlay */
+  .hero-gradient {
+    background: radial-gradient(ellipse at bottom,
+        hsl(0, 85%, 15%, 0.4) 0%,
+        hsl(0, 0%, 4%) 70%);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(0, 0%, 6%);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(0, 85%, 45%), hsl(0, 70%, 30%));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, hsl(0, 85%, 50%), hsl(0, 70%, 35%));
+  }
+
+  /* Nav link hover effect */
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, hsl(0, 85%, 50%), hsl(20, 100%, 50%));
+    transition: width 0.3s ease;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  /* Section title styling */
+  .section-title {
+    position: relative;
+    display: inline-block;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, hsl(0, 85%, 50%), transparent);
+  }
+
+  /* Floating animation */
+  .float-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Fade in animation */
+  .fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Stagger children animation */
+  .stagger-children>* {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .stagger-children>*:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .stagger-children>*:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .stagger-children>*:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .stagger-children>*:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+
+  .stagger-children>*:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+
+  .stagger-children>*:nth-child(6) {
+    animation-delay: 0.6s;
+  }
+
+  /* Flame particle animation */
+  .flame-particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, hsl(0, 100%, 60%) 0%, hsl(20, 100%, 50%) 50%, transparent 70%);
+    border-radius: 50%;
+    bottom: 0;
+    filter: blur(2px);
+    animation: flame-rise 3s ease-in infinite;
+    opacity: 0;
+    box-shadow: 0 0 20px hsl(0, 85%, 50%, 0.8), 0 0 40px hsl(20, 100%, 50%, 0.4);
+  }
+
+  @keyframes flame-rise {
+    0% {
+      bottom: 0;
+      opacity: 0;
+      transform: translateX(0) scale(1);
+    }
+
+    20% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.8;
+      transform: translateX(20px) scale(1.5);
+    }
+
+    80% {
+      opacity: 0.4;
+      transform: translateX(-10px) scale(0.8);
+    }
+
+    100% {
+      bottom: 100%;
+      opacity: 0;
+      transform: translateX(0) scale(0.5);
+    }
+  }
+}
