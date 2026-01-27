@@ -14,7 +14,7 @@ export const HeroSection = () => {
           playsInline
           poster="/placeholder.svg"
         >
-          <source src="https://res.cloudinary.com/dus3luhur/video/upload/v1769536511/intro-final-2_mpodpu.mov" type="video/mp4" />
+          <source src="https://res.cloudinary.com/dus3luhur/video/upload/v1769537336/intro-final-3_hjq6mc.mov" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
