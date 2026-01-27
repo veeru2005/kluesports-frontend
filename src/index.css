@@ -549,4 +549,83 @@
       transform: translateX(0) scale(0.5);
     }
   }
+
+  /* Custom flaming cursor (desktop only) */
+  @media (hover: hover) and (pointer: fine) {
+    html.flame-cursor-enabled,
+    html.flame-cursor-enabled * {
+      cursor: none !important;
+    }
+
+    .flame-cursor-ring,
+    .flame-cursor-dot {
+      position: fixed;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate3d(-9999px, -9999px, 0);
+      opacity: 0;
+      transition: opacity 140ms ease;
+      will-change: transform;
+    }
+
+    .flame-cursor-ring {
+      width: 34px;
+      height: 34px;
+      margin-left: -17px;
+      margin-top: -17px;
+      border-radius: 9999px;
+      border: 1px solid hsl(0 85% 55% / 0.65);
+      box-shadow:
+        0 0 18px hsl(0 85% 55% / 0.35),
+        0 0 36px hsl(15 95% 55% / 0.18);
+      backdrop-filter: blur(2px);
+      animation: flame-cursor-flicker-ring 1.1s ease-in-out infinite;
+    }
+
+    .flame-cursor-dot {
+      width: 10px;
+      height: 10px;
+      margin-left: -5px;
+      margin-top: -5px;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 30% 30%,
+          hsl(0 100% 70% / 1) 0%,
+          hsl(0 85% 55% / 1) 45%,
+          hsl(20 100% 55% / 0.95) 75%,
+          hsl(20 100% 55% / 0) 100%);
+      box-shadow:
+        0 0 14px hsl(0 85% 55% / 0.9),
+        0 0 30px hsl(15 100% 55% / 0.5);
+      filter: saturate(1.2);
+      animation: flame-cursor-flicker-dot 0.9s ease-in-out infinite;
+    }
+
+    @keyframes flame-cursor-flicker-ring {
+      0%,
+      100% {
+        filter: saturate(1.05) brightness(1);
+        box-shadow: 0 0 16px hsl(0 85% 55% / 0.32), 0 0 34px hsl(15 95% 55% / 0.16);
+      }
+
+      50% {
+        filter: saturate(1.2) brightness(1.05);
+        box-shadow: 0 0 22px hsl(0 85% 55% / 0.42), 0 0 44px hsl(20 100% 55% / 0.22);
+      }
+    }
+
+    @keyframes flame-cursor-flicker-dot {
+      0%,
+      100% {
+        filter: saturate(1.2) brightness(1);
+        box-shadow: 0 0 12px hsl(0 85% 55% / 0.85), 0 0 28px hsl(15 100% 55% / 0.42);
+      }
+
+      50% {
+        filter: saturate(1.45) brightness(1.12);
+        box-shadow: 0 0 18px hsl(0 85% 55% / 1), 0 0 44px hsl(20 100% 55% / 0.55);
+      }
+    }
+  }
 }
