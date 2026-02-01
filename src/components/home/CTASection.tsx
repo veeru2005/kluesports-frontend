@@ -38,30 +38,30 @@ export const CTASection = () => {
               href="https://www.instagram.com/klu__esports/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/60 border border-red-900/50 rounded-2xl hover:bg-black/80 hover:border-red-600 transition-all group backdrop-blur-sm shadow-lg hover:shadow-red-900/20"
+              className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/90 border-2 border-red-600 rounded-2xl hover:bg-black hover:border-red-500 transition-all group backdrop-blur-sm shadow-lg shadow-red-900/30 hover:shadow-red-600/40"
             >
               <img src="/instagram.svg" alt="Instagram" className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
-              <span className="text-lg md:text-xl font-display text-white group-hover:text-red-500 transition-colors tracking-widest uppercase">Instagram</span>
+              <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">Instagram</span>
             </a>
 
             <a
               href="https://discord.com/invite/pp9wnEjbt"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/60 border border-red-900/50 rounded-2xl hover:bg-black/80 hover:border-red-600 transition-all group backdrop-blur-sm shadow-lg hover:shadow-red-900/20"
+              className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/90 border-2 border-red-600 rounded-2xl hover:bg-black hover:border-red-500 transition-all group backdrop-blur-sm shadow-lg shadow-red-900/30 hover:shadow-red-600/40"
             >
               <img src="/discord.svg" alt="Discord" className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
-              <span className="text-lg md:text-xl font-display text-white group-hover:text-red-500 transition-colors tracking-widest uppercase">Discord</span>
+              <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">Discord</span>
             </a>
 
             <a
               href="https://www.youtube.com/@esports.kluniversity"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/60 border border-red-900/50 rounded-2xl hover:bg-black/80 hover:border-red-600 transition-all group backdrop-blur-sm shadow-lg hover:shadow-red-900/20"
+              className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/90 border-2 border-red-600 rounded-2xl hover:bg-black hover:border-red-500 transition-all group backdrop-blur-sm shadow-lg shadow-red-900/30 hover:shadow-red-600/40"
             >
               <img src="/youtube.svg" alt="YouTube" className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
-              <span className="text-lg md:text-xl font-display text-white group-hover:text-red-500 transition-colors tracking-widest uppercase">YouTube</span>
+              <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">YouTube</span>
             </a>
           </div>
         </div>

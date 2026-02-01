@@ -54,7 +54,7 @@ export const Footer = () => {
                 <li key={link}>
                   <Link
                     to={`/${link.toLowerCase() === "home" ? "" : link.toLowerCase()}`}
-                    className="text-muted-foreground hover:text-primary transition-colors font-body text-lg"
+                    className="text-muted-foreground hover:text-primary transition-all font-body text-lg inline-block hover:scale-110"
                   >
                     {link}
                   </Link>
@@ -80,8 +80,17 @@ export const Footer = () => {
           <p className="text-muted-foreground font-body text-center md:text-left">
             © {new Date().getFullYear()} KLU-Esports Club. All rights reserved.
           </p>
-          <p className="text-muted-foreground font-body text-center md:text-right">
-            Designed and Developed by <span className="text-primary">S.Veerendra Chowdary</span>
+          <p className="text-muted-foreground font-body text-center md:text-right flex items-center gap-2 justify-center md:justify-end">
+            Designed and Developed by
+            <a
+              href="https://www.linkedin.com/in/veerendra-chowdary-sunkavalli-513b58309/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary transition-colors flex items-center gap-1.5 group"
+            >
+              <img src="/Linkedin.svg" alt="LinkedIn" className="w-4 h-4" />
+              <span className="group-hover:text-red-600 transition-colors">S.Veerendra Chowdary</span>
+            </a>
           </p>
         </div>
       </div>

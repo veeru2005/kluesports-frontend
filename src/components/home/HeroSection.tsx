@@ -12,7 +12,7 @@ export const HeroSection = () => {
           muted
           loop
           playsInline
-          poster="/placeholder.svg"
+          preload="auto"
         >
           <source src="https://res.cloudinary.com/dus3luhur/video/upload/v1769537336/intro-final-3_hjq6mc.mov" type="video/mp4" />
           Your browser does not support the video tag.
