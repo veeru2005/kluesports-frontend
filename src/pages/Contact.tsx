@@ -161,26 +161,25 @@ const Contact = () => {
           <div className="absolute inset-0 hero-gradient" />
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
+              <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Get In Touch
               </span>
-              <h1 className="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-6">
+              <h1 className="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-3">
                 CONTACT <span className="flame-text">US</span>
               </h1>
-              <p className="text-xl text-muted-foreground font-body max-w-2xl mx-auto">
-                Have questions? Want to join? Need support? The KLU-Esports team is here
-                to help. Reach out and let's talk.
+              <p className="text-1xl text-muted-foreground font-body max-w-2xl mx-auto">
+                Have questions? Need support? The KLU-ESPORTS team is here to help. Reach out and let's talk.
               </p>
             </div>
           </div>
         </section>
 
         {/* Contact Section */}
-        <section className="py-24">
+        <section className="py-12">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-12 items-start">
               {/* Contact Form */}
-              <div className="glass-dark rounded-xl p-8 border border-border">
+              <div className="bg-black rounded-xl p-8 border-2 border-red-600">
                 <h2 className="font-display font-bold text-2xl mb-6">
                   Send Us A Message
                 </h2>
@@ -196,7 +195,7 @@ const Contact = () => {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Your name"
-                        className={`bg-muted border-border ${errors.name ? "border-destructive" : ""
+                        className={`bg-black border-2 border-red-600 rounded-lg ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 ${errors.name ? "border-destructive" : ""
                           }`}
                       />
                       {errors.name && (
@@ -214,7 +213,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="your@email.com"
-                        className={`bg-muted border-border ${errors.email ? "border-destructive" : ""
+                        className={`bg-black border-2 border-red-600 rounded-lg ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 ${errors.email ? "border-destructive" : ""
                           }`}
                       />
                       {errors.email && (
@@ -232,7 +231,7 @@ const Contact = () => {
                       value={formData.subject}
                       onChange={handleChange}
                       placeholder="What's this about?"
-                      className="bg-muted border-border"
+                      className="bg-black border-2 border-red-600 rounded-lg ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
                   <div className="space-y-2">
@@ -246,7 +245,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="Tell us what's on your mind..."
                       rows={6}
-                      className={`bg-muted border-border resize-none ${errors.message ? "border-destructive" : ""
+                      className={`bg-black border-2 border-red-600 rounded-lg ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none ${errors.message ? "border-destructive" : ""
                         }`}
                     />
                     {errors.message && (
@@ -313,10 +312,10 @@ const Contact = () => {
                   ].map((item, index) => (
                     <div
                       key={index}
-                      className="glass-dark rounded-xl p-6 border border-border hover:border-primary/40 transition-all group hover:-translate-y-1"
+                      className="bg-black rounded-xl p-6 border-2 border-red-600 hover:border-red-500 transition-all group hover:-translate-y-1"
                     >
                       <div className="flex flex-col items-start gap-4">
-                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <div className="w-12 h-12 rounded-lg bg-primary/30 flex items-center justify-center group-hover:bg-primary/40 transition-colors">
                           <item.icon className="w-6 h-6" />
                         </div>
                         <div>

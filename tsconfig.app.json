@@ -27,5 +27,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "upload.js"]
+  "include": ["src", "upload.js"],
+  "exclude": ["node_modules"]
 }

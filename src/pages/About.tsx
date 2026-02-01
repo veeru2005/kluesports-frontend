@@ -44,22 +44,21 @@ const About = () => {
           <div className="absolute inset-0 hero-gradient" />
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
+              <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Our Story
               </span>
-              <h1 className="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-6">
-                ABOUT <span className="flame-text">KLU-Esports</span>
+              <h1 className="font-display font-bold text-4xl sm:text-4xl md:text-6xl lg:text-7xl mb-3 whitespace-nowrap">
+                ABOUT <span className="flame-text">KLU-ESPORTS</span>
               </h1>
-              <p className="text-xl text-muted-foreground font-body max-w-2xl mx-auto">
-                From a small group of passionate gamers to one of the most recognized
-                gaming communities in the world. This is our journey.
+              <p className="text-1xl text-muted-foreground font-body max-w-2xl mx-auto">
+                From passionate gamers to the most recognized gaming community. This is our journey.
               </p>
             </div>
           </div>
         </section>
 
         {/* Story Section */}
-        <section className="py-24">
+        <section className="py-12">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div>

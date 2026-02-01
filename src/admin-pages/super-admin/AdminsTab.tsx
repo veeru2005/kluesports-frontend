@@ -544,16 +544,16 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={!!deletingAdmin} onOpenChange={() => setDeletingAdmin(null)}>
-                <AlertDialogContent className="border-2 border-red-600">
+                <AlertDialogContent className="bg-black border-2 border-red-600 w-[90%] max-w-md mx-auto rounded-xl">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete the admin{" "}
-                            <strong>{deletingAdmin?.name}</strong>.
+                        <AlertDialogTitle className="text-white font-display text-xl">Delete Admin</AlertDialogTitle>
+                        <AlertDialogDescription className="text-muted-foreground">
+                            Are you sure you want to delete the admin{" "}
+                            <strong className="text-red-500">{deletingAdmin?.name}</strong>? This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
+                        <AlertDialogCancel className="border-red-600 text-white hover:bg-red-600/10 mt-0">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
                             className="bg-red-600 hover:bg-red-700 text-white"

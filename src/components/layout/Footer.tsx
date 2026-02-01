@@ -3,7 +3,7 @@ import { Instagram, Youtube, MessageCircle } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="bg-background border-t border-primary/20">
+    <footer className="bg-background border-t-2 border-red-600">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo & Description */}
@@ -76,7 +76,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-border mt-10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-border mt-10 pt-8 flex flex-col md:flex-row justify-between items-center gap-1 md:gap-4">
           <p className="text-muted-foreground font-body text-center md:text-left">
             © {new Date().getFullYear()} KLU-Esports Club. All rights reserved.
           </p>

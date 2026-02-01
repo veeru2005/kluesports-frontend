@@ -95,30 +95,29 @@ const Events = () => {
           <div className="absolute inset-0 hero-gradient" />
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
+              <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Join The Battle
               </span>
-              <h1 className="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-6">
+              <h1 className="font-display font-bold text-4xl md:text-6xl lg:text-7xl mb-3">
                 UPCOMING <span className="flame-text">EVENTS</span>
               </h1>
-              <p className="text-xl text-muted-foreground font-body max-w-2xl mx-auto">
-                From weekly tournaments to championship finals, there's always action
-                in KLU-Esports. Find your next battle below.
+              <p className="text-1xl text-muted-foreground font-body max-w-2xl mx-auto">
+                From weekly tournaments to championship finals, find your next battle below.
               </p>
             </div>
           </div>
         </section>
 
         {/* Events Grid */}
-        <section className="py-24">
+        <section className="py-12">
           <div className="container mx-auto px-4">
             <Tabs defaultValue="all" className="space-y-8">
               <div className="flex justify-center">
-                <TabsList className="glass-dark border border-border p-1">
-                  <TabsTrigger value="all" className="font-display px-6">All Events</TabsTrigger>
-                  <TabsTrigger value="Free Fire" className="font-display px-6">Free Fire</TabsTrigger>
-                  <TabsTrigger value="BGMI" className="font-display px-6">BGMI</TabsTrigger>
-                  <TabsTrigger value="Valorant" className="font-display px-6">Valorant</TabsTrigger>
+                <TabsList className="glass-dark border border-border p-1 flex flex-wrap justify-center gap-1 sm:gap-0 h-auto">
+                  <TabsTrigger value="all" className="font-display px-3 sm:px-6 text-sm sm:text-base">All Events</TabsTrigger>
+                  <TabsTrigger value="Free Fire" className="font-display px-3 sm:px-6 text-sm sm:text-base">Free Fire</TabsTrigger>
+                  <TabsTrigger value="BGMI" className="font-display px-3 sm:px-6 text-sm sm:text-base">BGMI</TabsTrigger>
+                  <TabsTrigger value="Valorant" className="font-display px-3 sm:px-6 text-sm sm:text-base">Valorant</TabsTrigger>
                 </TabsList>
               </div>
 

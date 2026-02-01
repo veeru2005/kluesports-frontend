@@ -1,9 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AdminNavbar } from "../components/AdminNavbar";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Calendar, Users, Mail, Shield } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Calendar, Users, Mail, Shield, X, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { mockEvents, mockMembers, mockMessages } from "@/lib/mock-data";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -21,7 +34,45 @@ const SuperAdminDashboard = () => {
     const { user } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+    const { toast } = useToast();
     const [gameFilter, setGameFilter] = useState("all");
+    const [dayFilter, setDayFilter] = useState<string>("");
+    const [monthFilter, setMonthFilter] = useState<string>("");
+    const [yearFilter, setYearFilter] = useState<string>("");
+    const [deletingMessageId, setDeletingMessageId] = useState<string | null>(null);
+    const [messageToDelete, setMessageToDelete] = useState<string | null>(null);
+
+    // Delete message handler
+    const handleDeleteMessage = async () => {
+        if (!messageToDelete) return;
+        
+        setDeletingMessageId(messageToDelete);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/messages/${messageToDelete}`, {
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+            
+            if (!response.ok) throw new Error("Failed to delete message");
+            
+            queryClient.invalidateQueries({ queryKey: ["admin-messages"] });
+            toast({
+                title: "Message deleted",
+                description: "The message has been successfully deleted.",
+                variant: "success",
+            });
+        } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to delete message. Please try again.",
+                variant: "destructive",
+            });
+        } finally {
+            setDeletingMessageId(null);
+            setMessageToDelete(null);
+        }
+    };
 
     // Initialize activeTab from URL query parameter
     const getInitialTab = () => {
@@ -125,7 +176,7 @@ const SuperAdminDashboard = () => {
                     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                         {/* Dashboard Tab Content - Hero Section */}
                         <TabsContent value="dashboard" className="m-0 p-0 border-none outline-none">
-                            <div className="flex flex-col items-center justify-start md:justify-center min-h-[calc(100vh-5rem)] text-center relative overflow-hidden w-full glass-dark border-none rounded-none pt-16 md:pt-6">
+                            <div className="flex flex-col items-center justify-start md:justify-center min-h-[calc(100vh-5rem)] text-center relative overflow-hidden w-full glass-dark border-none rounded-none pt-16 md:pt-6 pb-24 md:pb-8">
                                 {/* Background glow */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-radial-gradient from-primary/10 to-transparent pointer-events-none" />
 
@@ -148,10 +199,10 @@ const SuperAdminDashboard = () => {
                                     </div>
 
                                     <p className="text-sm md:text-xl lg:text-2xl text-muted-foreground font-body max-w-3xl mx-auto leading-relaxed drop-shadow-lg px-2">
-                                        Manage the entire KLU-Esports platform, oversee all games, events, and administrators in one place.
+                                        Manage the entire KLU-ESPORTS platform, oversee all games, events, and administrators in one place.
                                     </p>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 pt-4 md:pt-8 max-w-4xl mx-auto w-full">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 pt-4 md:pt-8 max-w-5xl mx-auto w-full">
                                         {/* Total Members Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
@@ -196,6 +247,21 @@ const SuperAdminDashboard = () => {
                                             </div>
                                             </div>
                                         </div>
+
+                                        {/* Total Messages Box */}
+                                        <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
+                                            <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
+                                            <Mail className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                            <div className="text-center">
+                                                <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
+                                                    {messages?.length || 0}
+                                                </div>
+                                                <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
+                                                    Total Messages
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -203,7 +269,7 @@ const SuperAdminDashboard = () => {
 
                         {/* Members Tab */}
                         <TabsContent value="members" className="m-0 p-0 border-none outline-none">
-                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-1 sm:pt-2 md:pt-8 pb-6 md:pb-8">
+                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-1 sm:pt-2 md:pt-8 pb-24 md:pb-8">
                                 <div className="mx-auto w-full max-w-7xl">
                                     <MembersTab members={filteredMembers || []} />
                                 </div>
@@ -212,7 +278,7 @@ const SuperAdminDashboard = () => {
 
                         {/* Events Tab */}
                         <TabsContent value="events" className="m-0 p-0 border-none outline-none">
-                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-6 md:pb-8">
+                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
                                 <div className="mx-auto w-full max-w-7xl">
                                     <EventsTab events={filteredEvents || []} />
                                 </div>
@@ -221,7 +287,7 @@ const SuperAdminDashboard = () => {
 
                         {/* Admins Tab */}
                         <TabsContent value="admins" className="m-0 p-0 border-none outline-none">
-                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-6 md:pb-8">
+                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
                                 <div className="mx-auto w-full max-w-7xl">
                                     <AdminsTab admins={admins || []} />
                                 </div>
@@ -230,25 +296,133 @@ const SuperAdminDashboard = () => {
 
                         {/* Messages Tab */}
                         <TabsContent value="messages" className="m-0 p-0 border-none outline-none">
-                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-6 md:pb-8">
+                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
                                 <div className="mx-auto w-full max-w-7xl">
-                                    <div className="grid gap-4">
-                                        {messages?.map((msg: any) => (
-                                            <div
-                                                key={msg.id}
-                                                className="glass-dark rounded-xl p-6 border border-border"
+                                    {/* Date Filter */}
+                                    <div className="flex flex-wrap items-center justify-end gap-3 mb-6">
+                                        <Calendar className="w-5 h-5 text-red-500" />
+                                        
+                                        {/* Day Select */}
+                                        <Select value={dayFilter} onValueChange={setDayFilter}>
+                                            <SelectTrigger className="w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all">
+                                                <SelectValue placeholder="Day" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-black border-2 border-red-600 rounded-lg max-h-[200px]">
+                                                {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                                                    <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">
+                                                        {day}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        
+                                        {/* Month Select */}
+                                        <Select value={monthFilter} onValueChange={setMonthFilter}>
+                                            <SelectTrigger className="w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all">
+                                                <SelectValue placeholder="Month" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                <SelectItem value="01" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">January</SelectItem>
+                                                <SelectItem value="02" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">February</SelectItem>
+                                                <SelectItem value="03" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">March</SelectItem>
+                                                <SelectItem value="04" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">April</SelectItem>
+                                                <SelectItem value="05" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">May</SelectItem>
+                                                <SelectItem value="06" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">June</SelectItem>
+                                                <SelectItem value="07" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">July</SelectItem>
+                                                <SelectItem value="08" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">August</SelectItem>
+                                                <SelectItem value="09" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">September</SelectItem>
+                                                <SelectItem value="10" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">October</SelectItem>
+                                                <SelectItem value="11" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">November</SelectItem>
+                                                <SelectItem value="12" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">December</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        
+                                        {/* Year Select */}
+                                        <Select value={yearFilter} onValueChange={setYearFilter}>
+                                            <SelectTrigger className="w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all">
+                                                <SelectValue placeholder="Year" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                <SelectItem value="2026" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2026</SelectItem>
+                                                <SelectItem value="2027" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2027</SelectItem>
+                                                <SelectItem value="2028" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2028</SelectItem>
+                                                <SelectItem value="2029" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2029</SelectItem>
+                                                <SelectItem value="2030" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2030</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        
+                                        {(dayFilter || monthFilter || yearFilter) && (
+                                            <button
+                                                onClick={() => {
+                                                    setDayFilter("");
+                                                    setMonthFilter("");
+                                                    setYearFilter("");
+                                                }}
+                                                className="flex items-center gap-1 text-xs text-red-500 hover:text-red-400 transition-colors"
                                             >
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <h3 className="font-display font-semibold text-lg">
-                                                        {msg.subject || "No Subject"}
-                                                    </h3>
-                                                    <span className="text-xs text-muted-foreground">
-                                                        {new Date(msg.created_at).toLocaleDateString()}
+                                                <X className="w-4 h-4" />
+                                                CLEAR
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {messages?.filter((msg: any) => {
+                                            if (!dayFilter && !monthFilter && !yearFilter) return true;
+                                            const msgDate = new Date(msg.createdAt);
+                                            const msgDay = String(msgDate.getDate()).padStart(2, '0');
+                                            const msgMonth = String(msgDate.getMonth() + 1).padStart(2, '0');
+                                            const msgYear = String(msgDate.getFullYear());
+                                            
+                                            // Day, Month and Year filters
+                                            const dayMatch = !dayFilter || msgDay === dayFilter;
+                                            const monthMatch = !monthFilter || msgMonth === monthFilter;
+                                            const yearMatch = !yearFilter || msgYear === yearFilter;
+                                            
+                                            return dayMatch && monthMatch && yearMatch;
+                                        }).map((msg: any) => (
+                                            <div
+                                                key={msg._id || msg.id}
+                                                className="bg-black rounded-xl p-4 md:p-6 border-2 border-red-600 hover:border-red-500 transition-all flex flex-col"
+                                            >
+                                                {/* Date and Delete at top */}
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <span className="text-xs text-white bg-red-600 px-3 py-1.5 rounded font-medium">
+                                                        {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}
                                                     </span>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        onClick={() => setMessageToDelete(msg._id || msg.id)}
+                                                        disabled={deletingMessageId === (msg._id || msg.id)}
+                                                        className="gap-1 border-red-600 text-red-500 hover:bg-red-600 hover:text-white"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                        Delete
+                                                    </Button>
                                                 </div>
-                                                <p className="text-sm text-foreground mb-4">{msg.message}</p>
-                                                <div className="flex items-center justify-between text-sm text-muted-foreground border-t border-border/50 pt-4">
-                                                    <span>From: {msg.name} ({msg.email})</span>
+                                                
+                                                {/* Sender info */}
+                                                <div className="space-y-1 mb-4">
+                                                    <p className="text-sm text-muted-foreground">
+                                                        <span className="text-red-500 font-semibold">From:</span> {msg.name}
+                                                    </p>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        <span className="text-red-500 font-semibold">Email:</span> {msg.email}
+                                                    </p>
+                                                </div>
+                                                
+                                                {/* Message content */}
+                                                <div className="border-t border-red-600 pt-4 space-y-3 flex-1">
+                                                    <div>
+                                                        <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Subject</p>
+                                                        <h3 className="font-display font-semibold text-lg text-white">
+                                                            {msg.subject || "No Subject"}
+                                                        </h3>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Message</p>
+                                                        <p className="text-sm text-foreground whitespace-pre-wrap">{msg.message}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))}
@@ -259,6 +433,27 @@ const SuperAdminDashboard = () => {
                     </Tabs>
                 </div>
             </main>
+
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog open={!!messageToDelete} onOpenChange={(open) => !open && setMessageToDelete(null)}>
+                <AlertDialogContent className="bg-black border-2 border-red-600 w-[90%] max-w-md mx-auto rounded-xl">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="text-white font-display text-xl">Delete Message</AlertDialogTitle>
+                        <AlertDialogDescription className="text-muted-foreground">
+                            Are you sure you want to delete this message? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
+                        <AlertDialogCancel className="border-red-600 text-white hover:bg-red-600/10 mt-0">Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={handleDeleteMessage}
+                            className="bg-red-600 text-white hover:bg-red-700"
+                        >
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };

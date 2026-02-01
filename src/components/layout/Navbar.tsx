@@ -51,14 +51,22 @@ export const Navbar = () => {
   const isHomePage = location.pathname === "/";
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-          ? "bg-background/100 backdrop-blur-md border-b border-primary/100 shadow-lg shadow-primary/10"
-          : isHomePage
-            ? "bg-transparent"
-            : "bg-background/100 backdrop-blur-md border-b border-primary/100"
-        }`}
-    >
+    <>
+      {/* Overlay to close menu when clicking outside */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-40 md:hidden" 
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled || isOpen
+            ? "bg-background border-b-2 border-red-600 shadow-lg shadow-primary/10"
+            : isHomePage
+              ? "bg-transparent"
+              : "bg-background border-b-2 border-red-600"
+          }`}
+      >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -71,7 +79,7 @@ export const Navbar = () => {
               />
             </div>
             <span className="font-display font-bold text-2xl flame-text">
-              KLU-Esports
+              KLU-ESPORTS
             </span>
           </Link>
 
@@ -164,7 +172,7 @@ export const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-foreground p-2"
+            className="md:hidden text-foreground p-2 bg-transparent border-2 border-red-600 rounded-lg"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -173,94 +181,89 @@ export const Navbar = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden absolute top-20 left-0 right-0 bg-background border-b border-primary/60 animate-slide-up">
-            <div className="container px-4 py-6 flex flex-col gap-4">
+          <div className="md:hidden absolute top-20 left-0 right-0 bg-background border-b-2 border-red-600 animate-slide-down">
+            {/* Red separator line */}
+            <div className="w-full h-[2px] bg-red-600"></div>
+            <div className="container px-4 py-3 flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`font-display text-lg uppercase tracking-wider py-2 text-center ${location.pathname === link.path
-                    ? "text-primary"
-                    : "text-foreground/80"
+                  className={`font-display text-lg uppercase tracking-wider py-3 text-center rounded-lg transition-all ${location.pathname === link.path
+                    ? "text-primary border-2 border-red-600 bg-red-600/10"
+                    : "text-foreground/80 hover:text-primary"
                     }`}
                 >
                   {link.name}
                 </Link>
               ))}
-              <div className="border-t border-primary/60 pt-4"></div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1">
                 {user ? (
                   <>
                     {isAdmin && (
-                      <Button
-                        variant="outline"
+                      <button
                         onClick={() => {
                           navigate("/admin");
                           setIsOpen(false);
                         }}
-                        className="w-full gap-2 border-primary/50"
+                        className="font-display text-lg uppercase tracking-wider py-3 mx-0 rounded-lg transition-all text-foreground/80 hover:text-primary text-center"
                       >
-                        <Shield className="w-4 h-4" />
                         Admin Panel
-                      </Button>
+                      </button>
                     )}
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        navigate("/profile");
-                        setIsOpen(false);
-                      }}
-                      className="w-full gap-2 border-primary/50"
-                    >
-                      <User className="w-4 h-4" />
-                      Profile
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        navigate("/profile");
-                        setIsOpen(false);
-                      }}
-                      className="w-full gap-2 border-primary/50"
-                    >
-                      <Trophy className="w-4 h-4" />
-                      My Events
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        handleLogout();
-                        setIsOpen(false);
-                      }}
-                      className="w-full gap-2 border-primary/50"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Logout
-                    </Button>
+                    <div className="w-full h-px bg-red-600 mt-2"></div>
+                    <div className="flex flex-row gap-3 px-0 py-4 justify-center items-center">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          navigate("/profile");
+                          setIsOpen(false);
+                        }}
+                        className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                      >
+                        <User className="w-4 h-4" />
+                        Profile
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          handleLogout();
+                          setIsOpen(false);
+                        }}
+                        className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </Button>
+                    </div>
                   </>
                 ) : (
                   <>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        navigate("/login");
-                        setIsOpen(false);
-                      }}
-                      className="w-full bg-black border-primary/50 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
-                    >
-                      Login
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        navigate("/signup");
-                        setIsOpen(false);
-                      }}
-                      className="w-full bg-black border-primary/50 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
-                    >
-                      Join Now
-                    </Button>
+                    <div className="w-full h-px bg-red-600 mt-2"></div>
+                    <div className="flex flex-row gap-3 px-0 py-4 justify-center items-center">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          navigate("/login");
+                          setIsOpen(false);
+                        }}
+                        className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                      >
+                        <LogIn className="w-4 h-4" />
+                        Login
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          navigate("/signup");
+                          setIsOpen(false);
+                        }}
+                        className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                      >
+                        Join Now
+                      </Button>
+                    </div>
                   </>
                 )}
               </div>
@@ -269,5 +272,6 @@ export const Navbar = () => {
         )}
       </div>
     </nav>
+    </>
   );
 };

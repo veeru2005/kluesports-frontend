@@ -223,8 +223,8 @@ const Signup = () => {
           </Link>
 
           {/* Signup Card */}
-          <div className="bg-black/80 backdrop-blur-sm rounded-xl p-8 border-2 border-red-600">
-            <h1 className="font-display font-bold text-3xl text-center mb-2">
+          <div className="bg-black/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 md:p-8 border-2 border-red-600 overflow-hidden">
+            <h1 className="font-display font-bold text-2xl sm:text-3xl text-center mb-2">
               JOIN THE <span className="flame-text">KLU-Esports</span>
             </h1>
             <p className="text-muted-foreground text-center font-body mb-8">
@@ -306,7 +306,8 @@ const Signup = () => {
                       name="gameYouPlay"
                       value={formData.gameYouPlay}
                       onChange={(e) => setFormData(prev => ({ ...prev, gameYouPlay: e.target.value as "Free Fire" | "BGMI" | "Valorant" | "Call Of Duty" }))}
-                      className={`w-full bg-muted border border-border rounded-lg px-3 py-2 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-primary ${errors.gameYouPlay ? "border-destructive" : ""}`}
+                      className={`w-full max-w-full bg-muted border border-border rounded-lg px-3 py-2 h-10 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-primary appearance-none ${errors.gameYouPlay ? "border-destructive" : ""}`}
+                      style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
                     >
                       <option value="" disabled>Select your game</option>
                       <option value="Free Fire">Free Fire</option>

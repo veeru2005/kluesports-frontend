@@ -94,8 +94,8 @@ export default {
             boxShadow: "0 0 30px hsl(0, 85%, 50%, 0.6), 0 0 60px hsl(15, 100%, 50%, 0.3)"
           },
         },
-        "slide-up": {
-          from: { opacity: "0", transform: "translateY(20px)" },
+        "slide-down": {
+          from: { opacity: "0", transform: "translateY(-20px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
         "fade-in": {
@@ -108,7 +108,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "flame-flicker": "flame-flicker 2s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
-        "slide-up": "slide-up 0.6s ease-out",
+        "slide-down": "slide-down 0.3s ease-out",
         "fade-in": "fade-in 0.5s ease-out",
       },
       backgroundImage: {

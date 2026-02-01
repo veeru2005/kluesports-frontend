@@ -31,7 +31,15 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
     };
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-background/100 backdrop-blur-md border-b border-primary/100 shadow-lg shadow-primary/10 transition-all duration-300">
+        <>
+            {/* Overlay to close menu when clicking outside */}
+            {isMobileMenuOpen && (
+                <div 
+                    className="fixed inset-0 z-40 md:hidden" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b-2 border-red-600 shadow-lg shadow-primary/10 transition-all duration-300">
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-20">
                     {/* Left: Logo & Brand */}
@@ -45,7 +53,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                 />
                             </div>
                             <span className="font-display font-bold text-xl md:text-2xl flame-text">
-                                KLU-Esports
+                                KLU-ESPORTS
                             </span>
                         </div>
                     </div>
@@ -116,10 +124,10 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                     {/* Mobile Menu Button */}
                     <div className="md:hidden">
                         <Button
-                            variant="ghost"
+                            variant="outline"
                             size="icon"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="text-foreground hover:text-primary"
+                            className="text-foreground hover:text-primary bg-transparent border border-red-600 hover:bg-transparent"
                         >
                             {isMobileMenuOpen ? (
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -132,23 +140,23 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
 
                 {/* Mobile Menu Content */}
                 {isMobileMenuOpen && (
-                    <div className="md:hidden py-4 border-t border-primary/20 bg-background/95 backdrop-blur-xl animate-in slide-in-from-top-5">
-                        <div className="flex flex-col gap-4 text-center">
+                    <div className="md:hidden py-3 border-t-2 border-red-600 bg-background animate-in slide-in-from-top-5 -mx-4 px-4">
+                        <div className="flex flex-col gap-1 text-center">
                             <button
                                 onClick={() => { onTabChange ? onTabChange("dashboard") : navigate(`${baseUrl}?tab=dashboard`); setIsMobileMenuOpen(false); }}
-                                className={`font-display text-lg uppercase tracking-wider py-2 ${activeTab === "dashboard" ? "text-primary" : "text-foreground/80"}`}
+                                className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "dashboard" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                             >
                                 Dashboard
                             </button>
                             <button
                                 onClick={() => { onTabChange ? onTabChange("members") : navigate(`${baseUrl}?tab=members`); setIsMobileMenuOpen(false); }}
-                                className={`font-display text-lg uppercase tracking-wider py-2 ${activeTab === "members" ? "text-primary" : "text-foreground/80"}`}
+                                className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "members" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                             >
                                 Members
                             </button>
                             <button
                                 onClick={() => { onTabChange ? onTabChange("events") : navigate(`${baseUrl}?tab=events`); setIsMobileMenuOpen(false); }}
-                                className={`font-display text-lg uppercase tracking-wider py-2 ${activeTab === "events" ? "text-primary" : "text-foreground/80"}`}
+                                className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "events" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                             >
                                 Events
                             </button>
@@ -156,23 +164,24 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                 <>
                                     <button
                                         onClick={() => { onTabChange ? onTabChange("admins") : navigate(`${baseUrl}?tab=admins`); setIsMobileMenuOpen(false); }}
-                                        className={`font-display text-lg uppercase tracking-wider py-2 ${activeTab === "admins" ? "text-primary" : "text-foreground/80"}`}
+                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "admins" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                                     >
                                         Admins
                                     </button>
                                     <button
                                         onClick={() => { onTabChange ? onTabChange("messages") : navigate(`${baseUrl}?tab=messages`); setIsMobileMenuOpen(false); }}
-                                        className={`font-display text-lg uppercase tracking-wider py-2 ${activeTab === "messages" ? "text-primary" : "text-foreground/80"}`}
+                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "messages" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                                     >
                                         Messages
                                     </button>
                                 </>
                             )}
-                            <div className="flex flex-col gap-3 mt-2 px-4">
+                            <div className="w-full h-px bg-red-600 mt-2 -mx-4" style={{width: 'calc(100% + 2rem)'}}></div>
+                            <div className="flex flex-row gap-3 px-4 py-4 justify-center items-center">
                                 <Button
                                     variant="outline"
                                     onClick={() => { navigate("/profile"); setIsMobileMenuOpen(false); }}
-                                    className="w-full gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                                    className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
                                 >
                                     <User className="w-4 h-4" />
                                     Profile
@@ -180,7 +189,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                 <Button
                                     variant="outline"
                                     onClick={handleLogout}
-                                    className="w-full gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                                    className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
                                 >
                                     <LogOut className="w-4 h-4" />
                                     Logout
@@ -191,5 +200,6 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                 )}
             </div>
         </nav>
+        </>
     );
 };

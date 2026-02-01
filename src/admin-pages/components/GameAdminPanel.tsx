@@ -185,7 +185,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                         {/* Dashboard Tab Content - Hero Section */}
                         <TabsContent value="dashboard" className="m-0 p-0 border-none outline-none">
-                            <div className="flex flex-col items-center justify-start md:justify-center min-h-[calc(100vh-5rem)] text-center relative overflow-hidden w-full glass-dark border-none rounded-none pt-8 md:pt-0">
+                            <div className="flex flex-col items-center justify-start md:justify-center min-h-[calc(100vh-5rem)] text-center relative overflow-hidden w-full glass-dark border-none rounded-none pt-8 md:pt-0 pb-24 md:pb-8">
                                 {/* Background glow */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-radial-gradient from-primary/10 to-transparent pointer-events-none" />
 
@@ -248,7 +248,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
                         {/* Members Tab */}
                         <TabsContent value="members" className="m-0 p-0 border-none outline-none data-[state=active]:animate-in data-[state=active]:fade-in-0">
-                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-3 sm:px-4 md:px-8 pt-3 sm:pt-4 md:pt-8 pb-6 md:pb-8">
+                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-3 sm:px-4 md:px-8 pt-3 sm:pt-4 md:pt-8 pb-24 md:pb-8">
                                 <div className="mx-auto w-full max-w-7xl">
                                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                                         <h2 className="font-display font-semibold text-2xl">
@@ -421,7 +421,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
                         {/* Events Tab */}
                         <TabsContent value="events" className="m-0 p-0 border-none outline-none">
-                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-3 sm:px-4 md:px-8 pt-6 md:pt-8 pb-6 md:pb-8">
+                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-3 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
                                 <div className="mx-auto w-full max-w-7xl">
                                     <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                                         <h2 className="font-display font-semibold text-2xl">Manage Events</h2>
