@@ -36,13 +36,71 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    // Check if session is expired based on token
+    const isSessionExpired = () => {
+        const token = localStorage.getItem("inferno_token");
+        if (!token) return true;
+
+        try {
+            // Decode JWT to check expiration
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const currentTime = Math.floor(Date.now() / 1000);
+            
+            // Check JWT expiration
+            if (payload.exp && payload.exp < currentTime) {
+                return true;
+            }
+            
+            // Check if login date is today
+            if (payload.loginDate) {
+                const currentDate = new Date().toISOString().split('T')[0];
+                if (payload.loginDate !== currentDate) {
+                    return true;
+                }
+            }
+            
+            // Check if session is within 6 hours
+            if (payload.loginTimestamp) {
+                const timeDiff = Date.now() - payload.loginTimestamp;
+                const sixHours = 6 * 60 * 60 * 1000;
+                if (timeDiff > sixHours) {
+                    return true;
+                }
+            }
+            
+            return false;
+        } catch (error) {
+            return true;
+        }
+    };
+
+    const handleSessionExpiration = () => {
+        setUser(null);
+        localStorage.removeItem("inferno_user");
+        localStorage.removeItem("inferno_token");
+    };
+
     useEffect(() => {
         // Check local storage for persisted session
         const storedUser = localStorage.getItem("inferno_user");
         if (storedUser) {
-            setUser(JSON.parse(storedUser));
+            // Check if session is still valid
+            if (!isSessionExpired()) {
+                setUser(JSON.parse(storedUser));
+            } else {
+                handleSessionExpiration();
+            }
         }
         setIsLoading(false);
+
+        // Set up periodic session check (every minute)
+        const intervalId = setInterval(() => {
+            if (isSessionExpired()) {
+                handleSessionExpiration();
+            }
+        }, 60000); // Check every minute
+
+        return () => clearInterval(intervalId);
     }, []);
 
     const determineRole = (email: string): UserRole => {

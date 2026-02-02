@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,8 +18,20 @@ const Login = () => {
   const [canResend, setCanResend] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { sendOTP, verifyLoginOTP } = useAuth();
+
+  // Check if user was redirected due to session expiration
+  useEffect(() => {
+    if (searchParams.get('session_expired') === 'true') {
+      toast({
+        title: "Session Expired",
+        description: "Your session has expired. Please login again.",
+        variant: "destructive",
+      });
+    }
+  }, [searchParams, toast]);
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
