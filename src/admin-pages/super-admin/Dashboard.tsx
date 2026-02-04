@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { AdminNavbar } from "../components/AdminNavbar";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
@@ -43,19 +44,23 @@ const SuperAdminDashboard = () => {
     const [deletingMessageId, setDeletingMessageId] = useState<string | null>(null);
     const [messageToDelete, setMessageToDelete] = useState<string | null>(null);
 
+
+
+
+
     // Delete message handler
     const handleDeleteMessage = async () => {
         if (!messageToDelete) return;
-        
+
         setDeletingMessageId(messageToDelete);
         try {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/messages/${messageToDelete}`, {
                 method: 'DELETE',
                 headers: getHeaders()
             });
-            
+
             if (!response.ok) throw new Error("Failed to delete message");
-            
+
             queryClient.invalidateQueries({ queryKey: ["admin-messages"] });
             toast({
                 title: "Message deleted",
@@ -139,9 +144,13 @@ const SuperAdminDashboard = () => {
         },
     });
 
-    const filteredMembers = members?.filter(
-        (m) => gameFilter === "all" || m.game === gameFilter
-    );
+    const filteredMembers = members?.filter((m: any) => {
+        // Exclude all admins and super admins from members stats
+        if (m.role && (m.role === 'super_admin' || m.role.startsWith('admin_'))) return false;
+
+        if (gameFilter === "all") return true;
+        return m.game === gameFilter || m.gameYouPlay === gameFilter;
+    });
 
     const filteredEvents = events?.filter(
         (e) => gameFilter === "all" || e.game === gameFilter
@@ -180,7 +189,9 @@ const SuperAdminDashboard = () => {
                                 {/* Background glow */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-radial-gradient from-primary/10 to-transparent pointer-events-none" />
 
-                                <div className="relative z-10 space-y-4 md:space-y-8 animate-fade-in-up px-4">
+                                <div
+                                    className="relative z-10 space-y-4 md:space-y-8 px-4"
+                                >
                                     <div className="inline-block px-4 md:px-6 py-2 md:py-3 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-sm">
                                         <div className="flex items-center gap-2 md:gap-3">
                                             <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary" />
@@ -194,72 +205,74 @@ const SuperAdminDashboard = () => {
                                         </h1>
 
                                         <h2 className="font-display font-bold text-3xl md:text-5xl lg:text-7xl tracking-tight uppercase leading-none drop-shadow-[0_0_30px_rgba(220,38,38,0.6)] relative">
-                                            <span className="flame-text">{user?.username || user?.email?.split('@')[0] || 'Super Admin'}</span>
+                                            <span className="flame-text">{user?.name || user?.username || user?.email?.split('@')[0] || 'Super Admin'}</span>
                                         </h2>
                                     </div>
 
                                     <p className="text-sm md:text-xl lg:text-2xl text-muted-foreground font-body max-w-3xl mx-auto leading-relaxed drop-shadow-lg px-2">
-                                        Manage the entire KLU-ESPORTS platform, oversee all games, events, and administrators in one place.
+                                        Manage the entire KLU ESPORTS platform, oversee all games, events, and administrators in one place.
                                     </p>
 
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 pt-4 md:pt-8 max-w-5xl mx-auto w-full">
+                                    <div
+                                        className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 pt-4 md:pt-8 max-w-5xl mx-auto w-full"
+                                    >
                                         {/* Total Members Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                            <Users className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
-                                            <div className="text-center">
-                                                <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
-                                                    {filteredMembers?.length || 0}
+                                                <Users className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <div className="text-center">
+                                                    <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
+                                                        {filteredMembers?.length || 0}
+                                                    </div>
+                                                    <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
+                                                        Total Members
+                                                    </div>
                                                 </div>
-                                                <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
-                                                    Total Members
-                                                </div>
-                                            </div>
                                             </div>
                                         </div>
 
                                         {/* Total Events Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                            <Calendar className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
-                                            <div className="text-center">
-                                                <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
-                                                    {filteredEvents?.length || 0}
+                                                <Calendar className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <div className="text-center">
+                                                    <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
+                                                        {filteredEvents?.length || 0}
+                                                    </div>
+                                                    <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
+                                                        Total Events
+                                                    </div>
                                                 </div>
-                                                <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
-                                                    Total Events
-                                                </div>
-                                            </div>
                                             </div>
                                         </div>
 
                                         {/* Total Admins Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                            <Shield className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
-                                            <div className="text-center">
-                                                <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
-                                                    {admins?.length || 0}
+                                                <Shield className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <div className="text-center">
+                                                    <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
+                                                        {admins?.length || 0}
+                                                    </div>
+                                                    <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
+                                                        Total Admins
+                                                    </div>
                                                 </div>
-                                                <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
-                                                    Total Admins
-                                                </div>
-                                            </div>
                                             </div>
                                         </div>
 
                                         {/* Total Messages Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                            <Mail className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
-                                            <div className="text-center">
-                                                <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
-                                                    {messages?.length || 0}
+                                                <Mail className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <div className="text-center">
+                                                    <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
+                                                        {messages?.length || 0}
+                                                    </div>
+                                                    <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
+                                                        Total Messages
+                                                    </div>
                                                 </div>
-                                                <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
-                                                    Total Messages
-                                                </div>
-                                            </div>
                                             </div>
                                         </div>
                                     </div>
@@ -299,58 +312,51 @@ const SuperAdminDashboard = () => {
                             <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
                                 <div className="mx-auto w-full max-w-7xl">
                                     {/* Date Filter */}
-                                    <div className="flex flex-wrap items-center justify-end gap-3 mb-6">
-                                        <Calendar className="w-5 h-5 text-red-500" />
-                                        
+                                    <div className="flex flex-nowrap items-center justify-end gap-1.5 md:gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+                                        <Calendar className="w-4 h-4 md:w-5 md:h-5 text-red-500 flex-shrink-0" />
+
                                         {/* Day Select */}
                                         <Select value={dayFilter} onValueChange={setDayFilter}>
-                                            <SelectTrigger className="w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all">
+                                            <SelectTrigger className="w-[65px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
                                                 <SelectValue placeholder="Day" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-black border-2 border-red-600 rounded-lg max-h-[200px]">
                                                 {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                                                    <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">
+                                                    <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
                                                         {day}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        
+
                                         {/* Month Select */}
                                         <Select value={monthFilter} onValueChange={setMonthFilter}>
-                                            <SelectTrigger className="w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all">
+                                            <SelectTrigger className="w-[90px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
                                                 <SelectValue placeholder="Month" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                                <SelectItem value="01" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">January</SelectItem>
-                                                <SelectItem value="02" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">February</SelectItem>
-                                                <SelectItem value="03" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">March</SelectItem>
-                                                <SelectItem value="04" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">April</SelectItem>
-                                                <SelectItem value="05" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">May</SelectItem>
-                                                <SelectItem value="06" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">June</SelectItem>
-                                                <SelectItem value="07" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">July</SelectItem>
-                                                <SelectItem value="08" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">August</SelectItem>
-                                                <SelectItem value="09" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">September</SelectItem>
-                                                <SelectItem value="10" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">October</SelectItem>
-                                                <SelectItem value="11" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">November</SelectItem>
-                                                <SelectItem value="12" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">December</SelectItem>
+                                                {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((m, idx) => (
+                                                    <SelectItem key={m} value={m} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                        {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][idx]}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
-                                        
+
                                         {/* Year Select */}
                                         <Select value={yearFilter} onValueChange={setYearFilter}>
-                                            <SelectTrigger className="w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all">
+                                            <SelectTrigger className="w-[75px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
                                                 <SelectValue placeholder="Year" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                                <SelectItem value="2026" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2026</SelectItem>
-                                                <SelectItem value="2027" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2027</SelectItem>
-                                                <SelectItem value="2028" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2028</SelectItem>
-                                                <SelectItem value="2029" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2029</SelectItem>
-                                                <SelectItem value="2030" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">2030</SelectItem>
+                                                {["2024", "2025", "2026", "2027", "2028"].map((year) => (
+                                                    <SelectItem key={year} value={year} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                        {year}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
-                                        
+
                                         {(dayFilter || monthFilter || yearFilter) && (
                                             <button
                                                 onClick={() => {
@@ -358,26 +364,27 @@ const SuperAdminDashboard = () => {
                                                     setMonthFilter("");
                                                     setYearFilter("");
                                                 }}
-                                                className="flex items-center gap-1 text-xs text-red-500 hover:text-red-400 transition-colors"
+                                                className="flex items-center justify-center p-2 text-red-500 hover:text-red-400 transition-colors flex-shrink-0"
                                             >
                                                 <X className="w-4 h-4" />
-                                                CLEAR
                                             </button>
                                         )}
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    <div
+                                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                                    >
                                         {messages?.filter((msg: any) => {
                                             if (!dayFilter && !monthFilter && !yearFilter) return true;
                                             const msgDate = new Date(msg.createdAt);
                                             const msgDay = String(msgDate.getDate()).padStart(2, '0');
                                             const msgMonth = String(msgDate.getMonth() + 1).padStart(2, '0');
                                             const msgYear = String(msgDate.getFullYear());
-                                            
+
                                             // Day, Month and Year filters
                                             const dayMatch = !dayFilter || msgDay === dayFilter;
                                             const monthMatch = !monthFilter || msgMonth === monthFilter;
                                             const yearMatch = !yearFilter || msgYear === yearFilter;
-                                            
+
                                             return dayMatch && monthMatch && yearMatch;
                                         }).map((msg: any) => (
                                             <div
@@ -400,7 +407,7 @@ const SuperAdminDashboard = () => {
                                                         Delete
                                                     </Button>
                                                 </div>
-                                                
+
                                                 {/* Sender info */}
                                                 <div className="space-y-1 mb-4">
                                                     <p className="text-sm text-muted-foreground">
@@ -410,7 +417,7 @@ const SuperAdminDashboard = () => {
                                                         <span className="text-red-500 font-semibold">Email:</span> {msg.email}
                                                     </p>
                                                 </div>
-                                                
+
                                                 {/* Message content */}
                                                 <div className="border-t border-red-600 pt-4 space-y-3 flex-1">
                                                     <div>
@@ -445,7 +452,7 @@ const SuperAdminDashboard = () => {
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
                         <AlertDialogCancel className="border-red-600 text-white hover:bg-red-600/10 mt-0">Cancel</AlertDialogCancel>
-                        <AlertDialogAction 
+                        <AlertDialogAction
                             onClick={handleDeleteMessage}
                             className="bg-red-600 text-white hover:bg-red-700"
                         >

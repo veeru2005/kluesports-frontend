@@ -2,11 +2,15 @@ import { Button } from "@/components/ui/button";
 
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export const CTASection = () => {
   const navigate = useNavigate();
   const [isHoveringIgnite, setIsHoveringIgnite] = useState(false);
   const [isHoveringContact, setIsHoveringContact] = useState(false);
+  const logoAnim = useScrollAnimation();
+  const titleAnim = useScrollAnimation();
+  const linksAnim = useScrollAnimation();
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -16,7 +20,10 @@ export const CTASection = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="mb-8 flex justify-center">
+          <div
+            ref={logoAnim.elementRef}
+            className={`mb-8 flex justify-center scroll-scale ${logoAnim.isVisible ? 'scroll-visible' : ''}`}
+          >
             <img
               src="/KLU-Esports-Circle-Logo.png"
               alt="KLU-Esports"
@@ -24,16 +31,24 @@ export const CTASection = () => {
             />
           </div>
 
-          <h2 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl mb-6">
-            READY TO JOIN THE <br /> <span className="flame-text">KLU-Esports</span>?
-          </h2>
+          <div
+            ref={titleAnim.elementRef}
+            className={`scroll-fade-up ${titleAnim.isVisible ? 'scroll-visible' : ''}`}
+          >
+            <h2 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl mb-6">
+              READY TO JOIN THE <br /> <span className="flame-text">KLU-Esports</span>?
+            </h2>
 
-          <p className="text-xl text-muted-foreground font-body mb-10 max-w-xl mx-auto">
-            Step into the arena. Prove your worth. Become a legend among legends.
-            The flames are waiting.
-          </p>
+            <p className="text-xl text-muted-foreground font-body mb-10 max-w-xl mx-auto">
+              Step into the arena. Prove your worth. Become a legend among legends.
+              The flames are waiting.
+            </p>
+          </div>
 
-          <div className="flex flex-col gap-6 items-center justify-center max-w-lg mx-auto w-[90%] md:w-full">
+          <div
+            ref={linksAnim.elementRef}
+            className={`flex flex-col gap-6 items-center justify-center max-w-lg mx-auto w-[90%] md:w-full scroll-fade-up scroll-delay-200 ${linksAnim.isVisible ? 'scroll-visible' : ''}`}
+          >
             <a
               href="https://www.instagram.com/klu__esports/"
               target="_blank"
@@ -62,6 +77,16 @@ export const CTASection = () => {
             >
               <img src="/youtube.svg" alt="YouTube" className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
               <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">YouTube</span>
+            </a>
+
+            <a
+              href="https://www.linkedin.com/company/kl-esports-club"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/90 border-2 border-red-600 rounded-2xl hover:bg-black hover:border-red-500 transition-all group backdrop-blur-sm shadow-lg shadow-red-900/30 hover:shadow-red-600/40"
+            >
+              <img src="/Linkedin.svg" alt="LinkedIn" className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
+              <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">LinkedIn</span>
             </a>
           </div>
         </div>

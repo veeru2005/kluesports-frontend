@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Users, Plus, Trash2, Shield, Eye, Edit, Search, X, Upload, Clock, MapPin } from "lucide-react";
+import { Calendar, Users, Plus, Trash2, Shield, Eye, Edit, Search, X, Upload, Clock, MapPin, Mail } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { mockEvents, mockMembers } from "@/lib/mock-data";
 import { format } from "date-fns";
@@ -49,8 +49,16 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
     };
 
     const [activeTab, setActiveTab] = useState(getInitialTab());
+    const [viewMember, setViewMember] = useState<any>(null);
+    const [editMember, setEditMember] = useState<any>(null);
+    const [deletingMember, setDeletingMember] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [gameFilter, setGameFilter] = useState("all");
+    const [dayFilter, setDayFilter] = useState<string>("");
+    const [monthFilter, setMonthFilter] = useState<string>("");
+    const [yearFilter, setYearFilter] = useState<string>("");
+    const [deletingMessageId, setDeletingMessageId] = useState<string | null>(null);
+    const [messageToDelete, setMessageToDelete] = useState<string | null>(null);
     const [newEvent, setNewEvent] = useState({
         id: "",
         title: "",
@@ -63,6 +71,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
     const { toast } = useToast();
     const queryClient = useQueryClient();
 
+
     // Helper to get headers
     const getHeaders = () => {
         const token = localStorage.getItem("inferno_token");
@@ -72,24 +81,44 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
         };
     };
 
-    const { data: members } = useQuery({
+    const { data: members, error: membersError } = useQuery({
         queryKey: ["admin-members"],
         queryFn: async () => {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users`, {
                 headers: getHeaders()
             });
-            if (!response.ok) throw new Error("Failed to fetch members");
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.message || "Failed to fetch members");
+            }
             return response.json();
         },
     });
 
-    const { data: events } = useQuery({
+    const { data: events, error: eventsError } = useQuery({
         queryKey: ["admin-events"],
         queryFn: async () => {
             const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events`, {
                 headers: getHeaders()
             });
-            if (!response.ok) throw new Error("Failed to fetch events");
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.message || "Failed to fetch events");
+            }
+            return response.json();
+        },
+    });
+
+    const { data: messages, error: messagesError } = useQuery({
+        queryKey: ["admin-messages"],
+        queryFn: async () => {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/messages`, {
+                headers: getHeaders()
+            });
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.message || "Failed to fetch messages");
+            }
             return response.json();
         },
     });
@@ -97,13 +126,13 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
     const filteredMembers = members?.filter((m: any) => {
         // Exclude current user
         if (m.email === user?.email || m.id === user?.id) return false;
-        
+
         // Exclude all admins and super admins from members tab
         if (m.role && (m.role === 'super_admin' || m.role.startsWith('admin_'))) return false;
-        
+
         // For game admins, only show members of their specific game
         const matchesGame = m.game === game || m.gameYouPlay === game;
-        
+
         const matchesSearch = searchQuery === "" ||
             m.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             (m.name && m.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -141,8 +170,37 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
         },
     });
 
-    const [viewMember, setViewMember] = useState<any>(null);
-    const [editMember, setEditMember] = useState<any>(null);
+    const handleDeleteMember = async () => {
+        if (!deletingMember) return;
+        try {
+            const token = localStorage.getItem("inferno_token");
+            const response = await fetch(
+                `${import.meta.env.VITE_API_BASE_URL}/users/${deletingMember.id || deletingMember._id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (!response.ok) throw new Error("Failed to delete member");
+
+            toast({
+                title: "Success",
+                description: "Member deleted successfully",
+            });
+
+            queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+            setDeletingMember(null);
+        } catch (error) {
+            toast({
+                title: "Error",
+                description: "Failed to delete member",
+                variant: "destructive",
+            });
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -189,7 +247,9 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                 {/* Background glow */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-radial-gradient from-primary/10 to-transparent pointer-events-none" />
 
-                                <div className="relative z-10 space-y-4 md:space-y-8 animate-fade-in-up px-4">
+                                <div
+                                    className="relative z-10 space-y-4 md:space-y-8 px-4"
+                                >
                                     <div className="inline-block px-4 md:px-6 py-2 md:py-3 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-sm">
                                         <div className="flex items-center gap-2 md:gap-3">
                                             <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary" />
@@ -203,7 +263,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                         </h1>
 
                                         <h2 className="font-display font-bold text-3xl md:text-5xl lg:text-7xl tracking-tight uppercase leading-none drop-shadow-[0_0_30px_rgba(220,38,38,0.6)] relative">
-                                            <span className="flame-text">{user?.username || user?.email?.split('@')[0] || 'Admin'}</span>
+                                            <span className="flame-text">{user?.name || user?.username || user?.email?.split('@')[0] || 'Admin'}</span>
                                         </h2>
                                     </div>
 
@@ -211,34 +271,51 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                         Manage your {game} community, oversee events, and track member engagement all in one place.
                                     </p>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-4 md:pt-8 max-w-2xl mx-auto w-full">
+                                    <div
+                                        className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 pt-4 md:pt-8 max-w-5xl mx-auto w-full"
+                                    >
                                         {/* Total Members Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                            <Users className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
-                                            <div className="text-center">
-                                                <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
-                                                    {filteredMembers?.length || 0}
+                                                <Users className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <div className="text-center">
+                                                    <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
+                                                        {filteredMembers?.length || 0}
+                                                    </div>
+                                                    <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
+                                                        Total Members
+                                                    </div>
                                                 </div>
-                                                <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
-                                                    Total Members
-                                                </div>
-                                            </div>
                                             </div>
                                         </div>
 
                                         {/* Total Events Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                            <Calendar className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
-                                            <div className="text-center">
-                                                <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
-                                                    {filteredEvents?.length || 0}
-                                                </div>
-                                                <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
-                                                    Total Events
+                                                <Calendar className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <div className="text-center">
+                                                    <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
+                                                        {filteredEvents?.length || 0}
+                                                    </div>
+                                                    <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
+                                                        Total Events
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        {/* Total Messages Box */}
+                                        <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
+                                            <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
+                                                <Mail className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <div className="text-center">
+                                                    <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
+                                                        {messages?.length || 0}
+                                                    </div>
+                                                    <div className="text-xs md:text-sm text-muted-foreground font-body uppercase tracking-wider">
+                                                        Total Messages
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -254,73 +331,92 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                         <h2 className="font-display font-semibold text-2xl">
                                             {game} Members
                                         </h2>
-                                        <div className="flex gap-3 items-center flex-wrap">
-                                            <div className="relative w-full md:w-auto">
-                                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                        <div className="flex gap-3 items-center flex-wrap w-full md:w-auto">
+                                            <div className="relative w-full md:w-[400px]">
+                                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-500" />
                                                 <Input
                                                     placeholder="Search members..."
                                                     value={searchQuery}
                                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                                    className="pl-9 w-full md:w-[250px] bg-black/50 border-input"
+                                                    className="pl-9 w-full bg-black border-2 border-red-600 text-white placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-[0_0_10px_rgba(220,38,38,0.1)]"
                                                 />
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                    <div
+                                        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6"
+                                    >
                                         {filteredMembers?.map((member: any) => (
                                             <div
                                                 key={member.id}
                                                 className="bg-black/80 backdrop-blur-sm rounded-xl border-2 border-red-600 flex flex-col hover:border-red-500 transition-all overflow-hidden group"
                                             >
-                                                <div className="p-6 flex flex-col items-center justify-center text-center gap-3">
-                                                    <div className="w-20 h-20 rounded-full bg-red-600/20 flex items-center justify-center ring-2 ring-red-600/30">
-                                                        <span className="font-display font-bold text-3xl text-red-500">
+                                                <div className="p-2.5 md:p-6 flex flex-col items-center justify-center text-center gap-1.5 md:gap-3 bg-black">
+                                                    <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-red-600/20 flex items-center justify-center ring-2 ring-red-600/30">
+                                                        <span className="font-display font-bold text-lg md:text-3xl text-red-500">
                                                             {(member.full_name || member.name || member.username || "U").charAt(0).toUpperCase()}
                                                         </span>
                                                     </div>
-                                                    <div className="space-y-2 w-full flex flex-col items-center">
-                                                        <h3 className="font-display font-bold text-xl text-foreground truncate w-full text-center">
+                                                    <div className="space-y-0.5 md:space-y-2 w-full flex flex-col items-center">
+                                                        <h3 className="font-display font-bold text-sm md:text-xl text-foreground truncate w-full text-center">
                                                             {member.full_name || member.name || "Unknown Name"}
                                                         </h3>
-                                                        <p className="text-red-500 font-medium text-sm truncate w-full text-center">
+                                                        <p className="text-red-500 font-medium text-[11px] md:text-sm truncate w-full text-center">
                                                             {member.email || "user@example.com"}
                                                         </p>
-                                                        <p className="text-white text-xs font-display bg-muted/10 py-1 px-3 rounded-md border border-white mt-1">
-                                                            {member.username}
-                                                        </p>
+                                                        {member.collegeId && (
+                                                            <p className="text-white text-[10px] md:text-sm font-display font-bold bg-red-600/10 py-1 px-4 md:px-6 rounded-md border border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.1)] tracking-widest mt-1.5">
+                                                                {member.collegeId}
+                                                            </p>
+                                                        )}
                                                     </div>
                                                 </div>
 
-                                                <div className="mt-auto flex gap-4 p-6 border-t border-red-600/30">
+                                                <div className="mt-auto flex gap-2 md:gap-4 p-2 md:p-4 border-t border-red-600/30 bg-black">
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
-                                                        onClick={() => setViewMember(member)}
-                                                        className="flex-1 gap-2 border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 action-cycle"
+                                                        onClick={() => setEditMember({
+                                                            ...member,
+                                                            name: member.full_name || member.name || '',
+                                                            mobile: member.mobile || '',
+                                                            collegeId: member.collegeId || '',
+                                                            email: member.email || '',
+                                                            inGameName: member.inGameName || '',
+                                                            bio: member.bio || '',
+                                                            gameYouPlay: member.gameYouPlay || member.game || '',
+                                                            createdAt: member.createdAt || member.created_at || ''
+                                                        })}
+                                                        className="flex-1 h-9 md:h-10 px-2 md:px-4 text-[11px] md:text-sm border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
                                                     >
-                                                        <span className="action-cycle-icon">
-                                                            <Eye className="w-4 h-4" />
+                                                        <span className="action-swap">
+                                                            <span className="action-swap-item action-swap-a">
+                                                                <Eye className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                                                                <span>View</span>
+                                                            </span>
+                                                            <span className="action-swap-item action-swap-b">
+                                                                <Edit className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                                                                <span>Edit</span>
+                                                            </span>
                                                         </span>
-                                                        <span className="action-cycle-label">View</span>
                                                     </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() => setEditMember({ ...member, mobile: member.mobile || '', collegeId: member.collegeId || '', email: member.email || 'user@example.com' })}
-                                                        className="flex-1 gap-2 border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 action-cycle action-cycle-delay-1"
-                                                    >
-                                                        <span className="action-cycle-icon">
-                                                            <Edit className="w-4 h-4" />
-                                                        </span>
-                                                        <span className="action-cycle-label">Edit</span>
-                                                    </Button>
+                                                    {user?.role === 'super_admin' && (
+                                                        <Button
+                                                            size="sm"
+                                                            onClick={() => setDeletingMember(member)}
+                                                            className="flex-1 h-9 md:h-10 px-2 md:px-4 gap-1 md:gap-2 text-[11px] md:text-sm bg-red-600 hover:bg-red-700 text-white border-0 transition-all duration-300"
+                                                        >
+                                                            <Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                                                            <span>Delete</span>
+                                                        </Button>
+                                                    )}
                                                 </div>
                                             </div>
                                         ))}
 
                                         {/* View Member Dialog */}
                                         <Dialog open={!!viewMember} onOpenChange={(o) => !o && setViewMember(null)}>
-                                            <DialogContent className="glass-dark border-border">
+                                            <DialogContent className="max-w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl overflow-y-auto max-h-[90vh]">
                                                 <DialogHeader>
                                                     <DialogTitle className="font-display text-2xl">Member Details</DialogTitle>
                                                 </DialogHeader>
@@ -361,34 +457,73 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
                                         {/* Edit Member Dialog */}
                                         <Dialog open={!!editMember} onOpenChange={(o) => !o && setEditMember(null)}>
-                                            <DialogContent className="glass-dark border-border">
+                                            <DialogContent className="max-w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl overflow-y-auto max-h-[90vh]">
                                                 <DialogHeader>
                                                     <DialogTitle className="font-display text-xl">Edit Member: {editMember?.username}</DialogTitle>
                                                 </DialogHeader>
                                                 <div className="space-y-4 py-4">
                                                     <div className="space-y-2">
+                                                        <Label>Name</Label>
+                                                        <Input
+                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                            value={editMember?.name || ''}
+                                                            readOnly
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <Label>In-Game Name</Label>
+                                                        <Input
+                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                            value={editMember?.inGameName || ''}
+                                                            readOnly
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
                                                         <Label>Email</Label>
                                                         <Input
+                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
                                                             value={editMember?.email || ''}
-                                                            onChange={(e) => setEditMember({ ...editMember, email: e.target.value })}
-                                                            className="bg-muted border-border"
+                                                            readOnly
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label>Mobile Number</Label>
                                                         <Input
+                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
                                                             value={editMember?.mobile || ''}
-                                                            onChange={(e) => setEditMember({ ...editMember, mobile: e.target.value })}
-                                                            className="bg-muted border-border"
-                                                            maxLength={10}
+                                                            readOnly
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label>College ID</Label>
                                                         <Input
+                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
                                                             value={editMember?.collegeId || ''}
-                                                            onChange={(e) => setEditMember({ ...editMember, collegeId: e.target.value })}
-                                                            className="bg-muted border-border"
+                                                            readOnly
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <Label>Game Assignment</Label>
+                                                        <Input
+                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                            value={editMember?.gameYouPlay || ''}
+                                                            readOnly
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <Label>Bio</Label>
+                                                        <Input
+                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                            value={editMember?.bio || ''}
+                                                            readOnly
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <Label>Member Since</Label>
+                                                        <Input
+                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                            value={editMember?.createdAt ? format(new Date(editMember.createdAt), "MMMM yyyy") : "Join Date Unavailable"}
+                                                            readOnly
                                                         />
                                                     </div>
                                                 </div>
@@ -403,6 +538,38 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                             </DialogContent>
                                         </Dialog>
 
+                                        {/* Delete Confirmation Alert */}
+                                        {deletingMember && (
+                                            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                                                <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setDeletingMember(null)} />
+                                                <div className="relative bg-black border-2 border-red-600 rounded-xl p-6 max-w-md w-full shadow-[0_0_30px_rgba(220,38,38,0.4)]">
+                                                    <div className="flex items-center gap-4 text-red-500 mb-4">
+                                                        <div className="p-3 bg-red-600/20 rounded-full">
+                                                            <Trash2 className="w-6 h-6" />
+                                                        </div>
+                                                        <h3 className="text-xl font-display font-bold uppercase tracking-tight">Delete Member?</h3>
+                                                    </div>
+                                                    <p className="text-muted-foreground mb-6 leading-relaxed">
+                                                        Are you sure you want to remove <span className="text-white font-bold">{deletingMember.name || deletingMember.username}</span>? This action cannot be undone.
+                                                    </p>
+                                                    <div className="flex gap-3">
+                                                        <Button
+                                                            variant="outline"
+                                                            className="flex-1 border-white/20 hover:bg-white/10"
+                                                            onClick={() => setDeletingMember(null)}
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                        <Button
+                                                            className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                                                            onClick={handleDeleteMember}
+                                                        >
+                                                            Delete Forever
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {!filteredMembers?.length && (
@@ -425,22 +592,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                 <div className="mx-auto w-full max-w-7xl">
                                     <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                                         <h2 className="font-display font-semibold text-2xl">Manage Events</h2>
-                                        <div className="flex gap-3 items-center">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-sm text-muted-foreground">Filter:</span>
-                                                <Select value={gameFilter} onValueChange={setGameFilter}>
-                                                    <SelectTrigger className="w-[150px] bg-muted border-border">
-                                                        <SelectValue placeholder="All Games" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="all">All Games</SelectItem>
-                                                        <SelectItem value="Free Fire">Free Fire</SelectItem>
-                                                        <SelectItem value="BGMI">BGMI</SelectItem>
-                                                        <SelectItem value="Valorant">Valorant</SelectItem>
-                                                        <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
+                                        <div className="flex gap-3 items-center ml-auto">
                                             <Dialog open={eventDialogOpen} onOpenChange={(open) => {
                                                 setEventDialogOpen(open);
                                                 if (!open) {
@@ -461,7 +613,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         Add Event
                                                     </Button>
                                                 </DialogTrigger>
-                                                <DialogContent className="glass-dark border-border md:w-full w-[95vw] max-h-[85vh] overflow-y-auto [&>button]:hidden">
+                                                <DialogContent className="w-[95vw] sm:max-w-[600px] bg-black border-2 border-red-600 rounded-xl max-h-[90vh] overflow-y-auto [&>button]:hidden">
                                                     <DialogHeader>
                                                         <DialogTitle className="font-display text-2xl">
                                                             {newEvent.id ? "Edit" : "Create New"} {game} Event
@@ -471,18 +623,18 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         <div className="space-y-2">
                                                             <Label>Title</Label>
                                                             <Input
+                                                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                                                 value={newEvent.title}
                                                                 onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
                                                                 required
-                                                                className="bg-muted border-border"
                                                             />
                                                         </div>
                                                         <div className="space-y-2">
                                                             <Label>Description</Label>
                                                             <Textarea
+                                                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[100px] resize-none"
                                                                 value={newEvent.description}
                                                                 onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
-                                                                className="bg-muted border-border min-h-[100px] resize-none"
                                                                 rows={4}
                                                             />
                                                         </div>
@@ -492,6 +644,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                 <div className="flex-1">
                                                                     <div className="relative">
                                                                         <Input
+                                                                            className="hidden"
                                                                             id="event-image-upload"
                                                                             type="file"
                                                                             accept="image/*"
@@ -518,7 +671,6 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                                     img.src = URL.createObjectURL(file);
                                                                                 }
                                                                             }}
-                                                                            className="hidden"
                                                                         />
                                                                         <Button
                                                                             type="button"
@@ -564,7 +716,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                         setNewEvent({ ...newEvent, event_date: `${date}T${time}` });
                                                                     }}
                                                                     required
-                                                                    className="bg-muted border-border"
+                                                                    className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                                                 />
                                                             </div>
                                                             <div className="space-y-2">
@@ -573,7 +725,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                     type="number"
                                                                     value={newEvent.max_participants}
                                                                     onChange={(e) => setNewEvent({ ...newEvent, max_participants: e.target.value })}
-                                                                    className="bg-muted border-border"
+                                                                    className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                                                 />
                                                             </div>
                                                         </div>
@@ -601,7 +753,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                         setNewEvent({ ...newEvent, event_date: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
                                                                     }}
                                                                 >
-                                                                    <SelectTrigger className="bg-muted border-border min-w-[70px]">
+                                                                    <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
                                                                         <SelectValue placeholder="HH" />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
@@ -622,7 +774,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                         setNewEvent({ ...newEvent, event_date: `${datePart}T${hours}:${val}` });
                                                                     }}
                                                                 >
-                                                                    <SelectTrigger className="bg-muted border-border min-w-[70px]">
+                                                                    <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
                                                                         <SelectValue placeholder="MM" />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
@@ -651,7 +803,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                         setNewEvent({ ...newEvent, event_date: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
                                                                     }}
                                                                 >
-                                                                    <SelectTrigger className="bg-muted border-border min-w-[70px]">
+                                                                    <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
                                                                         <SelectValue />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
@@ -667,13 +819,13 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                 value={newEvent.location}
                                                                 onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
                                                                 placeholder="Enter event venue"
-                                                                className="bg-muted border-border"
+                                                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                                             />
                                                         </div>
 
                                                         <div className="space-y-2 opacity-70">
                                                             <Label>Game (Locked)</Label>
-                                                            <Input value={game} disabled className="bg-muted/50 border-border" />
+                                                            <Input value={game} disabled className="bg-black border-red-600/50 opacity-50 focus-visible:ring-0 focus-visible:ring-offset-0" />
                                                         </div>
 
                                                         <div className="flex justify-between items-center mt-8 pt-4 border-t border-border/50">
@@ -695,7 +847,9 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    <div
+                                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                                    >
                                         {filteredEvents?.map((event) => (
                                             <div
                                                 key={event.id}
@@ -779,6 +933,135 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                         {!filteredEvents?.length && (
                                             <div className="col-span-full text-center py-12">
                                                 <p className="text-muted-foreground text-lg">No events found for {game}.</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </TabsContent>
+
+                        {/* Messages Tab */}
+                        <TabsContent value="messages" className="m-0 p-0 border-none outline-none">
+                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
+                                <div className="mx-auto w-full max-w-7xl">
+                                    {/* Date Filter */}
+                                    <div className="flex flex-nowrap items-center justify-end gap-1.5 md:gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+                                        <Calendar className="w-4 h-4 md:w-5 md:h-5 text-red-500 flex-shrink-0" />
+
+                                        {/* Day Select */}
+                                        <Select value={dayFilter} onValueChange={setDayFilter}>
+                                            <SelectTrigger className="w-[65px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
+                                                <SelectValue placeholder="Day" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-black border-2 border-red-600 rounded-lg max-h-[200px]">
+                                                {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                                                    <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                        {day}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+
+                                        {/* Month Select */}
+                                        <Select value={monthFilter} onValueChange={setMonthFilter}>
+                                            <SelectTrigger className="w-[90px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
+                                                <SelectValue placeholder="Month" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((m, idx) => (
+                                                    <SelectItem key={m} value={m} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                        {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][idx]}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+
+                                        {/* Year Select */}
+                                        <Select value={yearFilter} onValueChange={setYearFilter}>
+                                            <SelectTrigger className="w-[75px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
+                                                <SelectValue placeholder="Year" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                {["2024", "2025", "2026", "2027", "2028"].map((year) => (
+                                                    <SelectItem key={year} value={year} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                        {year}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+
+                                        {(dayFilter || monthFilter || yearFilter) && (
+                                            <button
+                                                onClick={() => {
+                                                    setDayFilter("");
+                                                    setMonthFilter("");
+                                                    setYearFilter("");
+                                                }}
+                                                className="flex items-center justify-center p-2 text-red-500 hover:text-red-400 transition-colors flex-shrink-0"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div
+                                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                                    >
+                                        {messages?.filter((msg: any) => {
+                                            if (!dayFilter && !monthFilter && !yearFilter) return true;
+                                            const msgDate = new Date(msg.createdAt);
+                                            const msgDay = String(msgDate.getDate()).padStart(2, '0');
+                                            const msgMonth = String(msgDate.getMonth() + 1).padStart(2, '0');
+                                            const msgYear = String(msgDate.getFullYear());
+
+                                            // Day, Month and Year filters
+                                            const dayMatch = !dayFilter || msgDay === dayFilter;
+                                            const monthMatch = !monthFilter || msgMonth === monthFilter;
+                                            const yearMatch = !yearFilter || msgYear === yearFilter;
+
+                                            return dayMatch && monthMatch && yearMatch;
+                                        }).map((msg: any) => (
+                                            <div
+                                                key={msg._id || msg.id}
+                                                className="bg-black rounded-xl p-4 md:p-6 border-2 border-red-600 hover:border-red-500 transition-all flex flex-col"
+                                            >
+                                                {/* Date at top */}
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <span className="text-xs text-white bg-red-600 px-3 py-1.5 rounded font-medium">
+                                                        {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}
+                                                    </span>
+                                                </div>
+
+                                                {/* Sender info */}
+                                                <div className="space-y-1 mb-4">
+                                                    <p className="text-sm text-muted-foreground">
+                                                        <span className="text-red-500 font-semibold">From:</span> {msg.name}
+                                                    </p>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        <span className="text-red-500 font-semibold">Email:</span> {msg.email}
+                                                    </p>
+                                                </div>
+
+                                                {/* Message content */}
+                                                <div className="border-t border-red-600 pt-4 space-y-3 flex-1">
+                                                    <div>
+                                                        <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Subject</p>
+                                                        <h3 className="font-display font-semibold text-lg text-white">
+                                                            {msg.subject || "No Subject"}
+                                                        </h3>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Message</p>
+                                                        <p className="text-sm text-foreground whitespace-pre-wrap">{msg.message}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {(!messages || messages.length === 0) && (
+                                            <div className="col-span-full text-center py-12">
+                                                <div className="bg-red-600/10 border-2 border-red-600 rounded-xl p-8 max-w-md mx-auto">
+                                                    <Mail className="w-12 h-12 text-primary mx-auto mb-4 opacity-50" />
+                                                    <p className="text-muted-foreground text-lg font-display uppercase tracking-wider">No messages found</p>
+                                                </div>
                                             </div>
                                         )}
                                     </div>

@@ -4,9 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { mockEvents } from "@/lib/mock-data";
 import { format } from "date-fns";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export const EventsPreview = () => {
   const navigate = useNavigate();
+  const titleAnim = useScrollAnimation();
+  const event1Anim = useScrollAnimation();
+  const event2Anim = useScrollAnimation();
+  const event3Anim = useScrollAnimation();
 
   const { data: events, isLoading } = useQuery({
     queryKey: ["upcoming-events"],
@@ -48,7 +53,10 @@ export const EventsPreview = () => {
   return (
     <section className="py-24 bg-card/50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div
+          ref={titleAnim.elementRef}
+          className={`text-center mb-16 scroll-fade-up ${titleAnim.isVisible ? 'scroll-visible' : ''}`}
+        >
           <span className="font-display text-primary uppercase tracking-widest text-base mb-4 block">
             Upcoming Battles
           </span>
@@ -65,44 +73,48 @@ export const EventsPreview = () => {
                 className="glass-dark rounded-xl h-64 animate-pulse"
               />
             ))
-            : displayEvents.map((event, index) => (
-              <div
-                key={event.id}
-                className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group hover:ember-glow"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {/* Event header with gradient */}
-                <div className="h-2 bg-flame-gradient" />
+            : displayEvents.map((event, index) => {
+              const eventAnims = [event1Anim, event2Anim, event3Anim];
+              const eventAnim = eventAnims[index] || { elementRef: null, isVisible: false };
+              return (
+                <div
+                  key={event.id}
+                  ref={eventAnim.elementRef}
+                  className={`glass-dark rounded-xl overflow-hidden border border-red-600 hover:border-red-500 transition-all group hover:ember-glow scroll-scale scroll-delay-${index * 100} ${eventAnim.isVisible ? 'scroll-visible' : ''}`}
+                >
+                  {/* Event header with gradient */}
+                  <div className="h-2 bg-flame-gradient" />
 
-                <div className="p-6">
-                  {/* Date badge */}
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-base font-display mb-4">
-                    <Calendar className="w-4 h-4" />
-                    {format(new Date(event.event_date), "MMM dd, yyyy")}
-                  </div>
-
-                  <h3 className="font-display font-bold text-2xl text-foreground mb-3 group-hover:text-primary transition-colors">
-                    {event.title}
-                  </h3>
-                  <p className="text-muted-foreground font-body text-lg mb-6 line-clamp-2">
-                    {event.description}
-                  </p>
-
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4 text-primary" />
-                      {event.location || "TBA"}
+                  <div className="p-6">
+                    {/* Date badge */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-base font-display mb-4">
+                      <Calendar className="w-4 h-4" />
+                      {format(new Date(event.event_date), "MMM dd, yyyy")}
                     </div>
-                    {event.max_participants && (
+
+                    <h3 className="font-display font-bold text-2xl text-foreground mb-3 group-hover:text-primary transition-colors">
+                      {event.title}
+                    </h3>
+                    <p className="text-muted-foreground font-body text-lg mb-6 line-clamp-2">
+                      {event.description}
+                    </p>
+
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4 text-primary" />
-                        {event.max_participants} slots
+                        <MapPin className="w-4 h-4 text-primary" />
+                        {event.location || "TBA"}
                       </div>
-                    )}
+                      {event.max_participants && (
+                        <div className="flex items-center gap-1">
+                          <Users className="w-4 h-4 text-primary" />
+                          {event.max_participants} slots
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
 
         <div className="text-center mt-12">

@@ -15,6 +15,7 @@ export interface User {
     role: UserRole;
     game?: "Free Fire" | "BGMI" | "Valorant" | "Call Of Duty";
     gameYouPlay?: "Free Fire" | "BGMI" | "Valorant" | "Call Of Duty"; // Backend field name match
+    createdAt?: string;
 }
 
 interface AuthContextType {
@@ -28,6 +29,7 @@ interface AuthContextType {
     sendOTP: (email: string, purpose: 'login' | 'signup', password?: string) => Promise<{ success: boolean; message: string }>;
     verifyLoginOTP: (email: string, otp: string) => Promise<void>;
     verifySignupOTP: (identifier: string, userData: any, otp: string) => Promise<void>;
+    updateUser: (updatedUser: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -45,12 +47,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Decode JWT to check expiration
             const payload = JSON.parse(atob(token.split('.')[1]));
             const currentTime = Math.floor(Date.now() / 1000);
-            
+
             // Check JWT expiration
             if (payload.exp && payload.exp < currentTime) {
                 return true;
             }
-            
+
             // Check if login date is today
             if (payload.loginDate) {
                 const currentDate = new Date().toISOString().split('T')[0];
@@ -58,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     return true;
                 }
             }
-            
+
             // Check if session is within 6 hours
             if (payload.loginTimestamp) {
                 const timeDiff = Date.now() - payload.loginTimestamp;
@@ -67,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     return true;
                 }
             }
-            
+
             return false;
         } catch (error) {
             return true;
@@ -105,14 +107,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const determineRole = (email: string): UserRole => {
         const lowerEmail = email.toLowerCase();
-        
+
         // Check against super admin emails
         const superAdminEmails = [
             'superadmin1@klu.ac.in',
             'superadmin2@klu.ac.in',
             'superadmin3@klu.ac.in'
         ];
-        
+
         if (superAdminEmails.includes(lowerEmail)) return "super_admin";
         if (lowerEmail.includes("freefire")) return "admin_freefire";
         if (lowerEmail.includes("bgmi")) return "admin_bgmi";
@@ -208,6 +210,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoading(false);
     };
 
+    const updateUser = (updatedUser: User) => {
+        setUser(updatedUser);
+        localStorage.setItem("inferno_user", JSON.stringify(updatedUser));
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -220,7 +227,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 signup,
                 sendOTP,
                 verifyLoginOTP,
-                verifySignupOTP
+                verifySignupOTP,
+                updateUser
             }}
         >
             {children}

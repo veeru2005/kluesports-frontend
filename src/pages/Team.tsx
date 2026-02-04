@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { FlameParticles } from "@/components/ui/FlameParticles";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 import { Linkedin, Instagram, Mail } from "lucide-react";
 
@@ -15,6 +16,9 @@ const placeholderTeam = [
 ];
 
 const Team = () => {
+  const titleAnim = useScrollAnimation();
+  const gridAnim = useScrollAnimation();
+
   const { data: teamMembers, isLoading } = useQuery({
     queryKey: ["team-members"],
     queryFn: async () => {
@@ -34,7 +38,10 @@ const Team = () => {
           <FlameParticles />
           <div className="absolute inset-0 hero-gradient" />
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
+            <div
+              ref={titleAnim.elementRef}
+              className={`max-w-4xl mx-auto text-center scroll-fade-up ${titleAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Meet The Legends
               </span>
@@ -51,7 +58,10 @@ const Team = () => {
         {/* Team Grid */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-sm sm:max-w-none mx-auto">
+            <div
+              ref={gridAnim.elementRef}
+              className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-sm sm:max-w-none mx-auto scroll-fade-up ${gridAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
               {isLoading
                 ? [...Array(6)].map((_, i) => (
                   <div
@@ -62,7 +72,7 @@ const Team = () => {
                 : displayTeam.map((member, index) => (
                   <div
                     key={member.id}
-                    className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group hover:ember-glow"
+                    className="glass-dark rounded-xl overflow-hidden border border-red-600 hover:border-red-500 transition-all group hover:ember-glow"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Avatar/Image area - Square aspect ratio */}

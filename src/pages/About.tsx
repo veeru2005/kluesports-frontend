@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Target, Users, Trophy, Flame, Swords, Crown } from "lucide-react";
 import { FlameParticles } from "@/components/ui/FlameParticles";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const values = [
   {
@@ -34,6 +35,11 @@ const stats = [
 ];
 
 const About = () => {
+  const titleAnim = useScrollAnimation();
+  const storyAnim = useScrollAnimation();
+  const statsAnim = useScrollAnimation();
+  const valuesAnim = useScrollAnimation();
+  const missionAnim = useScrollAnimation();
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -43,12 +49,15 @@ const About = () => {
           <FlameParticles />
           <div className="absolute inset-0 hero-gradient" />
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
+            <div
+              ref={titleAnim.elementRef}
+              className={`max-w-4xl mx-auto text-center scroll-fade-up ${titleAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Our Story
               </span>
               <h1 className="font-display font-bold text-4xl sm:text-4xl md:text-6xl lg:text-7xl mb-3 whitespace-nowrap">
-                ABOUT <span className="flame-text">KLU-ESPORTS</span>
+                ABOUT <span className="flame-text">KLU ESPORTS</span>
               </h1>
               <p className="text-1xl text-muted-foreground font-body max-w-2xl mx-auto">
                 From passionate gamers to the most recognized gaming community. This is our journey.
@@ -61,7 +70,10 @@ const About = () => {
         <section className="py-12">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
+              <div
+                ref={storyAnim.elementRef}
+                className={`scroll-fade-left ${storyAnim.isVisible ? 'scroll-visible' : ''}`}
+              >
                 <h2 className="font-display font-bold text-4xl mb-6 section-title">
                   THE <span className="flame-text">ORIGIN</span>
                 </h2>
@@ -84,11 +96,14 @@ const About = () => {
                   </p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div
+                ref={statsAnim.elementRef}
+                className={`grid grid-cols-2 gap-4 scroll-fade-right ${statsAnim.isVisible ? 'scroll-visible' : ''}`}
+              >
                 {stats.map((stat, index) => (
                   <div
                     key={index}
-                    className="glass-dark rounded-xl p-8 text-center border border-border hover:border-primary/40 transition-all hover:ember-glow"
+                    className="glass-dark rounded-xl p-8 text-center border border-red-600 hover:border-red-500 transition-all hover:ember-glow"
                   >
                     <div className="font-display font-bold text-4xl text-primary mb-2">
                       {stat.value}
@@ -106,7 +121,10 @@ const About = () => {
         {/* Values Section */}
         <section className="py-24 bg-card/50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
+            <div
+              ref={valuesAnim.elementRef}
+              className={`text-center mb-16 scroll-fade-up ${valuesAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
                 What We Stand For
               </span>
@@ -119,7 +137,7 @@ const About = () => {
               {values.map((value, index) => (
                 <div
                   key={index}
-                  className="glass-dark rounded-xl p-8 text-center border border-border hover:border-primary/40 transition-all group hover:ember-glow"
+                  className="glass-dark rounded-xl p-8 text-center border border-red-600 hover:border-red-500 transition-all group hover:ember-glow"
                 >
                   <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors">
                     <value.icon className="w-8 h-8 text-primary" />
@@ -140,7 +158,10 @@ const About = () => {
         <section className="py-24 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent" />
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
+            <div
+              ref={missionAnim.elementRef}
+              className={`max-w-3xl mx-auto text-center scroll-scale ${missionAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
               <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-8 ember-pulse">
                 <Target className="w-10 h-10 text-primary" />
               </div>

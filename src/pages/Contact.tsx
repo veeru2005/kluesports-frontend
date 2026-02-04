@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 import { FlameParticles } from "@/components/ui/FlameParticles";
 import { Send } from "lucide-react";
 import { z } from "zod";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import Lottie from "lottie-react";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -88,6 +90,17 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
+  const titleAnim = useScrollAnimation();
+  const formAnim = useScrollAnimation();
+  const [helpCenterAnimation, setHelpCenterAnimation] = useState<any>(null);
+
+  useEffect(() => {
+    // Load the Lottie animation from public folder
+    fetch('/Help Center.json')
+      .then(response => response.json())
+      .then(data => setHelpCenterAnimation(data))
+      .catch(err => console.error('Failed to load animation:', err));
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -160,7 +173,10 @@ const Contact = () => {
           <FlameParticles />
           <div className="absolute inset-0 hero-gradient" />
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
+            <div
+              ref={titleAnim.elementRef}
+              className={`max-w-4xl mx-auto text-center scroll-fade-up ${titleAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Get In Touch
               </span>
@@ -177,13 +193,16 @@ const Contact = () => {
         {/* Contact Section */}
         <section className="py-12">
           <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div
+              ref={formAnim.elementRef}
+              className={`grid lg:grid-cols-[1fr_1.3fr] gap-8 items-start scroll-fade-up ${formAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
               {/* Contact Form */}
-              <div className="bg-black rounded-xl p-8 border-2 border-red-600">
+              <div className="bg-black rounded-xl p-6 border-2 border-red-600 flex flex-col">
                 <h2 className="font-display font-bold text-2xl mb-6">
                   Send Us A Message
                 </h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="font-display">
@@ -244,7 +263,7 @@ const Contact = () => {
                       value={formData.message}
                       onChange={handleChange}
                       placeholder="Tell us what's on your mind..."
-                      rows={6}
+                      rows={7}
                       className={`bg-black border-2 border-red-600 rounded-lg ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none ${errors.message ? "border-destructive" : ""
                         }`}
                     />
@@ -252,6 +271,8 @@ const Contact = () => {
                       <p className="text-destructive text-sm">{errors.message}</p>
                     )}
                   </div>
+                  {/* Spacer to align bottom with right side */}
+                  <div className="flex-1"></div>
                   <Button
                     type="submit"
                     variant="flame"
@@ -272,8 +293,8 @@ const Contact = () => {
               </div>
 
               {/* Other Ways To Reach Us (Side) */}
-              <div className="space-y-8">
-                <div>
+              <div className="flex flex-col h-full">
+                <div className="mb-6">
                   <h2 className="font-display font-bold text-3xl mb-4">
                     Other Ways To Reach Us
                   </h2>
@@ -283,7 +304,19 @@ const Contact = () => {
                   </p>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
+                {/* Help Center Animation */}
+                <div className="flex-1 flex items-center justify-center mb-6">
+                  {helpCenterAnimation && (
+                    <Lottie
+                      animationData={helpCenterAnimation}
+                      loop={true}
+                      className="w-full max-w-[600px] lg:max-w-[500px] transform scale-125 sm:scale-120"
+                    />
+                  )}
+                </div>
+
+                {/* Social Media Links - Responsive Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
                     {
                       icon: GmailIcon,
@@ -312,18 +345,18 @@ const Contact = () => {
                   ].map((item, index) => (
                     <div
                       key={index}
-                      className="bg-black rounded-xl p-6 border-2 border-red-600 hover:border-red-500 transition-all group hover:-translate-y-1"
+                      className="glass-dark rounded-xl p-5 text-center border border-red-600 hover:border-red-500 transition-all group hover:ember-glow"
                     >
-                      <div className="flex flex-col items-start gap-4">
-                        <div className="w-12 h-12 rounded-lg bg-primary/30 flex items-center justify-center group-hover:bg-primary/40 transition-colors">
-                          <item.icon className="w-6 h-6" />
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                          <item.icon className="w-7 h-7" />
                         </div>
                         <div>
                           <h3 className="font-display font-semibold text-lg text-foreground mb-1">
                             {item.title}
                           </h3>
-                          <p className="text-primary font-body mb-1 text-sm">{item.value}</p>
-                          <p className="text-muted-foreground font-body text-xs">
+                          <p className="text-primary font-body mb-1 text-xs leading-tight truncate" title={item.value}>{item.value}</p>
+                          <p className="text-muted-foreground font-body text-xs leading-tight">
                             {item.description}
                           </p>
                         </div>

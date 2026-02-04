@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Trash2, Pencil } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
     Dialog,
@@ -48,6 +48,7 @@ interface Admin {
     password?: string;
     inGameName?: string;
     collegeId?: string;
+    bio?: string;
 }
 
 // Helper functions
@@ -95,14 +96,14 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
     // Filter and sort admins: exclude current user, show super admins first, then other admins
     const sortedAdmins = useMemo(() => {
         if (!admins) return [];
-        
+
         return admins
             .filter(admin => {
                 const adminId = admin.id || admin._id;
                 const userId = user?.id;
                 // Exclude current logged-in user
                 if (admin.email === user?.email || adminId === userId) return false;
-                
+
                 // Filter by game
                 if (gameFilter !== "all") {
                     return admin.game === gameFilter;
@@ -139,6 +140,10 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
             mobile: admin.mobile,
             role: admin.role,
             game: admin.game,
+            inGameName: admin.inGameName,
+            collegeId: admin.collegeId,
+            bio: admin.bio,
+            createdAt: admin.createdAt || admin.created_at,
         });
     };
 
@@ -261,28 +266,38 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="font-display text-2xl md:text-3xl font-bold">Admins</h2>
-                <Button onClick={handleAdd} size="sm" className="text-xs md:text-sm">
-                    <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                    Add Admin
+            <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4">
+                <h2 className="font-display text-2xl md:text-3xl font-bold order-1">Admins</h2>
+
+                <Button
+                    onClick={handleAdd}
+                    size="sm"
+                    className="h-10 md:h-11 px-4 whitespace-nowrap bg-red-600 hover:bg-red-700 text-white border-0 gap-2 order-2 md:order-3"
+                >
+                    <Plus className="h-4 w-4" />
+                    <span className="hidden sm:inline">Add Admin</span>
+                    <span className="sm:hidden">Add</span>
                 </Button>
+
+                <div className="w-full md:w-auto order-3 md:order-2 md:ml-auto">
+                    <Select value={gameFilter} onValueChange={setGameFilter}>
+                        <SelectTrigger className="w-full md:w-[200px] bg-black border-2 border-red-600 h-11 focus:ring-0 focus:ring-offset-0">
+                            <SelectValue placeholder="Filter by Game" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                            <SelectItem value="all" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">All Games</SelectItem>
+                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">Free Fire</SelectItem>
+                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">BGMI</SelectItem>
+                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">Valorant</SelectItem>
+                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">Call Of Duty</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
-            <div className="flex justify-end">
-                <Select value={gameFilter} onValueChange={setGameFilter}>
-                    <SelectTrigger className="w-full md:w-[200px] bg-black border-2 border-red-600 h-11 focus:ring-0 focus:ring-offset-0">
-                        <SelectValue placeholder="Filter by Game" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All Games</SelectItem>
-                        <SelectItem value="Free Fire">Free Fire</SelectItem>
-                        <SelectItem value="BGMI">BGMI</SelectItem>
-                        <SelectItem value="Valorant">Valorant</SelectItem>
-                        <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-            <div className="grid gap-3 md:gap-4">
+
+            <div
+                className="grid gap-3 md:gap-4"
+            >
                 {sortedAdmins?.map((admin) => {
                     const adminId = admin.id || admin._id || "";
                     const createdDate = admin.created_at || admin.createdAt;
@@ -298,7 +313,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                                             {admin.name ? admin.name.charAt(0).toUpperCase() : '?'}
                                         </span>
                                     </div>
-                                    <div className="flex-1 min-w-0">
+                                    <div className="relative flex-1">
                                         <h3 className="font-display font-semibold text-sm md:text-base text-foreground truncate">
                                             {admin.name}
                                         </h3>
@@ -360,7 +375,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
 
             {/* Add Admin Dialog */}
             <Dialog open={isAddingAdmin} onOpenChange={setIsAddingAdmin}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto max-w-[95vw] sm:max-w-[500px]">
+                <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-6">
                     <DialogHeader>
                         <DialogTitle>Add New Admin</DialogTitle>
                         <DialogDescription>
@@ -371,6 +386,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-name">Name *</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-name"
                                 required
                                 value={formData.name || ""}
@@ -382,6 +398,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-ingamename">In-Game Name</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-ingamename"
                                 value={(formData as any).inGameName || ""}
                                 onChange={(e) =>
@@ -392,6 +409,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-collegeid">College ID</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-collegeid"
                                 value={(formData as any).collegeId || ""}
                                 maxLength={10}
@@ -403,6 +421,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-email">Email *</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-email"
                                 type="email"
                                 required
@@ -415,6 +434,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-mobile">Mobile</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-mobile"
                                 value={formData.mobile || ""}
                                 maxLength={10}
@@ -426,6 +446,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-password">Password *</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-password"
                                 type="password"
                                 required
@@ -447,7 +468,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                                     });
                                 }}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
                                     <SelectValue placeholder="Select role" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -469,8 +490,8 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
             </Dialog>
 
             {/* Edit Admin Dialog */}
-            <Dialog open={!!editingAdmin} onOpenChange={() => setEditingAdmin(null)}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto max-w-[95vw] sm:max-w-[500px]">
+            <Dialog open={!!editingAdmin} onOpenChange={(o) => o ? null : setEditingAdmin(null)}>
+                <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-6">
                     <DialogHeader>
                         <DialogTitle>Edit Admin</DialogTitle>
                         <DialogDescription>
@@ -481,32 +502,65 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="edit-name">Name</Label>
                             <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="edit-name"
                                 value={formData.name || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, name: e.target.value })
-                                }
+                                readOnly
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="edit-email">Email</Label>
                             <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="edit-email"
                                 type="email"
                                 value={formData.email || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, email: e.target.value })
-                                }
+                                readOnly
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="edit-mobile">Mobile</Label>
                             <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="edit-mobile"
                                 value={formData.mobile || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, mobile: e.target.value })
-                                }
+                                readOnly
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="edit-ingame">In-Game Name</Label>
+                            <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                id="edit-ingame"
+                                value={formData.inGameName || ""}
+                                readOnly
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="edit-collegeid">College ID</Label>
+                            <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                id="edit-collegeid"
+                                value={formData.collegeId || ""}
+                                readOnly
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="edit-bio">Bio</Label>
+                            <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                id="edit-bio"
+                                value={formData.bio || ""}
+                                readOnly
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="edit-since">Member Since</Label>
+                            <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                id="edit-since"
+                                value={formData.createdAt ? format(new Date(formData.createdAt), "PPP") : "N/A"}
+                                readOnly
                             />
                         </div>
                         <div className="grid gap-2">
@@ -521,7 +575,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                                     });
                                 }}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
                                     <SelectValue placeholder="Select role" />
                                 </SelectTrigger>
                                 <SelectContent>

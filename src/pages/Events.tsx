@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { FlameParticles } from "@/components/ui/FlameParticles";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const placeholderEvents = [
   {
@@ -72,6 +73,10 @@ const placeholderEvents = [
 ];
 
 const Events = () => {
+  const titleAnim = useScrollAnimation();
+  const tabsAnim = useScrollAnimation();
+  const gridAnim = useScrollAnimation();
+
   const { data: events, isLoading } = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
@@ -94,7 +99,10 @@ const Events = () => {
           <FlameParticles />
           <div className="absolute inset-0 hero-gradient" />
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
+            <div
+              ref={titleAnim.elementRef}
+              className={`max-w-4xl mx-auto text-center scroll-fade-up ${titleAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Join The Battle
               </span>
@@ -112,7 +120,10 @@ const Events = () => {
         <section className="py-12">
           <div className="container mx-auto px-4">
             <Tabs defaultValue="all" className="space-y-8">
-              <div className="flex justify-center">
+              <div
+                ref={tabsAnim.elementRef}
+                className={`flex justify-center scroll-fade-up ${tabsAnim.isVisible ? 'scroll-visible' : ''}`}
+              >
                 <TabsList className="glass-dark border border-border p-1 flex flex-wrap justify-center gap-1 sm:gap-0 h-auto">
                   <TabsTrigger value="all" className="font-display px-3 sm:px-6 text-sm sm:text-base">All Events</TabsTrigger>
                   <TabsTrigger value="Free Fire" className="font-display px-3 sm:px-6 text-sm sm:text-base">Free Fire</TabsTrigger>
@@ -123,7 +134,10 @@ const Events = () => {
 
               {["all", "Free Fire", "BGMI", "Valorant"].map((tab) => (
                 <TabsContent key={tab} value={tab}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  <div
+                    ref={gridAnim.elementRef}
+                    className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 scroll-fade-up ${gridAnim.isVisible ? 'scroll-visible' : ''}`}
+                  >
                     {isLoading
                       ? [...Array(6)].map((_, i) => (
                         <div

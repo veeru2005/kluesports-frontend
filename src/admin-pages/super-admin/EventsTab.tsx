@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, Pencil } from "lucide-react";
@@ -60,6 +61,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
     });
     const { toast } = useToast();
     const queryClient = useQueryClient();
+
 
     const filteredEvents = events?.filter((event) => {
         if (gameFilter === "all") return true;
@@ -197,29 +199,37 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="font-display text-2xl md:text-3xl font-bold">Events</h2>
-                <Button onClick={handleAdd} size="sm" className="text-xs md:text-sm">
-                    <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                    Add Event
-                </Button>
-            </div>
-            <div className="flex justify-end">
-                <Select value={gameFilter} onValueChange={setGameFilter}>
-                    <SelectTrigger className="w-full md:w-[200px] bg-black border-2 border-red-600 h-11 focus:ring-0 focus:ring-offset-0">
-                        <SelectValue placeholder="Filter by Game" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All Games</SelectItem>
-                        <SelectItem value="Free Fire">Free Fire</SelectItem>
-                        <SelectItem value="BGMI">BGMI</SelectItem>
-                        <SelectItem value="Valorant">Valorant</SelectItem>
-                        <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
+            <div className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4">
+                <h2 className="font-display text-2xl md:text-3xl font-bold order-1">Events</h2>
 
-            <div className="grid gap-4">
+                <Button
+                    onClick={handleAdd}
+                    size="sm"
+                    className="h-10 md:h-11 px-4 whitespace-nowrap bg-red-600 hover:bg-red-700 text-white border-0 gap-2 order-2 md:order-3"
+                >
+                    <Plus className="h-4 w-4" />
+                    <span className="hidden sm:inline">Add Event</span>
+                    <span className="sm:hidden">Add</span>
+                </Button>
+
+                <div className="w-full md:w-auto order-3 md:order-2 md:ml-auto">
+                    <Select value={gameFilter} onValueChange={setGameFilter}>
+                        <SelectTrigger className="w-full md:w-[200px] bg-black border-2 border-red-600 h-11 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                            <SelectValue placeholder="Filter by Game" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                            <SelectItem value="all" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">All Games</SelectItem>
+                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">Free Fire</SelectItem>
+                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">BGMI</SelectItem>
+                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">Valorant</SelectItem>
+                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">Call Of Duty</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+            <div
+                className="grid gap-4"
+            >
                 {filteredEvents?.map((event) => {
                     const eventId = event.id || event._id || "";
                     return (
@@ -274,7 +284,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
             {/* Add Event Dialog */}
             <Dialog open={isAddingEvent} onOpenChange={setIsAddingEvent}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto max-w-[95vw] sm:max-w-[500px]">
+                <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-6">
                     <DialogHeader>
                         <DialogTitle>Create Event</DialogTitle>
                         <DialogDescription>
@@ -285,6 +295,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-title">Title *</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-title"
                                 value={formData.title || ""}
                                 onChange={(e) =>
@@ -295,6 +306,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-description">Description *</Label>
                             <Textarea
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-description"
                                 value={formData.description || ""}
                                 onChange={(e) =>
@@ -305,6 +317,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-date">Event Date *</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-date"
                                 type="datetime-local"
                                 value={formData.event_date || ""}
@@ -316,6 +329,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-location">Location *</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-location"
                                 value={formData.location || ""}
                                 onChange={(e) =>
@@ -326,6 +340,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-max-participants">Max Participants *</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-max-participants"
                                 type="number"
                                 value={formData.max_participants || 50}
@@ -345,7 +360,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                     setFormData({ ...formData, game: value })
                                 }
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
                                     <SelectValue placeholder="Select game" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -359,6 +374,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="add-image">Image URL</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="add-image"
                                 value={formData.image_url || ""}
                                 onChange={(e) =>
@@ -378,7 +394,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
             {/* Edit Event Dialog */}
             <Dialog open={!!editingEvent} onOpenChange={() => setEditingEvent(null)}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto max-w-[95vw] sm:max-w-[500px]">
+                <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-6">
                     <DialogHeader>
                         <DialogTitle>Edit Event</DialogTitle>
                         <DialogDescription>
@@ -389,6 +405,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="edit-title">Title</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="edit-title"
                                 value={formData.title || ""}
                                 onChange={(e) =>
@@ -399,6 +416,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="edit-description">Description</Label>
                             <Textarea
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="edit-description"
                                 value={formData.description || ""}
                                 onChange={(e) =>
@@ -409,6 +427,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="edit-date">Event Date</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="edit-date"
                                 type="datetime-local"
                                 value={formData.event_date || ""}
@@ -420,6 +439,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="edit-location">Location</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="edit-location"
                                 value={formData.location || ""}
                                 onChange={(e) =>
@@ -430,6 +450,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="edit-max-participants">Max Participants</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="edit-max-participants"
                                 type="number"
                                 value={formData.max_participants || 50}
@@ -449,7 +470,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                     setFormData({ ...formData, game: value })
                                 }
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
                                     <SelectValue placeholder="Select game" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -463,6 +484,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="edit-image">Image URL</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="edit-image"
                                 value={formData.image_url || ""}
                                 onChange={(e) =>

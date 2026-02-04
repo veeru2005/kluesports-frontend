@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Target, Zap, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const features = [
   {
@@ -22,6 +23,10 @@ const features = [
 
 export const AboutPreview = () => {
   const navigate = useNavigate();
+  const leftContent = useScrollAnimation();
+  const feature1 = useScrollAnimation();
+  const feature2 = useScrollAnimation();
+  const feature3 = useScrollAnimation();
 
   return (
     <section className="py-8 md:py-24 relative overflow-hidden">
@@ -31,7 +36,10 @@ export const AboutPreview = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left Content */}
-          <div className="fade-in-up text-center md:text-left">
+          <div
+            ref={leftContent.elementRef}
+            className={`text-center md:text-left scroll-fade-left ${leftContent.isVisible ? 'scroll-visible' : ''}`}
+          >
             <span className="font-display text-primary uppercase tracking-widest text-lg mb-0 block">
               Who We Are
             </span>
@@ -57,27 +65,30 @@ export const AboutPreview = () => {
 
           {/* Right Features */}
           <div className="space-y-6">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="glass-dark rounded-xl p-6 border border-border hover:border-primary/40 transition-all group hover:ember-glow mx-2 md:mx-0"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex gap-4 items-center">
-                  <div className="w-12 h-12 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <feature.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-display font-semibold text-2xl text-foreground mb-3">
-                      {feature.title}
-                    </h3>
-                    <p className="text-muted-foreground font-body text-xl">
-                      {feature.description}
-                    </p>
+            {[feature1, feature2, feature3].map((featureAnim, index) => {
+              const feature = features[index];
+              return (
+                <div
+                  key={index}
+                  ref={featureAnim.elementRef}
+                  className={`glass-dark rounded-xl p-6 border border-red-600 hover:border-red-500 transition-all group hover:ember-glow mx-2 md:mx-0 scroll-fade-right scroll-delay-${(index + 1) * 100} ${featureAnim.isVisible ? 'scroll-visible' : ''}`}
+                >
+                  <div className="flex gap-4 items-center">
+                    <div className="w-12 h-12 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <feature.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-display font-semibold text-2xl text-foreground mb-3">
+                        {feature.title}
+                      </h3>
+                      <p className="text-muted-foreground font-body text-xl">
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

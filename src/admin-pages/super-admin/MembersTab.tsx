@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import api from "@/utils/apiClient";
 
 interface Member {
     id: string;
@@ -44,10 +46,12 @@ interface Member {
     mobile?: string;
     full_name?: string;
     created_at?: string;
+    createdAt?: string;
     game?: string;
     gameYouPlay?: string;
     role?: string;
     user_roles?: { role: string }[];
+    bio?: string;
 }
 
 interface MembersTabProps {
@@ -55,6 +59,8 @@ interface MembersTabProps {
 }
 
 export const MembersTab = ({ members }: MembersTabProps) => {
+    // Normalize incoming members so we always have `id` (backend may return `_id`)
+    const normalizedMembers = (members || []).map((m: any) => ({ ...m, id: m.id || m._id }));
     const [gameFilter, setGameFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [editingMember, setEditingMember] = useState<Member | null>(null);
@@ -64,13 +70,14 @@ export const MembersTab = ({ members }: MembersTabProps) => {
     const queryClient = useQueryClient();
     const { user } = useAuth();
 
-    const filteredMembers = members?.filter((member) => {
+
+    const filteredMembers = normalizedMembers?.filter((member: any) => {
         // Exclude current user
         if (member.email === user?.email || member.id === user?.id) return false;
-        
+
         // Exclude all admins and super admins from members tab
         if (member.role && (member.role === 'super_admin' || member.role.startsWith('admin_'))) return false;
-        
+
         // Apply search filter
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
@@ -78,27 +85,30 @@ export const MembersTab = ({ members }: MembersTabProps) => {
             const matchesEmail = member.email?.toLowerCase().includes(query) || false;
             const matchesInGameName = member.inGameName?.toLowerCase().includes(query) || false;
             const matchesCollegeId = member.collegeId?.toLowerCase().includes(query) || false;
-            
+
             if (!matchesName && !matchesEmail && !matchesInGameName && !matchesCollegeId) {
                 return false;
             }
         }
-        
+
         // Apply game filter
         if (gameFilter === "all") return true;
         return member.game === gameFilter || member.gameYouPlay === gameFilter;
     }) || [];
 
-    const handleEdit = (member: Member) => {
-        setEditingMember(member);
+    const handleEdit = (member: any) => {
+        const normalized = { ...member, id: member.id || member._id };
+        setEditingMember(normalized);
         setFormData({
-            name: member.name,
-            username: member.username,
-            email: member.email,
-            inGameName: member.inGameName,
-            collegeId: member.collegeId,
-            mobile: member.mobile,
-            gameYouPlay: member.gameYouPlay || member.game,
+            name: normalized.name,
+            username: normalized.username,
+            email: normalized.email,
+            inGameName: normalized.inGameName,
+            collegeId: normalized.collegeId,
+            mobile: normalized.mobile,
+            gameYouPlay: normalized.gameYouPlay || normalized.game,
+            bio: normalized.bio,
+            createdAt: normalized.createdAt || normalized.created_at,
         });
     };
 
@@ -106,32 +116,21 @@ export const MembersTab = ({ members }: MembersTabProps) => {
         if (!editingMember) return;
 
         try {
-            const token = localStorage.getItem("inferno_token");
-            const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/users/${editingMember.id}`,
-                {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(formData),
-                }
-            );
-
-            if (!response.ok) throw new Error("Failed to update member");
+            const res = await api.put(`/users/${editingMember.id}`, formData);
 
             toast({
                 title: "Success",
-                description: "Member updated successfully",
+                description: res.message || "Member updated successfully",
+                variant: "success",
             });
 
             queryClient.invalidateQueries({ queryKey: ["admin-members"] });
             setEditingMember(null);
         } catch (error) {
+            const message = error?.message || "Failed to update member";
             toast({
                 title: "Error",
-                description: "Failed to update member",
+                description: message,
                 variant: "destructive",
             });
         }
@@ -157,6 +156,7 @@ export const MembersTab = ({ members }: MembersTabProps) => {
             toast({
                 title: "Success",
                 description: "Member deleted successfully",
+                variant: "success",
             });
 
             queryClient.invalidateQueries({ queryKey: ["admin-members"] });
@@ -175,13 +175,13 @@ export const MembersTab = ({ members }: MembersTabProps) => {
             {/* Desktop: All in one row */}
             <div className="hidden md:flex justify-between items-center gap-4">
                 <h2 className="font-display text-3xl font-bold whitespace-nowrap">Members</h2>
-                <div className="relative flex-1 max-w-2xl">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <div className="relative w-full md:max-w-md">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500" />
                     <Input
                         placeholder="Search by name, email, game tag, ID..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-11 w-full h-11 text-base"
+                        className="pl-11 w-full h-11 text-base bg-black border-2 border-red-600 text-white placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-[0_0_10px_rgba(220,38,38,0.1)]"
                     />
                 </div>
                 <div className="flex items-center">
@@ -217,17 +217,19 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                     </Select>
                 </div>
                 <div className="relative w-full">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-red-500" />
                     <Input
                         placeholder="Search by name, email, game tag, ID..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10 w-full h-10 text-sm"
+                        className="pl-10 w-full h-10 text-sm bg-black border-2 border-red-600 text-white placeholder:text-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-[0_0_10px_rgba(220,38,38,0.2)]"
                     />
                 </div>
             </div>
             {filteredMembers && filteredMembers.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                <div
+                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"
+                >
                     {filteredMembers?.map((member) => (
                         <div
                             key={member.id}
@@ -247,7 +249,7 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                                         {member.email}
                                     </p>
                                     {member.collegeId && (
-                                        <p className="text-white text-[11px] font-display bg-muted/10 py-0.5 px-2 md:px-3 rounded-md border border-white/80 mt-1">
+                                        <p className="text-white text-[10px] md:text-sm font-display font-bold bg-red-600/10 py-1 px-4 md:px-6 rounded-md border border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.1)] tracking-widest mt-1.5">
                                             {member.collegeId}
                                         </p>
                                     )}
@@ -291,8 +293,8 @@ export const MembersTab = ({ members }: MembersTabProps) => {
             )}
 
             {/* Edit Dialog */}
-            <Dialog open={!!editingMember} onOpenChange={() => setEditingMember(null)}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto max-w-[95vw] sm:max-w-[500px]">
+            <Dialog open={!!editingMember} onOpenChange={(o) => o ? null : setEditingMember(null)}>
+                <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-6">
                     <DialogHeader>
                         <DialogTitle>Edit Member</DialogTitle>
                         <DialogDescription>
@@ -303,72 +305,92 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="name">Name</Label>
                             <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="name"
                                 value={formData.name || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, name: e.target.value })
-                                }
+                                readOnly
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="email"
                                 type="email"
                                 value={formData.email || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, email: e.target.value })
-                                }
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="inGameName">In-Game Name</Label>
                             <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="inGameName"
                                 value={formData.inGameName || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, inGameName: e.target.value })
-                                }
+                                readOnly
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="collegeId">College ID</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="collegeId"
                                 value={formData.collegeId || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, collegeId: e.target.value })
-                                }
+                                onChange={(e) => setFormData({ ...formData, collegeId: e.target.value })}
                             />
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="mobile">Mobile</Label>
                             <Input
+                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="mobile"
                                 value={formData.mobile || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, mobile: e.target.value })
-                                }
+                                onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                             />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="gameYouPlay">Game</Label>
-                            <Select
-                                value={formData.gameYouPlay || ""}
-                                onValueChange={(value) =>
-                                    setFormData({ ...formData, gameYouPlay: value })
-                                }
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select game" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="Free Fire">Free Fire</SelectItem>
-                                    <SelectItem value="BGMI">BGMI</SelectItem>
-                                    <SelectItem value="Valorant">Valorant</SelectItem>
-                                    <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <Label htmlFor="gameYouPlay">Game Assignment</Label>
+                            {user?.role === 'super_admin' ? (
+                                <Select
+                                    value={formData.gameYouPlay || 'Free Fire'}
+                                    onValueChange={(val) => setFormData({ ...formData, gameYouPlay: val })}
+                                >
+                                    <SelectTrigger className="bg-black border-0 h-10 rounded-md px-3">
+                                        <SelectValue placeholder="Select game" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Free Fire">Free Fire</SelectItem>
+                                        <SelectItem value="BGMI">BGMI</SelectItem>
+                                        <SelectItem value="Valorant">Valorant</SelectItem>
+                                        <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            ) : (
+                                <Input
+                                    className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    id="gameYouPlay"
+                                    value={formData.gameYouPlay || ""}
+                                    readOnly
+                                />
+                            )}
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="bio">Bio</Label>
+                            <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                id="bio"
+                                value={formData.bio || ""}
+                                readOnly
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="memberSince">Member Since</Label>
+                            <Input
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                id="memberSince"
+                                value={formData.createdAt ? format(new Date(formData.createdAt), "PPP") : "N/A"}
+                                readOnly
+                            />
                         </div>
                     </div>
                     <DialogFooter className="flex-row gap-2">

@@ -478,6 +478,85 @@
     }
   }
 
+  /* Scroll animations - these trigger when element enters viewport */
+  .scroll-hidden {
+    opacity: 0;
+    transition: none;
+  }
+
+  .scroll-visible {
+    animation-fill-mode: forwards;
+  }
+
+  /* Fade in from bottom */
+  .scroll-fade-up {
+    transform: translateY(50px);
+    opacity: 0;
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .scroll-fade-up.scroll-visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* Fade in from left */
+  .scroll-fade-left {
+    transform: translateX(-50px);
+    opacity: 0;
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .scroll-fade-left.scroll-visible {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  /* Fade in from right */
+  .scroll-fade-right {
+    transform: translateX(50px);
+    opacity: 0;
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .scroll-fade-right.scroll-visible {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  /* Scale up fade in */
+  .scroll-scale {
+    transform: scale(0.9);
+    opacity: 0;
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .scroll-scale.scroll-visible {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  /* Stagger delay utilities for scroll animations */
+  .scroll-delay-100 {
+    transition-delay: 0.1s;
+  }
+
+  .scroll-delay-200 {
+    transition-delay: 0.2s;
+  }
+
+  .scroll-delay-300 {
+    transition-delay: 0.3s;
+  }
+
+  .scroll-delay-400 {
+    transition-delay: 0.4s;
+  }
+
+  .scroll-delay-500 {
+    transition-delay: 0.5s;
+  }
+
   /* Stagger children animation */
   .stagger-children>* {
     opacity: 0;
