@@ -205,6 +205,7 @@
   }
 
   @keyframes action-icon {
+
     0%,
     100% {
       transform: translateY(0) scale(1);
@@ -227,6 +228,7 @@
   }
 
   @keyframes action-label {
+
     0%,
     45%,
     100% {
@@ -246,6 +248,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+
     .action-cycle-icon,
     .action-cycle-label {
       animation: none !important;
@@ -282,6 +285,7 @@
   }
 
   @keyframes action-swap-a {
+
     /* View */
     0%,
     40% {
@@ -306,6 +310,7 @@
   }
 
   @keyframes action-swap-b {
+
     /* Edit */
     0%,
     40% {
@@ -330,6 +335,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+
     .action-swap-a,
     .action-swap-b {
       animation: none !important;
@@ -631,6 +637,7 @@
 
   /* Custom flaming cursor (desktop only) */
   @media (hover: hover) and (pointer: fine) {
+
     html.flame-cursor-enabled,
     html.flame-cursor-enabled * {
       cursor: none !important;
@@ -682,6 +689,7 @@
     }
 
     @keyframes flame-cursor-flicker-ring {
+
       0%,
       100% {
         filter: saturate(1.05) brightness(1);
@@ -695,6 +703,7 @@
     }
 
     @keyframes flame-cursor-flicker-dot {
+
       0%,
       100% {
         filter: saturate(1.2) brightness(1);

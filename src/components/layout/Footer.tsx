@@ -19,7 +19,7 @@ export const Footer = () => {
                 className="w-12 h-12 rounded-full border border-red-600/50 drop-shadow-[0_0_15px_rgba(220,38,38,0.3)]"
               />
               <div className="flex flex-col">
-                <span className="font-display font-bold text-xl flame-text tracking-wide">
+                <span className="font-display font-bold text-xl flame-text leading-none">
                   KLU ESPORTS
                 </span>
                 <span className="text-xs text-white font-medium uppercase leading-tight tracking-[0.07em]">

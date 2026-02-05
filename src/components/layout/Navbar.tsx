@@ -82,7 +82,7 @@ export const Navbar = () => {
                 <span className="font-display font-bold text-2xl flame-text leading-none">
                   KLU ESPORTS
                 </span>
-                <span className="text-xs text-white font-medium uppercase leading-tight tracking-[0.16em]">
+                <span className="text-sm text-white font-medium uppercase leading-tight tracking-[0.09em]">
                   Gaming Community
                 </span>
               </div>
