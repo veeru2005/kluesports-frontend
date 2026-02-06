@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,9 @@ import { FlameParticles } from "@/components/ui/FlameParticles";
 import { Send } from "lucide-react";
 import { z } from "zod";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import Lottie from "lottie-react";
+
+// Lazy load Lottie for better performance
+const Lottie = lazy(() => import("lottie-react"));
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -165,7 +167,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
       <main className="pt-20">
         {/* Hero Section */}
@@ -307,11 +309,13 @@ const Contact = () => {
                 {/* Help Center Animation */}
                 <div className="flex-1 flex items-center justify-center mb-6">
                   {helpCenterAnimation && (
-                    <Lottie
-                      animationData={helpCenterAnimation}
-                      loop={true}
-                      className="w-full max-w-[600px] lg:max-w-[500px] transform scale-125 sm:scale-120"
-                    />
+                    <Suspense fallback={<div className="w-full max-w-[400px] md:max-w-[500px] h-64 flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+                      <Lottie
+                        animationData={helpCenterAnimation}
+                        loop={true}
+                        className="w-full max-w-[400px] md:max-w-[500px]"
+                      />
+                    </Suspense>
                   )}
                 </div>
 

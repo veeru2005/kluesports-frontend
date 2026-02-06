@@ -1,12 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/home/HeroSection";
-import { AboutPreview } from "@/components/home/AboutPreview";
-import { EventsPreview } from "@/components/home/EventsPreview";
-import { CTASection } from "@/components/home/CTASection";
 import { useAuth } from "@/contexts/AuthContext";
+
+// Lazy load below-the-fold components for better performance
+const AboutPreview = lazy(() => import("@/components/home/AboutPreview").then(m => ({ default: m.AboutPreview })));
+const EventsPreview = lazy(() => import("@/components/home/EventsPreview").then(m => ({ default: m.EventsPreview })));
+const CTASection = lazy(() => import("@/components/home/CTASection").then(m => ({ default: m.CTASection })));
+const Footer = lazy(() => import("@/components/layout/Footer").then(m => ({ default: m.Footer })));
+
+// Simple loading placeholder
+const SectionLoader = () => (
+  <div className="w-full py-24 flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const Index = () => {
   const { user, role, isLoading } = useAuth();
@@ -34,11 +43,19 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
-        <AboutPreview />
-        <EventsPreview />
-        <CTASection />
+        <Suspense fallback={<SectionLoader />}>
+          <AboutPreview />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <EventsPreview />
+        </Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <CTASection />
+        </Suspense>
       </main>
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
     </div>
   );
 };

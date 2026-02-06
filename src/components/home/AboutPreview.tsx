@@ -40,12 +40,12 @@ export const AboutPreview = () => {
             ref={leftContent.elementRef}
             className={`text-center md:text-left scroll-fade-left ${leftContent.isVisible ? 'scroll-visible' : ''}`}
           >
-            <span className="font-display text-primary uppercase tracking-widest text-lg mb-0 block">
+            <span className="font-display text-red-500 uppercase tracking-widest text-lg mb-0 block">
               Who We Are
             </span>
-            <h2 className="font-display font-bold text-5xl md:text-7xl mb-8 relative inline-block after:content-[''] after:absolute after:-bottom-2 after:w-[60px] after:h-[3px] after:bg-gradient-to-r after:from-[hsl(0,85%,50%)] after:to-transparent after:left-1/2 after:-translate-x-1/2 md:after:left-0 md:after:translate-x-0">
+            <h1 className="font-display font-bold text-5xl md:text-7xl mb-8 relative inline-block after:content-[''] after:absolute after:-bottom-2 after:w-[60px] after:h-[3px] after:bg-gradient-to-r after:from-[hsl(0,85%,50%)] after:to-transparent after:left-1/2 after:-translate-x-1/2 md:after:left-0 md:after:translate-x-0">
               BORN TO <span className="flame-text">DOMINATE</span>
-            </h2>
+            </h1>
             <p className="text-muted-foreground font-body text-xl md:text-2xl leading-relaxed mb-6 md:mb-10">
               KLU-Esports isn't just a gaming club—it's a movement. Founded by elite
               players who believe that gaming is more than entertainment, it's a
@@ -78,9 +78,9 @@ export const AboutPreview = () => {
                       <feature.icon className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-display font-semibold text-2xl text-foreground mb-3">
+                      <h2 className="font-display font-semibold text-2xl text-foreground mb-3">
                         {feature.title}
-                      </h3>
+                      </h2>
                       <p className="text-muted-foreground font-body text-xl">
                         {feature.description}
                       </p>
