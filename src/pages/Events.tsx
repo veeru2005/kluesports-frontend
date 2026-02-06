@@ -2,7 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useQuery } from "@tanstack/react-query";
 import { mockEvents } from "@/lib/mock-data";
-import { Calendar, MapPin, Users, Clock, X } from "lucide-react";
+import { Calendar, MapPin, Users, Clock, X, Gamepad2 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { FlameParticles } from "@/components/ui/FlameParticles";
@@ -285,10 +285,23 @@ const Events = () => {
                 return (
                   <TabsContent key={tab} value={tab} className="outline-none">
                     {isLoading ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {[...Array(3)].map((_, i) => (
-                          <div key={i} className="glass-dark rounded-xl h-[400px] animate-pulse" />
-                        ))}
+                      <div className="flex flex-col items-center justify-center py-20 gap-3">
+                        <div className="relative w-16 h-16">
+                          {/* Rotating dashed circle */}
+                          <div
+                            className="absolute inset-0 rounded-full animate-spin"
+                            style={{
+                              border: '3px dashed',
+                              borderColor: 'hsl(0, 85%, 50%)',
+                              animationDuration: '2s'
+                            }}
+                          />
+                          {/* Game icon in center */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Gamepad2 className="w-7 h-7 text-primary" />
+                          </div>
+                        </div>
+                        <p className="text-lg font-display flame-text tracking-wider">Loading...</p>
                       </div>
                     ) : upcoming.length > 0 ? (
                       <div
@@ -300,7 +313,7 @@ const Events = () => {
                       </div>
                     ) : (
                       <div className="col-span-full py-20 text-center glass-dark rounded-xl border-2 border-red-600">
-                        <Calendar className="w-16 h-16 text-red-500 mx-auto mb-4" />
+                        <Calendar className="w-16 h-16 text-primary mx-auto mb-4" />
                         <h3 className="text-white font-display text-2xl uppercase tracking-widest mb-2">No Upcoming Battles</h3>
                         <p className="text-muted-foreground font-body max-w-md mx-auto">
                           No {tab === "all" ? "" : tab} events currently scheduled. Check back soon for new tournaments!
@@ -315,7 +328,7 @@ const Events = () => {
         </section>
 
         {/* Conducted Events Section */}
-        <section className="py-24">
+        <section className="pt-12 pb-24">
           <div className="container mx-auto px-4">
             <div
               ref={conductedHeaderAnim.elementRef}
@@ -355,8 +368,12 @@ const Events = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="col-span-full py-16 text-center glass-dark rounded-xl border border-white/5">
-                        <p className="text-muted-foreground font-display uppercase tracking-widest opacity-50">No completed {tab === "all" ? "" : tab} events found</p>
+                      <div className="col-span-full py-20 text-center glass-dark rounded-xl border-2 border-red-600">
+                        <Calendar className="w-16 h-16 text-primary mx-auto mb-4" />
+                        <h3 className="text-white font-display text-2xl uppercase tracking-widest mb-2">No Events Completed</h3>
+                        <p className="text-muted-foreground font-body max-w-md mx-auto">
+                          No {tab === "all" ? "" : tab} events have been completed yet. Stay tuned for results!
+                        </p>
                       </div>
                     )}
                   </TabsContent>

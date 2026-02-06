@@ -104,7 +104,7 @@ export const EventsPreview = () => {
             })
           ) : (
             <div className="col-span-full md:col-span-2 lg:col-span-3 w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
-              <Calendar className="w-16 h-16 text-red-500 mx-auto mb-4" />
+              <Calendar className="w-16 h-16 text-primary mx-auto mb-4"/>
               <h3 className="text-xl font-bold text-white font-display mb-2">No Upcoming Events</h3>
               <p className="text-white/60 font-body">
                 The battlefield is quiet for now. Stay tuned for upcoming tournaments and matches!
