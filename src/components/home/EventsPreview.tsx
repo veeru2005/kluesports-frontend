@@ -14,41 +14,27 @@ export const EventsPreview = () => {
   const event3Anim = useScrollAnimation();
 
   const { data: events, isLoading } = useQuery({
-    queryKey: ["upcoming-events"],
+    queryKey: ["home-upcoming-events"],
     queryFn: async () => {
-      await new Promise(r => setTimeout(r, 500));
-      return mockEvents.slice(0, 3);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events`);
+        if (!response.ok) throw new Error("Failed to fetch events");
+        const data = await response.json();
+
+        // Filter future events and sort by date
+        const upcoming = data
+          .filter((e: any) => new Date(e.event_date) > new Date())
+          .sort((a: any, b: any) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
+
+        return upcoming.slice(0, 3);
+      } catch (error) {
+        console.error("Error fetching homepage events:", error);
+        return [];
+      }
     },
   });
 
-  const placeholderEvents = [
-    {
-      id: "1",
-      title: "Championship Finals",
-      description: "The ultimate showdown between top contenders",
-      event_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      location: "Online Arena",
-      max_participants: 64,
-    },
-    {
-      id: "2",
-      title: "Weekly Warzone",
-      description: "Battle royale mayhem every weekend",
-      event_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-      location: "Discord Server",
-      max_participants: 100,
-    },
-    {
-      id: "3",
-      title: "Pro League Qualifiers",
-      description: "Your chance to join the elite ranks",
-      event_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-      location: "Main Stage",
-      max_participants: 32,
-    },
-  ];
-
-  const displayEvents = events?.length ? events : placeholderEvents;
+  const displayEvents = events || [];
 
   return (
     <section className="py-24 bg-card/50">
@@ -66,14 +52,15 @@ export const EventsPreview = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {isLoading
-            ? [...Array(3)].map((_, i) => (
+          {isLoading ? (
+            [...Array(3)].map((_, i) => (
               <div
                 key={i}
                 className="glass-dark rounded-xl h-64 animate-pulse"
               />
             ))
-            : displayEvents.map((event, index) => {
+          ) : displayEvents.length > 0 ? (
+            displayEvents.map((event, index) => {
               const eventAnims = [event1Anim, event2Anim, event3Anim];
               const eventAnim = eventAnims[index] || { elementRef: null, isVisible: false };
               return (
@@ -114,7 +101,16 @@ export const EventsPreview = () => {
                   </div>
                 </div>
               );
-            })}
+            })
+          ) : (
+            <div className="col-span-full md:col-span-2 lg:col-span-3 w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
+              <Calendar className="w-16 h-16 text-red-500 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-white font-display mb-2">No Upcoming Events</h3>
+              <p className="text-white/60 font-body">
+                The battlefield is quiet for now. Stay tuned for upcoming tournaments and matches!
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="text-center mt-12">

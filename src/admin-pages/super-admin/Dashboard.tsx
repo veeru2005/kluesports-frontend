@@ -192,10 +192,10 @@ const SuperAdminDashboard = () => {
                                 <div
                                     className="relative z-10 space-y-4 md:space-y-8 px-4"
                                 >
-                                    <div className="inline-block px-4 md:px-6 py-2 md:py-3 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-sm">
+                                    <div className="inline-block px-4 md:px-6 py-2 md:py-3 rounded-full border-2 border-red-600 bg-black backdrop-blur-sm transition-all duration-300 hover:bg-red-600 group cursor-default">
                                         <div className="flex items-center gap-2 md:gap-3">
-                                            <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-                                            <span className="text-red-200 text-xs md:text-base font-medium tracking-widest uppercase">Super Admin Dashboard</span>
+                                            <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:text-white transition-colors" />
+                                            <span className="text-white text-xs md:text-base font-medium tracking-widest uppercase group-hover:text-white transition-colors">Super Admin Dashboard</span>
                                         </div>
                                     </div>
 
@@ -317,12 +317,12 @@ const SuperAdminDashboard = () => {
 
                                         {/* Day Select */}
                                         <Select value={dayFilter} onValueChange={setDayFilter}>
-                                            <SelectTrigger className="w-[65px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
+                                            <SelectTrigger className="w-[65px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                                                 <SelectValue placeholder="Day" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-black border-2 border-red-600 rounded-lg max-h-[200px]">
                                                 {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                                                    <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                    <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600 focus:bg-red-600 focus:text-white data-[state=checked]:bg-red-600 data-[state=checked]:text-white text-xs md:text-sm cursor-pointer">
                                                         {day}
                                                     </SelectItem>
                                                 ))}
@@ -331,12 +331,12 @@ const SuperAdminDashboard = () => {
 
                                         {/* Month Select */}
                                         <Select value={monthFilter} onValueChange={setMonthFilter}>
-                                            <SelectTrigger className="w-[90px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
+                                            <SelectTrigger className="w-[90px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                                                 <SelectValue placeholder="Month" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
                                                 {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((m, idx) => (
-                                                    <SelectItem key={m} value={m} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                    <SelectItem key={m} value={m} className="text-white hover:bg-red-600 focus:bg-red-600 focus:text-white data-[state=checked]:bg-red-600 data-[state=checked]:text-white text-xs md:text-sm cursor-pointer">
                                                         {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][idx]}
                                                     </SelectItem>
                                                 ))}
@@ -345,12 +345,12 @@ const SuperAdminDashboard = () => {
 
                                         {/* Year Select */}
                                         <Select value={yearFilter} onValueChange={setYearFilter}>
-                                            <SelectTrigger className="w-[75px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
+                                            <SelectTrigger className="w-[75px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                                                 <SelectValue placeholder="Year" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
                                                 {["2024", "2025", "2026", "2027", "2028"].map((year) => (
-                                                    <SelectItem key={year} value={year} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                    <SelectItem key={year} value={year} className="text-white hover:bg-red-600 focus:bg-red-600 focus:text-white data-[state=checked]:bg-red-600 data-[state=checked]:text-white text-xs md:text-sm cursor-pointer">
                                                         {year}
                                                     </SelectItem>
                                                 ))}
@@ -386,53 +386,62 @@ const SuperAdminDashboard = () => {
                                             const yearMatch = !yearFilter || msgYear === yearFilter;
 
                                             return dayMatch && monthMatch && yearMatch;
-                                        }).map((msg: any) => (
-                                            <div
-                                                key={msg._id || msg.id}
-                                                className="bg-black rounded-xl p-4 md:p-6 border-2 border-red-600 hover:border-red-500 transition-all flex flex-col"
-                                            >
-                                                {/* Date and Delete at top */}
-                                                <div className="flex justify-between items-center mb-4">
-                                                    <span className="text-xs text-white bg-red-600 px-3 py-1.5 rounded font-medium">
-                                                        {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}
-                                                    </span>
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() => setMessageToDelete(msg._id || msg.id)}
-                                                        disabled={deletingMessageId === (msg._id || msg.id)}
-                                                        className="gap-1 border-red-600 text-red-500 hover:bg-red-600 hover:text-white"
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                        Delete
-                                                    </Button>
-                                                </div>
-
-                                                {/* Sender info */}
-                                                <div className="space-y-1 mb-4">
-                                                    <p className="text-sm text-muted-foreground">
-                                                        <span className="text-red-500 font-semibold">From:</span> {msg.name}
-                                                    </p>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        <span className="text-red-500 font-semibold">Email:</span> {msg.email}
-                                                    </p>
-                                                </div>
-
-                                                {/* Message content */}
-                                                <div className="border-t border-red-600 pt-4 space-y-3 flex-1">
-                                                    <div>
-                                                        <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Subject</p>
-                                                        <h3 className="font-display font-semibold text-lg text-white">
-                                                            {msg.subject || "No Subject"}
-                                                        </h3>
+                                        }).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                                            .map((msg: any) => (
+                                                <div
+                                                    key={msg._id || msg.id}
+                                                    className="bg-black rounded-xl p-4 md:p-6 border-2 border-red-600 hover:border-red-500 transition-all flex flex-col"
+                                                >
+                                                    {/* Date and Delete at top */}
+                                                    <div className="flex justify-between items-center mb-4">
+                                                        <span className="text-xs text-white bg-red-600 px-3 py-1.5 rounded font-medium">
+                                                            {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}
+                                                        </span>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={() => setMessageToDelete(msg._id || msg.id)}
+                                                            disabled={deletingMessageId === (msg._id || msg.id)}
+                                                            className="gap-1 border-red-600 text-red-500 hover:bg-red-600 hover:text-white"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                            Delete
+                                                        </Button>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Message</p>
-                                                        <p className="text-sm text-foreground whitespace-pre-wrap">{msg.message}</p>
+
+                                                    {/* Sender info */}
+                                                    <div className="space-y-1 mb-4">
+                                                        <p className="text-sm text-muted-foreground">
+                                                            <span className="text-red-500 font-semibold">From:</span> {msg.name}
+                                                        </p>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            <span className="text-red-500 font-semibold">Email:</span> {msg.email}
+                                                        </p>
+                                                    </div>
+
+                                                    {/* Message content */}
+                                                    <div className="border-t border-red-600 pt-4 space-y-3 flex-1">
+                                                        <div>
+                                                            <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Subject</p>
+                                                            <h3 className="font-display font-semibold text-lg text-white">
+                                                                {msg.subject || "No Subject"}
+                                                            </h3>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Message</p>
+                                                            <p className="text-sm text-foreground whitespace-pre-wrap">{msg.message}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                            ))}
+                                        {(!messages || messages.length === 0) && (
+                                            <div className="col-span-full w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
+                                                <h3 className="text-xl font-bold text-white font-display mb-2">No Messages Found</h3>
+                                                <p className="text-white/60 font-body">
+                                                    No messages found.
+                                                </p>
                                             </div>
-                                        ))}
+                                        )}
                                     </div>
                                 </div>
                             </div>

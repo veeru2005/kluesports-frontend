@@ -18,6 +18,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    DialogClose,
 } from "@/components/ui/dialog";
 import {
     Select,
@@ -136,7 +137,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
         },
     });
 
-    const filteredMembers = members?.filter((m: any) => {
+    const filteredMembers = (members?.filter((m: any) => {
         // Exclude current user
         if (m.email === user?.email || m.id === user?.id) return false;
 
@@ -151,11 +152,19 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
             (m.name && m.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
             (m.email && m.email.toLowerCase().includes(searchQuery.toLowerCase()));
         return matchesGame && matchesSearch;
-    }) || [];
+    }) || []).sort((a: any, b: any) => {
+        const dateA = new Date(a.createdAt || a.created_at || 0).getTime();
+        const dateB = new Date(b.createdAt || b.created_at || 0).getTime();
+        return dateB - dateA;
+    });
 
     const filteredEvents = (events?.filter((e: any) => {
         return gameFilter === "all" ? e.game === game : e.game === gameFilter;
-    }) || []).sort((a: any, b: any) => new Date(b.event_date).getTime() - new Date(a.event_date).getTime());
+    }) || []).sort((a: any, b: any) => {
+        const dateA = new Date(a.createdAt || a.created_at || a.event_date).getTime();
+        const dateB = new Date(b.createdAt || b.created_at || b.event_date).getTime();
+        return dateB - dateA;
+    });
 
     const createEventMutation = useMutation({
         mutationFn: async (eventData: typeof newEvent & { game: string }) => {
@@ -303,10 +312,10 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                 <div
                                     className="relative z-10 space-y-4 md:space-y-8 px-4"
                                 >
-                                    <div className="inline-block px-4 md:px-6 py-2 md:py-3 rounded-full border border-primary/30 bg-primary/10 backdrop-blur-sm">
+                                    <div className="inline-block px-4 md:px-6 py-2 md:py-3 rounded-full border-2 border-red-600 bg-black backdrop-blur-sm transition-all duration-300 hover:bg-red-600 group cursor-default">
                                         <div className="flex items-center gap-2 md:gap-3">
-                                            <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-                                            <span className="text-red-200 text-xs md:text-base font-medium tracking-widest uppercase">{game} Admin Dashboard</span>
+                                            <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:text-white transition-colors" />
+                                            <span className="text-white text-xs md:text-base font-medium tracking-widest uppercase group-hover:text-white transition-colors">{game} Admin Dashboard</span>
                                         </div>
                                     </div>
 
@@ -642,11 +651,9 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                     </div>
 
                                     {!filteredMembers?.length && (
-                                        <div className="flex flex-col items-center justify-center min-h-[50vh] w-full">
-                                            <div className="p-8 rounded-full bg-muted/10 mb-4">
-                                                <Search className="w-8 h-8 text-muted-foreground" />
-                                            </div>
-                                            <p className="text-muted-foreground text-xl font-display">
+                                        <div className="col-span-full w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
+                                            <h3 className="text-xl font-bold text-white font-display mb-2">No Members Found</h3>
+                                            <p className="text-white/60 font-body">
                                                 No members found for {game}.
                                             </p>
                                         </div>
@@ -662,6 +669,26 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                     <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
                                         <h2 className="font-display font-semibold text-2xl">Manage Events</h2>
                                         <div className="flex gap-3 items-center ml-auto">
+                                            <Button
+                                                variant="flame"
+                                                className="gap-2"
+                                                onClick={() => {
+                                                    setNewEvent({
+                                                        id: "",
+                                                        title: "",
+                                                        description: "",
+                                                        event_date: "",
+                                                        end_time: "",
+                                                        location: "",
+                                                        max_participants: "",
+                                                        image_url: ""
+                                                    });
+                                                    setEventDialogOpen(true);
+                                                }}
+                                            >
+                                                <Plus className="w-4 h-4" />
+                                                Add Event
+                                            </Button>
                                             <Dialog open={eventDialogOpen} onOpenChange={(open) => {
                                                 setEventDialogOpen(open);
                                                 if (!open) {
@@ -677,12 +704,6 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                     });
                                                 }
                                             }}>
-                                                <DialogTrigger asChild>
-                                                    <Button variant="flame" className="gap-2">
-                                                        <Plus className="w-4 h-4" />
-                                                        Add Event
-                                                    </Button>
-                                                </DialogTrigger>
                                                 <DialogContent className="w-[95vw] sm:max-w-[600px] bg-black border-2 border-red-600 rounded-xl max-h-[90vh] overflow-y-auto [&>button]:hidden">
                                                     <DialogHeader>
                                                         <DialogTitle className="font-display text-2xl">
@@ -721,61 +742,46 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             onChange={async (e) => {
                                                                                 const file = e.target.files?.[0];
                                                                                 if (file) {
-                                                                                    // Validate image is square (1:1 aspect ratio)
-                                                                                    const img = new Image();
-                                                                                    img.onload = async () => {
-                                                                                        if (img.width === img.height) {
-                                                                                            // Upload to Cloudinary
-                                                                                            try {
-                                                                                                toast({
-                                                                                                    title: "Uploading...",
-                                                                                                    description: "Please wait while we upload your image.",
-                                                                                                });
+                                                                                    try {
+                                                                                        toast({
+                                                                                            title: "Uploading...",
+                                                                                            description: "Please wait while we upload your image.",
+                                                                                        });
 
-                                                                                                const formData = new FormData();
-                                                                                                formData.append('image', file);
+                                                                                        const formData = new FormData();
+                                                                                        formData.append('image', file);
 
-                                                                                                const token = localStorage.getItem("inferno_token");
-                                                                                                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/upload/event-image`, {
-                                                                                                    method: 'POST',
-                                                                                                    headers: {
-                                                                                                        'Authorization': `Bearer ${token}`
-                                                                                                    },
-                                                                                                    body: formData,
-                                                                                                });
+                                                                                        const token = localStorage.getItem("inferno_token");
+                                                                                        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/upload/event-image`, {
+                                                                                            method: 'POST',
+                                                                                            headers: {
+                                                                                                'Authorization': `Bearer ${token}`
+                                                                                            },
+                                                                                            body: formData,
+                                                                                        });
 
-                                                                                                if (!response.ok) {
-                                                                                                    throw new Error('Failed to upload image');
-                                                                                                }
-
-                                                                                                const data = await response.json();
-                                                                                                setNewEvent({ ...newEvent, image_url: data.url });
-
-                                                                                                toast({
-                                                                                                    title: "Success",
-                                                                                                    description: "Image uploaded successfully!",
-                                                                                                    variant: "success"
-                                                                                                });
-                                                                                            } catch (error) {
-                                                                                                console.error('Upload error:', error);
-                                                                                                toast({
-                                                                                                    title: "Upload Failed",
-                                                                                                    description: "Failed to upload image. Please try again.",
-                                                                                                    variant: "destructive",
-                                                                                                });
-                                                                                                e.target.value = '';
-                                                                                            }
-                                                                                        } else {
-                                                                                            toast({
-                                                                                                title: "Invalid Image Dimensions",
-                                                                                                description: `Image must be square (1:1 ratio). Your image is ${img.width}×${img.height}px. Please use a 1080×1080px image.`,
-                                                                                                variant: "destructive",
-                                                                                            });
-                                                                                            // Reset the file input
-                                                                                            e.target.value = '';
+                                                                                        if (!response.ok) {
+                                                                                            const errorData = await response.json().catch(() => ({}));
+                                                                                            throw new Error(errorData.message || 'Failed to upload image');
                                                                                         }
-                                                                                    };
-                                                                                    img.src = URL.createObjectURL(file);
+
+                                                                                        const data = await response.json();
+                                                                                        setNewEvent({ ...newEvent, image_url: data.url });
+
+                                                                                        toast({
+                                                                                            title: "Success",
+                                                                                            description: "Image uploaded successfully!",
+                                                                                            variant: "success"
+                                                                                        });
+                                                                                    } catch (error: any) {
+                                                                                        console.error('Upload error:', error);
+                                                                                        toast({
+                                                                                            title: "Upload Failed",
+                                                                                            description: error.message || "Failed to upload image. Please try again.",
+                                                                                            variant: "destructive",
+                                                                                        });
+                                                                                        e.target.value = '';
+                                                                                    }
                                                                                 }
                                                                             }}
                                                                         />
@@ -789,7 +795,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             Choose File
                                                                         </Button>
                                                                     </div>
-                                                                    <p className="text-xs text-muted-foreground mt-2">Recommended: 1080×1080px (square image)</p>
+
                                                                 </div>
                                                                 {newEvent.image_url && (
                                                                     <div className="flex-shrink-0 relative group">
@@ -1048,62 +1054,86 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                                     >
                                         {filteredEvents?.map((event) => (
-                                            <div
-                                                key={event.id}
-                                                className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group flex flex-col h-full"
-                                            >
-                                                <div className="aspect-square w-full bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden flex items-center justify-center border-b border-border/50">
-                                                    {event.image_url ? (
-                                                        <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
-                                                    ) : (
-                                                        <div className="text-center p-6">
-                                                            <div className="text-primary font-display font-bold text-4xl mb-2">
-                                                                {format(new Date(event.event_date), "dd")}
-                                                            </div>
-                                                            <div className="text-muted-foreground font-display text-xl uppercase tracking-widest">
-                                                                {format(new Date(event.event_date), "MMM yyyy")}
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                <div className="p-6 flex flex-col flex-grow">
-                                                    <h3 className="font-display font-bold text-2xl text-foreground group-hover:text-primary transition-colors mb-3 line-clamp-2">
-                                                        {event.title}
-                                                    </h3>
-                                                    <p className="text-muted-foreground font-body mb-6 line-clamp-3 text-sm">
-                                                        {event.description || "No description provided."}
-                                                    </p>
-
-                                                    <div className="mt-auto space-y-4">
-                                                        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-                                                            <div className="flex items-center gap-2">
-                                                                <Calendar className="w-4 h-4 text-primary" />
-                                                                {format(new Date(event.event_date), "PPP")}
-                                                            </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <Clock className="w-4 h-4 text-primary" />
-                                                                {format(new Date(event.event_date), "h:mm a")} {event.end_time && `- ${format(new Date(event.end_time), "h:mm a")}`}
-                                                            </div>
-                                                            {event.location && (
-                                                                <div className="flex items-center gap-2">
-                                                                    <MapPin className="w-4 h-4 text-primary" />
-                                                                    {event.location}
+                                            <Dialog key={event.id || event._id}>
+                                                <DialogTrigger asChild>
+                                                    <div className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group hover:ember-glow flex flex-col h-full cursor-pointer relative w-[90%] mx-auto">
+                                                        <div className="aspect-[4/5] w-full bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden flex items-center justify-center border-b border-border/50">
+                                                            {event.image_url ? (
+                                                                <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
+                                                            ) : (
+                                                                <div className="text-center p-6 flex flex-col items-center justify-center h-full w-full bg-black/40">
+                                                                    <div className="text-primary font-display font-bold text-4xl mb-2">
+                                                                        {format(new Date(event.event_date), "dd")}
+                                                                    </div>
+                                                                    <div className="text-muted-foreground font-display text-xl uppercase tracking-widest">
+                                                                        {format(new Date(event.event_date), "MMM")}
+                                                                    </div>
                                                                 </div>
                                                             )}
-                                                            <div className="flex items-center gap-2">
-                                                                <Users className="w-4 h-4 text-primary" />
-                                                                {event.max_participants || "Unlim."} Slots
+
+                                                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-100 flex flex-col justify-end p-4">
+                                                                <div className="absolute top-4 right-4">
+                                                                    <span className="bg-black/60 border border-primary/30 text-primary px-2 py-0.5 rounded-full backdrop-blur-md text-[9px] font-display uppercase tracking-wider">
+                                                                        {game}
+                                                                    </span>
+                                                                </div>
+                                                                <h3 className="font-display font-bold text-xl text-white mb-1 leading-tight group-hover:text-primary transition-colors">
+                                                                    {event.title}
+                                                                </h3>
+                                                                <div className="flex items-center gap-2 text-white/80 text-xs font-display tracking-widest uppercase">
+                                                                    <Calendar className="w-3 h-3 text-primary" />
+                                                                    {format(new Date(event.event_date), "MMM dd, yyyy")}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </DialogTrigger>
+                                                <DialogContent className="glass-dark border-2 border-primary w-[85vw] max-w-[500px] text-white px-8 pb-8 pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)] [&>button]:hidden">
+                                                    <div className="overflow-y-auto custom-scrollbar flex flex-col gap-5">
+                                                        <div className="flex items-center justify-end w-full">
+                                                            <span className="bg-primary/90 border border-primary text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg">
+                                                                {game}
+                                                            </span>
+                                                        </div>
+
+                                                        <div className="space-y-3">
+                                                            <h2 className="text-2xl font-bold text-white font-display leading-tight text-left uppercase tracking-tight">
+                                                                {event.title}
+                                                            </h2>
+                                                            <p className="text-white/60 text-sm leading-relaxed text-left font-body">
+                                                                {event.description || "No description."}
+                                                            </p>
+                                                        </div>
+
+                                                        <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border border-primary/50 shadow-[0_0_15px_-5px_hsl(var(--primary)/0.2)]">
+                                                            <div className="flex items-center gap-4">
+                                                                <Calendar className="w-5 h-5 text-primary shrink-0" />
+                                                                <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-4">
+                                                                <Clock className="w-5 h-5 text-primary shrink-0" />
+                                                                <span className="font-display tracking-wide uppercase text-sm">
+                                                                    {format(new Date(event.event_date), "h:mm a")} {event.end_time && `- ${format(new Date(event.end_time), "h:mm a")}`}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex items-center gap-4">
+                                                                <MapPin className="w-5 h-5 text-primary shrink-0" />
+                                                                <span className="font-display tracking-wide uppercase text-sm truncate">{event.location || "TBA"}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-4">
+                                                                <Users className="w-5 h-5 text-primary shrink-0" />
+                                                                <span className="font-display tracking-wide uppercase text-sm">{event.max_participants || "Unlim."} Slots</span>
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex gap-2 pt-2">
-                                                            <Button
-                                                                variant="outline"
-                                                                className="flex-1 bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
-                                                                onClick={() => {
+                                                        <div className="flex gap-3 pt-2">
+                                                            <button
+                                                                type="button"
+                                                                className="flex-1 h-12 rounded-full border-2 border-primary bg-black/50 hover:bg-primary hover:border-primary text-white font-display text-sm uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
                                                                     setNewEvent({
-                                                                        id: event.id,
+                                                                        id: event.id || event._id,
                                                                         title: event.title,
                                                                         description: event.description || "",
                                                                         event_date: event.event_date,
@@ -1115,23 +1145,35 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                     setEventDialogOpen(true);
                                                                 }}
                                                             >
-                                                                Edit
-                                                            </Button>
-                                                            <Button
-                                                                variant="outline"
-                                                                className="flex-1 bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
-                                                                onClick={() => setEventToDelete(event)}
+                                                                <Edit className="w-4 h-4" /> Edit
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                className="flex-1 h-12 rounded-full border-2 border-red-600 bg-black/50 hover:bg-red-600 hover:border-red-600 text-white font-display text-sm uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setEventToDelete(event);
+                                                                }}
                                                             >
-                                                                <Trash2 className="w-4 h-4" />
-                                                            </Button>
+                                                                <Trash2 className="w-4 h-4" /> Delete
+                                                            </button>
                                                         </div>
+
+                                                        <DialogClose asChild>
+                                                            <button className="w-full h-12 rounded-full border-2 border-red-600 bg-black/50 hover:bg-red-600 text-white font-display text-sm transition-all uppercase tracking-widest shadow-sm hover:shadow-lg flex items-center justify-center outline-none mt-2 duration-300 ring-0 focus:ring-0">
+                                                                Close
+                                                            </button>
+                                                        </DialogClose>
                                                     </div>
-                                                </div>
-                                            </div>
+                                                </DialogContent>
+                                            </Dialog>
                                         ))}
                                         {!filteredEvents?.length && (
-                                            <div className="col-span-full text-center py-12">
-                                                <p className="text-muted-foreground text-lg">No events found for {game}.</p>
+                                            <div className="col-span-full w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
+                                                <h3 className="text-xl font-bold text-white font-display mb-2">No Events Found</h3>
+                                                <p className="text-white/60 font-body">
+                                                    No events found for {game}.
+                                                </p>
                                             </div>
                                         )}
                                     </div>
@@ -1149,12 +1191,12 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
                                         {/* Day Select */}
                                         <Select value={dayFilter} onValueChange={setDayFilter}>
-                                            <SelectTrigger className="w-[65px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
+                                            <SelectTrigger className="w-[65px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                                                 <SelectValue placeholder="Day" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-black border-2 border-red-600 rounded-lg max-h-[200px]">
                                                 {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                                                    <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                    <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600 focus:bg-red-600 focus:text-white data-[state=checked]:bg-red-600 data-[state=checked]:text-white text-xs md:text-sm cursor-pointer">
                                                         {day}
                                                     </SelectItem>
                                                 ))}
@@ -1163,12 +1205,12 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
                                         {/* Month Select */}
                                         <Select value={monthFilter} onValueChange={setMonthFilter}>
-                                            <SelectTrigger className="w-[90px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
+                                            <SelectTrigger className="w-[90px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                                                 <SelectValue placeholder="Month" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
                                                 {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((m, idx) => (
-                                                    <SelectItem key={m} value={m} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                    <SelectItem key={m} value={m} className="text-white hover:bg-red-600 focus:bg-red-600 focus:text-white data-[state=checked]:bg-red-600 data-[state=checked]:text-white text-xs md:text-sm cursor-pointer">
                                                         {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][idx]}
                                                     </SelectItem>
                                                 ))}
@@ -1177,12 +1219,12 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
                                         {/* Year Select */}
                                         <Select value={yearFilter} onValueChange={setYearFilter}>
-                                            <SelectTrigger className="w-[75px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0">
+                                            <SelectTrigger className="w-[75px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                                                 <SelectValue placeholder="Year" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
                                                 {["2024", "2025", "2026", "2027", "2028"].map((year) => (
-                                                    <SelectItem key={year} value={year} className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white text-xs md:text-sm">
+                                                    <SelectItem key={year} value={year} className="text-white hover:bg-red-600 focus:bg-red-600 focus:text-white data-[state=checked]:bg-red-600 data-[state=checked]:text-white text-xs md:text-sm cursor-pointer">
                                                         {year}
                                                     </SelectItem>
                                                 ))}
@@ -1218,49 +1260,50 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                             const yearMatch = !yearFilter || msgYear === yearFilter;
 
                                             return dayMatch && monthMatch && yearMatch;
-                                        }).map((msg: any) => (
-                                            <div
-                                                key={msg._id || msg.id}
-                                                className="bg-black rounded-xl p-4 md:p-6 border-2 border-red-600 hover:border-red-500 transition-all flex flex-col"
-                                            >
-                                                {/* Date at top */}
-                                                <div className="flex justify-between items-center mb-4">
-                                                    <span className="text-xs text-white bg-red-600 px-3 py-1.5 rounded font-medium">
-                                                        {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}
-                                                    </span>
-                                                </div>
-
-                                                {/* Sender info */}
-                                                <div className="space-y-1 mb-4">
-                                                    <p className="text-sm text-muted-foreground">
-                                                        <span className="text-red-500 font-semibold">From:</span> {msg.name}
-                                                    </p>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        <span className="text-red-500 font-semibold">Email:</span> {msg.email}
-                                                    </p>
-                                                </div>
-
-                                                {/* Message content */}
-                                                <div className="border-t border-red-600 pt-4 space-y-3 flex-1">
-                                                    <div>
-                                                        <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Subject</p>
-                                                        <h3 className="font-display font-semibold text-lg text-white">
-                                                            {msg.subject || "No Subject"}
-                                                        </h3>
+                                        }).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                                            .map((msg: any) => (
+                                                <div
+                                                    key={msg._id || msg.id}
+                                                    className="bg-black rounded-xl p-4 md:p-6 border-2 border-red-600 hover:border-red-500 transition-all flex flex-col"
+                                                >
+                                                    {/* Date at top */}
+                                                    <div className="flex justify-between items-center mb-4">
+                                                        <span className="text-xs text-white bg-red-600 px-3 py-1.5 rounded font-medium">
+                                                            {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}
+                                                        </span>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Message</p>
-                                                        <p className="text-sm text-foreground whitespace-pre-wrap">{msg.message}</p>
+
+                                                    {/* Sender info */}
+                                                    <div className="space-y-1 mb-4">
+                                                        <p className="text-sm text-muted-foreground">
+                                                            <span className="text-red-500 font-semibold">From:</span> {msg.name}
+                                                        </p>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            <span className="text-red-500 font-semibold">Email:</span> {msg.email}
+                                                        </p>
+                                                    </div>
+
+                                                    {/* Message content */}
+                                                    <div className="border-t border-red-600 pt-4 space-y-3 flex-1">
+                                                        <div>
+                                                            <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Subject</p>
+                                                            <h3 className="font-display font-semibold text-lg text-white">
+                                                                {msg.subject || "No Subject"}
+                                                            </h3>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-red-500 font-semibold uppercase tracking-wider mb-1">Message</p>
+                                                            <p className="text-sm text-foreground whitespace-pre-wrap">{msg.message}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
                                         {(!messages || messages.length === 0) && (
-                                            <div className="col-span-full text-center py-12">
-                                                <div className="bg-red-600/10 border-2 border-red-600 rounded-xl p-8 max-w-md mx-auto">
-                                                    <Mail className="w-12 h-12 text-primary mx-auto mb-4 opacity-50" />
-                                                    <p className="text-muted-foreground text-lg font-display uppercase tracking-wider">No messages found</p>
-                                                </div>
+                                            <div className="col-span-full w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
+                                                <h3 className="text-xl font-bold text-white font-display mb-2">No Messages Found</h3>
+                                                <p className="text-white/60 font-body">
+                                                    No messages found.
+                                                </p>
                                             </div>
                                         )}
                                     </div>
@@ -1270,7 +1313,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                     </Tabs>
                 </div>
                 <AlertDialog open={!!eventToDelete} onOpenChange={(open) => !open && setEventToDelete(null)}>
-                    <AlertDialogContent className="bg-black border-2 border-red-600">
+                    <AlertDialogContent className="bg-black border-2 border-red-600 w-[90%] sm:max-w-md rounded-xl">
                         <AlertDialogHeader>
                             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                             <AlertDialogDescription>
@@ -1278,11 +1321,11 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                 <span className="font-bold text-red-500"> {eventToDelete?.title}</span> and remove it from our servers.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel className="bg-transparent border-white/20 hover:bg-white/10 text-white">Cancel</AlertDialogCancel>
+                        <AlertDialogFooter className="flex flex-row items-center gap-3 w-full sm:justify-end">
+                            <AlertDialogCancel className="mt-0 flex-1 sm:flex-none bg-transparent border-white/20 hover:bg-white/10 text-white">Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                                className="bg-red-600 hover:bg-red-700 text-white"
-                                onClick={() => eventToDelete && deleteEventMutation.mutate(eventToDelete.id)}
+                                className="flex-1 sm:flex-none bg-red-600 hover:bg-red-700 text-white"
+                                onClick={() => eventToDelete && deleteEventMutation.mutate(eventToDelete.id || eventToDelete._id)}
                             >
                                 Delete Event
                             </AlertDialogAction>

@@ -71,7 +71,7 @@ export const MembersTab = ({ members }: MembersTabProps) => {
     const { user } = useAuth();
 
 
-    const filteredMembers = normalizedMembers?.filter((member: any) => {
+    const filteredMembers = (normalizedMembers?.filter((member: any) => {
         // Exclude current user
         if (member.email === user?.email || member.id === user?.id) return false;
 
@@ -94,7 +94,11 @@ export const MembersTab = ({ members }: MembersTabProps) => {
         // Apply game filter
         if (gameFilter === "all") return true;
         return member.game === gameFilter || member.gameYouPlay === gameFilter;
-    }) || [];
+    }) || []).sort((a: any, b: any) => {
+        const dateA = new Date(a.createdAt || a.created_at || 0).getTime();
+        const dateB = new Date(b.createdAt || b.created_at || 0).getTime();
+        return dateB - dateA;
+    });
 
     const handleEdit = (member: any) => {
         const normalized = { ...member, id: member.id || member._id };
@@ -287,8 +291,11 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                     ))}
                 </div>
             ) : (
-                <div className="text-center py-12 text-muted-foreground">
-                    {searchQuery || gameFilter !== "all" ? "No members found matching your search." : "No members yet."}
+                <div className="w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
+                    <h3 className="text-xl font-bold text-white font-display mb-2">No Members Found</h3>
+                    <p className="text-white/60 font-body">
+                        {searchQuery || gameFilter !== "all" ? "No members found matching your search." : "There are no members registered yet."}
+                    </p>
                 </div>
             )}
 

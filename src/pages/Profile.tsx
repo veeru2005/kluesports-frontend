@@ -378,7 +378,7 @@ const Profile = () => {
           <div className="max-w-4xl mx-auto space-y-4 md:space-y-8">
             <div className="space-y-4 md:space-y-8">
               {/* View Tabs */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className={`grid ${isAdmin ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
                 <Button
                   variant={!isEventsView ? "flame" : "outline"}
                   className={`rounded-lg border transition-all ${!isEventsView ? 'border-red-600 shadow-lg' : 'border-red-600 text-white hover:bg-red-600/10'}`}
@@ -387,18 +387,20 @@ const Profile = () => {
                   <User className="w-4 h-4 mr-2" />
                   Profile Settings
                 </Button>
-                <Button
-                  variant={isEventsView ? "flame" : "outline"}
-                  className={`rounded-lg border transition-all ${isEventsView ? 'border-red-600 shadow-lg' : 'border-red-600 text-white hover:bg-red-600/10'}`}
-                  onClick={() => navigate("/profile?view=events")}
-                >
-                  <Trophy className="w-4 h-4 mr-2" />
-                  My Events
-                </Button>
+                {!isAdmin && (
+                  <Button
+                    variant={isEventsView ? "flame" : "outline"}
+                    className={`rounded-lg border transition-all ${isEventsView ? 'border-red-600 shadow-lg' : 'border-red-600 text-white hover:bg-red-600/10'}`}
+                    onClick={() => navigate("/profile?view=events")}
+                  >
+                    <Trophy className="w-4 h-4 mr-2" />
+                    My Events
+                  </Button>
+                )}
               </div>
 
               {/* Profile Header */}
-              <div className={`glass-dark rounded-xl p-8 border border-red-600/90 text-center shadow-2xl relative overflow-hidden group ${isEventsView ? 'hidden' : ''}`}>
+              <div className={`glass-dark rounded-xl p-8 border border-red-600/90 text-center shadow-2xl relative overflow-hidden group ${isEventsView && !isAdmin ? 'hidden' : ''}`}>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/4 rounded-full blur-3xl" />
                 <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border-2 border-primary/50">
                   <User className="w-12 h-12 text-primary" />
@@ -412,7 +414,7 @@ const Profile = () => {
               </div>
 
               {/* Profile Form */}
-              <div className={`glass-dark rounded-xl p-8 border border-red-600/90 shadow-2xl relative overflow-hidden ${isEventsView ? 'hidden' : ''}`}>
+              <div className={`glass-dark rounded-xl p-8 border border-red-600/90 shadow-2xl relative overflow-hidden ${isEventsView && !isAdmin ? 'hidden' : ''}`}>
                 <div className="absolute top-0 left-0 w-32 h-32 bg-red-600/4 rounded-full blur-3xl" />
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="font-display font-bold text-2xl">
@@ -596,7 +598,7 @@ const Profile = () => {
 
             <div className="space-y-8">
               {/* My Events Section */}
-              {!isEditing && (
+              {!isEditing && !isAdmin && (
                 <div className={`glass-dark rounded-xl p-8 border border-red-600/90 shadow-2xl relative overflow-hidden ${!isEventsView ? 'hidden' : ''}`}>
                   <div className="absolute bottom-0 right-0 w-32 h-32 bg-red-600/5 rounded-full blur-3xl" />
                   <h2 className="font-display font-bold text-2xl mb-6 flex items-center gap-2">

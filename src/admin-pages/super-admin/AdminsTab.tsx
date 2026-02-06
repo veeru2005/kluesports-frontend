@@ -367,8 +367,13 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                     );
                 })}
                 {(!sortedAdmins || sortedAdmins.length === 0) && (
-                    <div className="text-center py-12 text-muted-foreground">
-                        No admins found.
+                    <div className="w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
+                        <h3 className="text-xl font-bold text-white font-display mb-2">No Admins Found</h3>
+                        <p className="text-white/60 font-body">
+                            {gameFilter === "all"
+                                ? "There are no admins currently."
+                                : `There are no admins found for ${gameFilter}.`}
+                        </p>
                     </div>
                 )}
             </div>
