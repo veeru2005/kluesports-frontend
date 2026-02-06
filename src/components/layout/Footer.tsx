@@ -22,7 +22,7 @@ export const Footer = () => {
                 <span className="font-display font-bold text-xl flame-text leading-none">
                   KLU ESPORTS
                 </span>
-                <span className="text-xs text-white font-medium uppercase leading-tight tracking-[0.07em]">
+                <span className="text-xs text-white font-medium uppercase leading-tight tracking-[0.04em]">
                   Gaming Community
                 </span>
               </div>

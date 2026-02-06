@@ -53,13 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 return true;
             }
 
-            // Check if login date is today
-            if (payload.loginDate) {
-                const currentDate = new Date().toISOString().split('T')[0];
-                if (payload.loginDate !== currentDate) {
-                    return true;
-                }
-            }
+
 
             // Check if session is within 6 hours
             if (payload.loginTimestamp) {

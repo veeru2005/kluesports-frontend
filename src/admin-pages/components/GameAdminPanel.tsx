@@ -26,6 +26,17 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import api from "@/utils/apiClient";
 
 interface GameAdminPanelProps {
     game: "Free Fire" | "BGMI" | "Valorant" | "Call Of Duty";
@@ -64,10 +75,12 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
         title: "",
         description: "",
         event_date: "",
+        end_time: "",
         location: "",
         max_participants: "",
         image_url: "",
     });
+    const [eventToDelete, setEventToDelete] = useState<any>(null);
     const { toast } = useToast();
     const queryClient = useQueryClient();
 
@@ -146,27 +159,53 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
     const createEventMutation = useMutation({
         mutationFn: async (eventData: typeof newEvent & { game: string }) => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events`, {
-                method: 'POST',
+            const payload = { ...eventData, end_time: eventData.end_time || null };
+            const url = eventData.id
+                ? `${import.meta.env.VITE_API_BASE_URL}/events/${eventData.id}`
+                : `${import.meta.env.VITE_API_BASE_URL}/events`;
+            const method = eventData.id ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method,
                 headers: getHeaders(),
-                body: JSON.stringify(eventData),
+                body: JSON.stringify(payload),
             });
-            if (!response.ok) throw new Error("Failed to create event");
+            if (!response.ok) throw new Error(eventData.id ? "Failed to update event" : "Failed to create event");
             return response.json();
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-events"] });
-            toast({ title: "Success", description: "Event created successfully!", variant: "success" });
+            toast({ title: "Success", description: "Event saved successfully!", variant: "success" });
             setEventDialogOpen(false);
             setNewEvent({
                 id: "",
                 title: "",
                 description: "",
                 event_date: "",
+                end_time: "",
                 location: "",
                 max_participants: "",
                 image_url: "",
             });
+        },
+    });
+
+    const deleteEventMutation = useMutation({
+        mutationFn: async (id: string) => {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`, {
+                method: 'DELETE',
+                headers: getHeaders(),
+            });
+            if (!response.ok) throw new Error("Failed to delete event");
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-events"] });
+            toast({ title: "Success", description: "Event deleted successfully!", variant: "success" });
+            setEventToDelete(null);
+        },
+        onError: () => {
+            toast({ title: "Error", description: "Failed to delete event", variant: "destructive" });
         },
     });
 
@@ -204,6 +243,20 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (newEvent.end_time) {
+            const start = new Date(newEvent.event_date);
+            const end = new Date(newEvent.end_time);
+            if (end <= start) {
+                toast({
+                    title: "Invalid Time",
+                    description: "End time must be after start time.",
+                    variant: "destructive"
+                });
+                return;
+            }
+        }
+
         createEventMutation.mutate({ ...newEvent, game });
     };
 
@@ -489,26 +542,35 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                     <div className="space-y-2">
                                                         <Label>Mobile Number</Label>
                                                         <Input
-                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                            className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                                             value={editMember?.mobile || ''}
-                                                            readOnly
+                                                            onChange={(e) => setEditMember({ ...editMember, mobile: e.target.value })}
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label>College ID</Label>
                                                         <Input
-                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                            className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                                             value={editMember?.collegeId || ''}
-                                                            readOnly
+                                                            onChange={(e) => setEditMember({ ...editMember, collegeId: e.target.value })}
                                                         />
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label>Game Assignment</Label>
-                                                        <Input
-                                                            className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                                            value={editMember?.gameYouPlay || ''}
-                                                            readOnly
-                                                        />
+                                                        <Select
+                                                            value={editMember?.gameYouPlay || editMember?.game || 'Free Fire'}
+                                                            onValueChange={(val) => setEditMember({ ...editMember, gameYouPlay: val })}
+                                                        >
+                                                            <SelectTrigger className="bg-black border border-red-600 h-10 rounded-md px-3 focus:ring-0 focus:ring-offset-0">
+                                                                <SelectValue placeholder="Select game" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                <SelectItem value="Free Fire">Free Fire</SelectItem>
+                                                                <SelectItem value="BGMI">BGMI</SelectItem>
+                                                                <SelectItem value="Valorant">Valorant</SelectItem>
+                                                                <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
+                                                            </SelectContent>
+                                                        </Select>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label>Bio</Label>
@@ -527,12 +589,19 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="flex justify-end gap-2">
-                                                    <Button variant="outline" onClick={() => setEditMember(null)}>Cancel</Button>
-                                                    <Button variant="flame" onClick={() => {
-                                                        // Mock update functionality
-                                                        toast({ title: "Member Updated", description: "Member details updated successfully." });
-                                                        setEditMember(null);
+                                                <div className="flex flex-col-reverse sm:flex-row sm:justify-between w-full gap-2 pt-2">
+                                                    <Button variant="outline" onClick={() => setEditMember(null)} className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white px-8 h-10 w-full sm:w-auto">
+                                                        Cancel
+                                                    </Button>
+                                                    <Button className="bg-red-600 hover:bg-red-700 text-white px-8 h-10 w-full sm:w-auto" onClick={async () => {
+                                                        try {
+                                                            const res = await api.put(`/users/${editMember._id || editMember.id}`, editMember);
+                                                            toast({ title: "Success", description: res.message || "Member updated successfully", variant: "success" });
+                                                            queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+                                                            setEditMember(null);
+                                                        } catch (error: any) {
+                                                            toast({ title: "Error", description: error?.message || "Failed to update member", variant: "destructive" });
+                                                        }
                                                     }}>Save Changes</Button>
                                                 </div>
                                             </DialogContent>
@@ -601,6 +670,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         title: "",
                                                         description: "",
                                                         event_date: "",
+                                                        end_time: "",
                                                         location: "",
                                                         max_participants: "",
                                                         image_url: ""
@@ -648,16 +718,53 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             id="event-image-upload"
                                                                             type="file"
                                                                             accept="image/*"
-                                                                            onChange={(e) => {
+                                                                            onChange={async (e) => {
                                                                                 const file = e.target.files?.[0];
                                                                                 if (file) {
                                                                                     // Validate image is square (1:1 aspect ratio)
                                                                                     const img = new Image();
-                                                                                    img.onload = () => {
+                                                                                    img.onload = async () => {
                                                                                         if (img.width === img.height) {
-                                                                                            // Create a local URL for preview
-                                                                                            const imageUrl = URL.createObjectURL(file);
-                                                                                            setNewEvent({ ...newEvent, image_url: imageUrl });
+                                                                                            // Upload to Cloudinary
+                                                                                            try {
+                                                                                                toast({
+                                                                                                    title: "Uploading...",
+                                                                                                    description: "Please wait while we upload your image.",
+                                                                                                });
+
+                                                                                                const formData = new FormData();
+                                                                                                formData.append('image', file);
+
+                                                                                                const token = localStorage.getItem("inferno_token");
+                                                                                                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/upload/event-image`, {
+                                                                                                    method: 'POST',
+                                                                                                    headers: {
+                                                                                                        'Authorization': `Bearer ${token}`
+                                                                                                    },
+                                                                                                    body: formData,
+                                                                                                });
+
+                                                                                                if (!response.ok) {
+                                                                                                    throw new Error('Failed to upload image');
+                                                                                                }
+
+                                                                                                const data = await response.json();
+                                                                                                setNewEvent({ ...newEvent, image_url: data.url });
+
+                                                                                                toast({
+                                                                                                    title: "Success",
+                                                                                                    description: "Image uploaded successfully!",
+                                                                                                    variant: "success"
+                                                                                                });
+                                                                                            } catch (error) {
+                                                                                                console.error('Upload error:', error);
+                                                                                                toast({
+                                                                                                    title: "Upload Failed",
+                                                                                                    description: "Failed to upload image. Please try again.",
+                                                                                                    variant: "destructive",
+                                                                                                });
+                                                                                                e.target.value = '';
+                                                                                            }
                                                                                         } else {
                                                                                             toast({
                                                                                                 title: "Invalid Image Dimensions",
@@ -707,17 +814,20 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         <div className="grid grid-cols-2 gap-4">
                                                             <div className="space-y-2">
                                                                 <Label>Date</Label>
-                                                                <Input
-                                                                    type="date"
-                                                                    value={newEvent.event_date ? newEvent.event_date.split('T')[0] : ''}
-                                                                    onChange={(e) => {
-                                                                        const date = e.target.value;
-                                                                        const time = newEvent.event_date ? newEvent.event_date.split('T')[1] : '12:00';
-                                                                        setNewEvent({ ...newEvent, event_date: `${date}T${time}` });
-                                                                    }}
-                                                                    required
-                                                                    className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                                                />
+                                                                <div className="relative">
+                                                                    <Input
+                                                                        type="date"
+                                                                        value={newEvent.event_date ? newEvent.event_date.split('T')[0] : ''}
+                                                                        onChange={(e) => {
+                                                                            const date = e.target.value;
+                                                                            const time = newEvent.event_date ? newEvent.event_date.split('T')[1] : '12:00';
+                                                                            setNewEvent({ ...newEvent, event_date: `${date}T${time}` });
+                                                                        }}
+                                                                        required
+                                                                        className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                                                    />
+                                                                    <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+                                                                </div>
                                                             </div>
                                                             <div className="space-y-2">
                                                                 <Label>Max Participants</Label>
@@ -730,87 +840,174 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                             </div>
                                                         </div>
 
-                                                        <div className="space-y-2">
-                                                            <Label>Time</Label>
-                                                            <div className="flex gap-2">
-                                                                <Select
-                                                                    value={(() => {
-                                                                        if (!newEvent.event_date) return "12";
-                                                                        const hours = parseInt(newEvent.event_date.split('T')[1]?.split(':')[0] || "12");
-                                                                        const h12 = hours % 12 || 12;
-                                                                        return h12.toString();
-                                                                    })()}
-                                                                    onValueChange={(val) => {
-                                                                        const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
-                                                                        const currentHours = parseInt(newEvent.event_date?.split('T')[1]?.split(':')[0] || "12");
-                                                                        const currentMins = newEvent.event_date?.split('T')[1]?.split(':')[1] || "00";
-                                                                        const isPM = currentHours >= 12;
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            <div className="space-y-2">
+                                                                <Label>Start Time</Label>
+                                                                <div className="flex gap-2">
+                                                                    <Select
+                                                                        value={(() => {
+                                                                            if (!newEvent.event_date) return "12";
+                                                                            const hours = parseInt(newEvent.event_date.split('T')[1]?.split(':')[0] || "12");
+                                                                            const h12 = hours % 12 || 12;
+                                                                            return h12.toString();
+                                                                        })()}
+                                                                        onValueChange={(val) => {
+                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                            const currentHours = parseInt(newEvent.event_date?.split('T')[1]?.split(':')[0] || "12");
+                                                                            const currentMins = newEvent.event_date?.split('T')[1]?.split(':')[1] || "00";
+                                                                            const isPM = currentHours >= 12;
 
-                                                                        let newHours = parseInt(val);
-                                                                        if (isPM && newHours < 12) newHours += 12;
-                                                                        if (!isPM && newHours === 12) newHours = 0;
+                                                                            let newHours = parseInt(val);
+                                                                            if (isPM && newHours < 12) newHours += 12;
+                                                                            if (!isPM && newHours === 12) newHours = 0;
 
-                                                                        setNewEvent({ ...newEvent, event_date: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
-                                                                    }}
-                                                                >
-                                                                    <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
-                                                                        <SelectValue placeholder="HH" />
-                                                                    </SelectTrigger>
-                                                                    <SelectContent>
-                                                                        {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                                                                            <SelectItem key={h} value={h.toString()}>
-                                                                                {h}
-                                                                            </SelectItem>
-                                                                        ))}
-                                                                    </SelectContent>
-                                                                </Select>
+                                                                            setNewEvent({ ...newEvent, event_date: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
+                                                                        }}
+                                                                    >
+                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                            <SelectValue placeholder="HH" />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent>
+                                                                            {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
+                                                                                <SelectItem key={h} value={h.toString()}>
+                                                                                    {h}
+                                                                                </SelectItem>
+                                                                            ))}
+                                                                        </SelectContent>
+                                                                    </Select>
 
-                                                                <Select
-                                                                    value={newEvent.event_date?.split('T')[1]?.split(':')[1] || "00"}
-                                                                    onValueChange={(val) => {
-                                                                        const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
-                                                                        const timePart = newEvent.event_date?.split('T')[1] || "12:00";
-                                                                        const hours = timePart.split(':')[0];
-                                                                        setNewEvent({ ...newEvent, event_date: `${datePart}T${hours}:${val}` });
-                                                                    }}
-                                                                >
-                                                                    <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
-                                                                        <SelectValue placeholder="MM" />
-                                                                    </SelectTrigger>
-                                                                    <SelectContent>
-                                                                        {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
-                                                                            <SelectItem key={m} value={m}>
-                                                                                {m}
-                                                                            </SelectItem>
-                                                                        ))}
-                                                                    </SelectContent>
-                                                                </Select>
+                                                                    <Select
+                                                                        value={newEvent.event_date?.split('T')[1]?.split(':')[1] || "00"}
+                                                                        onValueChange={(val) => {
+                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                            const timePart = newEvent.event_date?.split('T')[1] || "12:00";
+                                                                            const hours = timePart.split(':')[0];
+                                                                            setNewEvent({ ...newEvent, event_date: `${datePart}T${hours}:${val}` });
+                                                                        }}
+                                                                    >
+                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                            <SelectValue placeholder="MM" />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent>
+                                                                            {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
+                                                                                <SelectItem key={m} value={m}>
+                                                                                    {m}
+                                                                                </SelectItem>
+                                                                            ))}
+                                                                        </SelectContent>
+                                                                    </Select>
 
-                                                                <Select
-                                                                    value={(() => {
-                                                                        if (!newEvent.event_date) return "AM";
-                                                                        const hours = parseInt(newEvent.event_date.split('T')[1]?.split(':')[0] || "0");
-                                                                        return hours >= 12 ? "PM" : "AM";
-                                                                    })()}
-                                                                    onValueChange={(val) => {
-                                                                        const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
-                                                                        const currentMins = newEvent.event_date?.split('T')[1]?.split(':')[1] || "00";
-                                                                        let hours = parseInt(newEvent.event_date?.split('T')[1]?.split(':')[0] || "12");
+                                                                    <Select
+                                                                        value={(() => {
+                                                                            if (!newEvent.event_date) return "AM";
+                                                                            const hours = parseInt(newEvent.event_date.split('T')[1]?.split(':')[0] || "0");
+                                                                            return hours >= 12 ? "PM" : "AM";
+                                                                        })()}
+                                                                        onValueChange={(val) => {
+                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                            const currentMins = newEvent.event_date?.split('T')[1]?.split(':')[1] || "00";
+                                                                            let hours = parseInt(newEvent.event_date?.split('T')[1]?.split(':')[0] || "12");
 
-                                                                        if (val === "PM" && hours < 12) hours += 12;
-                                                                        if (val === "AM" && hours >= 12) hours -= 12;
+                                                                            if (val === "PM" && hours < 12) hours += 12;
+                                                                            if (val === "AM" && hours >= 12) hours -= 12;
 
-                                                                        setNewEvent({ ...newEvent, event_date: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
-                                                                    }}
-                                                                >
-                                                                    <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
-                                                                        <SelectValue />
-                                                                    </SelectTrigger>
-                                                                    <SelectContent>
-                                                                        <SelectItem value="AM">AM</SelectItem>
-                                                                        <SelectItem value="PM">PM</SelectItem>
-                                                                    </SelectContent>
-                                                                </Select>
+                                                                            setNewEvent({ ...newEvent, event_date: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
+                                                                        }}
+                                                                    >
+                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                            <SelectValue />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent>
+                                                                            <SelectItem value="AM">AM</SelectItem>
+                                                                            <SelectItem value="PM">PM</SelectItem>
+                                                                        </SelectContent>
+                                                                    </Select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="space-y-2">
+                                                                <Label>End Time</Label>
+                                                                <div className="flex gap-2">
+                                                                    <Select
+                                                                        value={(() => {
+                                                                            if (!newEvent.end_time) return undefined;
+                                                                            const hours = parseInt(newEvent.end_time.split('T')[1]?.split(':')[0] || "12");
+                                                                            const h12 = hours % 12 || 12;
+                                                                            return h12.toString();
+                                                                        })()}
+                                                                        onValueChange={(val) => {
+                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                            // Use end_time parts if available, else default to 12:00
+                                                                            const currentHours = parseInt(newEvent.end_time?.split('T')[1]?.split(':')[0] || "12");
+                                                                            const currentMins = newEvent.end_time?.split('T')[1]?.split(':')[1] || "00";
+                                                                            const isPM = currentHours >= 12;
+
+                                                                            let newHours = parseInt(val);
+                                                                            if (isPM && newHours < 12) newHours += 12;
+                                                                            if (!isPM && newHours === 12) newHours = 0;
+
+                                                                            setNewEvent({ ...newEvent, end_time: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
+                                                                        }}
+                                                                    >
+                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                            <SelectValue placeholder="HH" />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent>
+                                                                            {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
+                                                                                <SelectItem key={h} value={h.toString()}>
+                                                                                    {h}
+                                                                                </SelectItem>
+                                                                            ))}
+                                                                        </SelectContent>
+                                                                    </Select>
+
+                                                                    <Select
+                                                                        value={newEvent.end_time?.split('T')[1]?.split(':')[1] || undefined}
+                                                                        onValueChange={(val) => {
+                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                            const timePart = newEvent.end_time?.split('T')[1] || "12:00";
+                                                                            const hours = timePart.split(':')[0];
+                                                                            setNewEvent({ ...newEvent, end_time: `${datePart}T${hours}:${val}` });
+                                                                        }}
+                                                                    >
+                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                            <SelectValue placeholder="MM" />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent>
+                                                                            {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
+                                                                                <SelectItem key={m} value={m}>
+                                                                                    {m}
+                                                                                </SelectItem>
+                                                                            ))}
+                                                                        </SelectContent>
+                                                                    </Select>
+
+                                                                    <Select
+                                                                        value={(() => {
+                                                                            if (!newEvent.end_time) return undefined;
+                                                                            const hours = parseInt(newEvent.end_time.split('T')[1]?.split(':')[0] || "0");
+                                                                            return hours >= 12 ? "PM" : "AM";
+                                                                        })()}
+                                                                        onValueChange={(val) => {
+                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                            const currentMins = newEvent.end_time?.split('T')[1]?.split(':')[1] || "00";
+                                                                            let hours = parseInt(newEvent.end_time?.split('T')[1]?.split(':')[0] || "12");
+
+                                                                            if (val === "PM" && hours < 12) hours += 12;
+                                                                            if (val === "AM" && hours >= 12) hours -= 12;
+
+                                                                            setNewEvent({ ...newEvent, end_time: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
+                                                                        }}
+                                                                    >
+                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                            <SelectValue />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent>
+                                                                            <SelectItem value="AM">AM</SelectItem>
+                                                                            <SelectItem value="PM">PM</SelectItem>
+                                                                        </SelectContent>
+                                                                    </Select>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div className="space-y-2">
@@ -823,9 +1020,9 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                             />
                                                         </div>
 
-                                                        <div className="space-y-2 opacity-70">
+                                                        <div className="space-y-2">
                                                             <Label>Game (Locked)</Label>
-                                                            <Input value={game} disabled className="bg-black border-red-600/50 opacity-50 focus-visible:ring-0 focus-visible:ring-offset-0" />
+                                                            <Input value={game} disabled className="bg-black border-red-600 text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0" />
                                                         </div>
 
                                                         <div className="flex justify-between items-center mt-8 pt-4 border-t border-border/50">
@@ -855,7 +1052,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                 key={event.id}
                                                 className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group flex flex-col h-full"
                                             >
-                                                <div className="h-48 bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden flex items-center justify-center border-b border-border/50">
+                                                <div className="aspect-square w-full bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden flex items-center justify-center border-b border-border/50">
                                                     {event.image_url ? (
                                                         <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
                                                     ) : (
@@ -886,7 +1083,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                             </div>
                                                             <div className="flex items-center gap-2">
                                                                 <Clock className="w-4 h-4 text-primary" />
-                                                                {format(new Date(event.event_date), "h:mm a")}
+                                                                {format(new Date(event.event_date), "h:mm a")} {event.end_time && `- ${format(new Date(event.end_time), "h:mm a")}`}
                                                             </div>
                                                             {event.location && (
                                                                 <div className="flex items-center gap-2">
@@ -910,6 +1107,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                         title: event.title,
                                                                         description: event.description || "",
                                                                         event_date: event.event_date,
+                                                                        end_time: event.end_time || "",
                                                                         location: event.location,
                                                                         max_participants: event.max_participants?.toString() || "",
                                                                         image_url: event.image_url || ""
@@ -922,6 +1120,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                             <Button
                                                                 variant="outline"
                                                                 className="flex-1 bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                                                                onClick={() => setEventToDelete(event)}
                                                             >
                                                                 <Trash2 className="w-4 h-4" />
                                                             </Button>
@@ -1070,6 +1269,26 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                         </TabsContent>
                     </Tabs>
                 </div>
+                <AlertDialog open={!!eventToDelete} onOpenChange={(open) => !open && setEventToDelete(null)}>
+                    <AlertDialogContent className="bg-black border-2 border-red-600">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the event
+                                <span className="font-bold text-red-500"> {eventToDelete?.title}</span> and remove it from our servers.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel className="bg-transparent border-white/20 hover:bg-white/10 text-white">Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                className="bg-red-600 hover:bg-red-700 text-white"
+                                onClick={() => eventToDelete && deleteEventMutation.mutate(eventToDelete.id)}
+                            >
+                                Delete Event
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </main>
         </div>
     );

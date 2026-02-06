@@ -82,7 +82,7 @@ export const Navbar = () => {
                 <span className="font-display font-bold text-2xl flame-text leading-none">
                   KLU ESPORTS
                 </span>
-                <span className="text-sm text-white font-medium uppercase leading-tight tracking-[0.09em]">
+                <span className="text-sm text-white font-medium uppercase leading-tight tracking-[0.06em]">
                   Gaming Community
                 </span>
               </div>
@@ -118,7 +118,7 @@ export const Navbar = () => {
                       Profile
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56 bg-black/95 border-primary/50 text-white backdrop-blur-md" align="end" forceMount>
+                  <DropdownMenuContent className="w-56 bg-black/95 border-2 border-red-600 text-white backdrop-blur-md" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none text-white font-display uppercase tracking-wider">{user.name || user.username}</p>
@@ -132,7 +132,7 @@ export const Navbar = () => {
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile Settings</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer hover:bg-primary hover:text-white focus:bg-primary focus:text-white group transition-colors">
+                    <DropdownMenuItem onClick={() => navigate("/profile?view=events")} className="cursor-pointer hover:bg-primary hover:text-white focus:bg-primary focus:text-white group transition-colors">
                       <Trophy className="mr-2 h-4 w-4" />
                       <span>My Events</span>
                     </DropdownMenuItem>

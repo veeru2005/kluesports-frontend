@@ -64,7 +64,7 @@ export default defineConfig(({ mode }) => ({
             "sonner",
           ],
           recharts: ["recharts"],
-          supabase: ["@supabase/supabase-js"],
+
           lottie: ["lottie-react"],
         },
       },

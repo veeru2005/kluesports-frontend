@@ -314,11 +314,11 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
-                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
                                 id="email"
                                 type="email"
                                 value={formData.email || ""}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                readOnly
                             />
                         </div>
                         <div className="grid gap-2">
@@ -350,29 +350,20 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="gameYouPlay">Game Assignment</Label>
-                            {user?.role === 'super_admin' ? (
-                                <Select
-                                    value={formData.gameYouPlay || 'Free Fire'}
-                                    onValueChange={(val) => setFormData({ ...formData, gameYouPlay: val })}
-                                >
-                                    <SelectTrigger className="bg-black border-0 h-10 rounded-md px-3">
-                                        <SelectValue placeholder="Select game" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Free Fire">Free Fire</SelectItem>
-                                        <SelectItem value="BGMI">BGMI</SelectItem>
-                                        <SelectItem value="Valorant">Valorant</SelectItem>
-                                        <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            ) : (
-                                <Input
-                                    className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                    id="gameYouPlay"
-                                    value={formData.gameYouPlay || ""}
-                                    readOnly
-                                />
-                            )}
+                            <Select
+                                value={formData.gameYouPlay || 'Free Fire'}
+                                onValueChange={(val) => setFormData({ ...formData, gameYouPlay: val })}
+                            >
+                                <SelectTrigger className="bg-black border border-red-600 h-10 rounded-md px-3 focus:ring-0 focus:ring-offset-0">
+                                    <SelectValue placeholder="Select game" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Free Fire">Free Fire</SelectItem>
+                                    <SelectItem value="BGMI">BGMI</SelectItem>
+                                    <SelectItem value="Valorant">Valorant</SelectItem>
+                                    <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="bio">Bio</Label>
@@ -393,11 +384,11 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                             />
                         </div>
                     </div>
-                    <DialogFooter className="flex-row gap-2">
-                        <Button variant="outline" onClick={() => setEditingMember(null)} className="flex-1">
+                    <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-between w-full gap-2">
+                        <Button variant="outline" onClick={() => setEditingMember(null)} className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white px-8 h-10 w-full sm:w-auto">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdate} className="flex-1">Save Changes</Button>
+                        <Button onClick={handleUpdate} className="bg-red-600 hover:bg-red-700 text-white px-8 h-10 w-full sm:w-auto">Save Changes</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
