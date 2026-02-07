@@ -1051,12 +1051,12 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                     </div>
 
                                     <div
-                                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
                                     >
                                         {filteredEvents?.map((event) => (
                                             <Dialog key={event.id || event._id}>
                                                 <DialogTrigger asChild>
-                                                    <div className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group hover:ember-glow flex flex-col h-full cursor-pointer relative w-[90%] mx-auto">
+                                                    <div className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group hover:ember-glow flex flex-col h-full cursor-pointer relative w-[90%] sm:w-full sm:max-w-[280px] mx-auto sm:mx-0">
                                                         <div className="aspect-[4/5] w-full bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden flex items-center justify-center border-b border-border/50">
                                                             {event.image_url ? (
                                                                 <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
@@ -1072,8 +1072,8 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                             )}
 
                                                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-100 flex flex-col justify-end p-4">
-                                                                <div className="absolute top-4 right-4">
-                                                                    <span className="bg-black/60 border border-primary/30 text-primary px-2 py-0.5 rounded-full backdrop-blur-md text-[9px] font-display uppercase tracking-wider">
+                                                                <div className="absolute top-4 w-full flex justify-center left-0">
+                                                                    <span className="px-3 py-1 rounded-full bg-primary text-white text-[10px] font-bold font-display uppercase tracking-wider shadow-md">
                                                                         {game}
                                                                     </span>
                                                                 </div>

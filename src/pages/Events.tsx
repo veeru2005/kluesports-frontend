@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FlameParticles } from "@/components/ui/FlameParticles";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Loader } from "@/components/ui/Loader";
 
 const placeholderEvents = [
   {
@@ -91,7 +92,7 @@ const EventCard = ({ event, index, isPast }: EventCardProps) => (
   <Dialog>
     <DialogTrigger asChild>
       <div
-        className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group hover:ember-glow flex flex-col h-full cursor-pointer relative w-[90%] mx-auto"
+        className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group hover:ember-glow flex flex-col h-full cursor-pointer relative w-[90%] sm:w-full mx-auto sm:mx-0"
         style={{ animationDelay: `${index * 0.1}s` }}
       >
         <div className="aspect-[4/5] w-full bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden flex items-center justify-center border-b border-border/50">
@@ -106,28 +107,25 @@ const EventCard = ({ event, index, isPast }: EventCardProps) => (
           )}
 
           {/* Badge Overlays */}
-          <div className="absolute top-3 sm:top-4 left-3 sm:left-4 right-3 sm:right-4 z-10 flex justify-between items-start pointer-events-none">
-            <div className="flex gap-2">
-            </div>
+          <div className="absolute top-4 left-0 right-0 z-10 flex justify-center items-start pointer-events-none">
             {event.game && (
-              <span className={`px-2 py-0.5 rounded-full backdrop-blur-md border text-[8px] sm:text-[9px] font-display uppercase tracking-wider ${isPast ? "bg-black/60 border-white/20 text-white/70" : "bg-black/60 border-primary/30 text-primary"}`}>
+              <span className="px-2 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold font-display uppercase tracking-wider shadow-sm">
                 {event.game}
               </span>
             )}
           </div>
 
-          {/* Hover Details Overlay (Only for Upcoming) */}
-          {!isPast && (
-            <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 z-10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="bg-primary/90 text-white px-2 sm:px-3 py-1 rounded text-[8px] sm:text-[10px] font-display uppercase tracking-widest shadow-lg shadow-primary/20">
-                View Details
+          {/* Title & Date Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex flex-col justify-end p-5 sm:p-4">
+            <h3 className="text-white font-display font-bold text-base sm:text-lg uppercase tracking-wider mb-0.5 leading-tight drop-shadow-lg">
+              {event.title}
+            </h3>
+            <div className="flex items-center gap-2 text-white/90">
+              <Calendar className="w-3.5 h-3.5 text-red-600 drop-shadow-md" />
+              <span className="font-display font-medium text-[10px] sm:text-xs tracking-widest uppercase drop-shadow-md">
+                {format(new Date(event.event_date), "MMM dd, yyyy")}
               </span>
             </div>
-          )}
-
-          {/* Title Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 sm:p-4">
-            <p className="text-white font-display text-sm sm:text-lg uppercase tracking-wider line-clamp-1">{event.title}</p>
           </div>
         </div>
       </div>
@@ -286,38 +284,26 @@ const Events = () => {
                   <TabsContent key={tab} value={tab} className="outline-none">
                     {isLoading ? (
                       <div className="flex flex-col items-center justify-center py-20 gap-3">
-                        <div className="relative w-16 h-16">
-                          {/* Rotating dashed circle */}
-                          <div
-                            className="absolute inset-0 rounded-full animate-spin"
-                            style={{
-                              border: '3px dashed',
-                              borderColor: 'hsl(0, 85%, 50%)',
-                              animationDuration: '2s'
-                            }}
-                          />
-                          {/* Game icon in center */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <Gamepad2 className="w-7 h-7 text-primary" />
-                          </div>
-                        </div>
-                        <p className="text-lg font-display flame-text tracking-wider">Loading...</p>
+                        <Loader />
                       </div>
                     ) : upcoming.length > 0 ? (
                       <div
-                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8"
                       >
                         {upcoming.map((event, index) => (
                           <EventCard key={event.id || event._id} event={event} index={index} />
                         ))}
                       </div>
                     ) : (
-                      <div className="col-span-full py-20 text-center glass-dark rounded-xl border-2 border-red-600">
-                        <Calendar className="w-16 h-16 text-primary mx-auto mb-4" />
-                        <h3 className="text-white font-display text-2xl uppercase tracking-widest mb-2">No Upcoming Battles</h3>
-                        <p className="text-muted-foreground font-body max-w-md mx-auto">
-                          No {tab === "all" ? "" : tab} events currently scheduled. Check back soon for new tournaments!
-                        </p>
+                      <div className="col-span-full py-16 px-6 sm:px-12 text-center glass-dark rounded-3xl border-2 border-red-600 mx-auto w-[90%] sm:w-full max-w-3xl relative overflow-hidden">
+                        <div className="absolute inset-0 bg-red-600/5 blur-3xl" />
+                        <div className="relative z-10">
+                          <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-primary mx-auto mb-4" />
+                          <h3 className="text-white font-display text-xl sm:text-2xl uppercase tracking-widest mb-3">No Upcoming Battles</h3>
+                          <p className="text-muted-foreground font-body text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                            No {tab === "all" ? "" : tab} events currently scheduled. Check back soon for new tournaments!
+                          </p>
+                        </div>
                       </div>
                     )}
                   </TabsContent>
@@ -361,19 +347,22 @@ const Events = () => {
                   <TabsContent key={tab} value={tab} className="outline-none">
                     {past.length > 0 ? (
                       <div
-                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8"
                       >
                         {past.map((event, index) => (
                           <EventCard key={event.id || event._id} event={event} index={index} isPast />
                         ))}
                       </div>
                     ) : (
-                      <div className="col-span-full py-20 text-center glass-dark rounded-xl border-2 border-red-600">
-                        <Calendar className="w-16 h-16 text-primary mx-auto mb-4" />
-                        <h3 className="text-white font-display text-2xl uppercase tracking-widest mb-2">No Events Completed</h3>
-                        <p className="text-muted-foreground font-body max-w-md mx-auto">
-                          No {tab === "all" ? "" : tab} events have been completed yet. Stay tuned for results!
-                        </p>
+                      <div className="col-span-full py-16 px-6 sm:px-12 text-center glass-dark rounded-3xl border-2 border-red-600 mx-auto w-[90%] sm:w-full max-w-3xl relative overflow-hidden">
+                        <div className="absolute inset-0 bg-red-600/5 blur-3xl" />
+                        <div className="relative z-10">
+                          <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-primary mx-auto mb-4" />
+                          <h3 className="text-white font-display text-xl sm:text-2xl uppercase tracking-widest mb-3">No Events Completed</h3>
+                          <p className="text-muted-foreground font-body text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                            No {tab === "all" ? "" : tab} events have been completed yet. Stay tuned for results!
+                          </p>
+                        </div>
                       </div>
                     )}
                   </TabsContent>

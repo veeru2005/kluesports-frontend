@@ -27,6 +27,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Loader } from "@/components/ui/Loader";
 
 const Profile = () => {
   const { user, isAdmin, role, isLoading: authLoading, updateUser } = useAuth();
@@ -329,7 +330,7 @@ const Profile = () => {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-primary font-display text-2xl">Loading...</div>
+        <Loader />
       </div>
     );
   }
@@ -673,7 +674,7 @@ const Profile = () => {
                         <Input
                           placeholder="000000"
                           maxLength={6}
-                          className="bg-black border-2 border-red-600 text-center text-2xl tracking-[1em] focus-visible:ring-0 focus-visible:border-red-400 !ring-0 !ring-offset-0 rounded-xl"
+                          className="bg-black border-2 border-red-600 text-center text-2xl tracking-[1em] focus-visible:ring-0 focus-visible:border-red-600 !ring-0 !ring-offset-0 rounded-xl max-w-xs mx-auto text-white placeholder:text-muted-foreground/30"
                           value={securityData.otp}
                           onChange={(e) => setSecurityData({
                             newEmail: securityData.newEmail,
@@ -710,7 +711,7 @@ const Profile = () => {
                         <Input
                           placeholder="000000"
                           maxLength={6}
-                          className="bg-black border-2 border-red-600 text-center text-2xl tracking-[1em] focus-visible:ring-0 focus-visible:border-red-400 !ring-0 !ring-offset-0 rounded-xl"
+                          className="bg-black border-2 border-red-600 text-center text-2xl tracking-[1em] focus-visible:ring-0 focus-visible:border-red-600 !ring-0 !ring-offset-0 rounded-xl max-w-xs mx-auto text-white placeholder:text-muted-foreground/30"
                           value={securityData.otp}
                           onChange={(e) => setSecurityData({
                             newEmail: securityData.newEmail,
@@ -778,7 +779,7 @@ const Profile = () => {
                         <Input
                           placeholder="000000"
                           maxLength={6}
-                          className="bg-black border-2 border-red-600 text-center text-2xl tracking-[1em] focus-visible:ring-0 focus-visible:border-red-400 !ring-0 !ring-offset-0 rounded-xl"
+                          className="bg-black border-2 border-red-600 text-center text-2xl tracking-[1em] focus-visible:ring-0 focus-visible:border-red-600 !ring-0 !ring-offset-0 rounded-xl max-w-xs mx-auto text-white placeholder:text-muted-foreground/30"
                           value={securityData.otp}
                           onChange={(e) => setSecurityData({
                             newEmail: securityData.newEmail,

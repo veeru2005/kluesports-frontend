@@ -73,10 +73,16 @@ export const EventsPreview = () => {
                   <div className="h-2 bg-flame-gradient" />
 
                   <div className="p-6">
-                    {/* Date badge */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-base font-display mb-4">
-                      <Calendar className="w-4 h-4" />
-                      {format(new Date(event.event_date), "MMM dd, yyyy")}
+                    <div className="flex flex-wrap items-center gap-2 mb-4">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-display font-medium">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {format(new Date(event.event_date), "MMM dd, yyyy")}
+                      </div>
+                      {event.game && (
+                        <span className="px-3 py-1 rounded-full bg-primary border border-primary text-white text-[10px] font-bold font-display uppercase tracking-wider shadow-sm">
+                          {event.game}
+                        </span>
+                      )}
                     </div>
 
                     <h3 className="font-display font-bold text-2xl text-foreground mb-3 group-hover:text-primary transition-colors">
@@ -103,12 +109,15 @@ export const EventsPreview = () => {
               );
             })
           ) : (
-            <div className="col-span-full md:col-span-2 lg:col-span-3 w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
-              <Calendar className="w-16 h-16 text-primary mx-auto mb-4"/>
-              <h3 className="text-xl font-bold text-white font-display mb-2">No Upcoming Events</h3>
-              <p className="text-white/60 font-body">
-                The battlefield is quiet for now. Stay tuned for upcoming tournaments and matches!
-              </p>
+            <div className="col-span-full md:col-span-2 lg:col-span-3 py-16 px-6 sm:px-12 text-center glass-dark rounded-3xl border-2 border-red-600 mx-auto w-[90%] sm:w-full max-w-3xl relative overflow-hidden my-8">
+              <div className="absolute inset-0 bg-red-600/5 blur-3xl" />
+              <div className="relative z-10">
+                <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-primary mx-auto mb-4" />
+                <h3 className="text-white font-display text-xl sm:text-2xl uppercase tracking-widest mb-3">No Upcoming Events</h3>
+                <p className="text-muted-foreground font-body text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                  The battlefield is quiet for now. Stay tuned for upcoming tournaments and matches!
+                </p>
+              </div>
             </div>
           )}
         </div>

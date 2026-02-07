@@ -41,7 +41,7 @@ const About = () => {
   const valuesAnim = useScrollAnimation();
   const missionAnim = useScrollAnimation();
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
       <main className="pt-20">
         {/* Hero Section */}
@@ -56,7 +56,7 @@ const About = () => {
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Our Story
               </span>
-              <h1 className="font-display font-bold text-4xl sm:text-4xl md:text-6xl lg:text-7xl mb-3 whitespace-nowrap">
+              <h1 className="font-display font-bold text-4xl sm:text-4xl md:text-6xl lg:text-7xl mb-3">
                 ABOUT <span className="flame-text">KLU ESPORTS</span>
               </h1>
               <p className="text-1xl text-muted-foreground font-body max-w-2xl mx-auto">

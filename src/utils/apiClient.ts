@@ -25,7 +25,7 @@ export async function apiClient<T = any>(
     options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
     const token = localStorage.getItem('inferno_token');
-    
+
     const headers: HeadersInit = {
         'Content-Type': 'application/json',
         ...options.headers,
@@ -48,10 +48,10 @@ export async function apiClient<T = any>(
             // Clear local storage
             localStorage.removeItem('inferno_user');
             localStorage.removeItem('inferno_token');
-            
+
             // Redirect to login
             window.location.href = '/login?session_expired=true';
-            
+
             throw new Error(data.message || 'Session expired. Please login again.');
         }
 
@@ -73,21 +73,21 @@ export async function apiClient<T = any>(
 export const api = {
     get: <T = any>(endpoint: string, options?: RequestInit) =>
         apiClient<T>(endpoint, { ...options, method: 'GET' }),
-    
+
     post: <T = any>(endpoint: string, body?: any, options?: RequestInit) =>
         apiClient<T>(endpoint, {
             ...options,
             method: 'POST',
             body: body ? JSON.stringify(body) : undefined,
         }),
-    
+
     put: <T = any>(endpoint: string, body?: any, options?: RequestInit) =>
         apiClient<T>(endpoint, {
             ...options,
             method: 'PUT',
             body: body ? JSON.stringify(body) : undefined,
         }),
-    
+
     delete: <T = any>(endpoint: string, options?: RequestInit) =>
         apiClient<T>(endpoint, { ...options, method: 'DELETE' }),
 };

@@ -10,10 +10,12 @@ const EventsPreview = lazy(() => import("@/components/home/EventsPreview").then(
 const CTASection = lazy(() => import("@/components/home/CTASection").then(m => ({ default: m.CTASection })));
 const Footer = lazy(() => import("@/components/layout/Footer").then(m => ({ default: m.Footer })));
 
+import { Loader } from "@/components/ui/Loader";
+
 // Simple loading placeholder
 const SectionLoader = () => (
   <div className="w-full py-24 flex items-center justify-center">
-    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+    <Loader />
   </div>
 );
 

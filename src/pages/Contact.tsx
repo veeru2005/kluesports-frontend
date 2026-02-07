@@ -10,6 +10,7 @@ import { FlameParticles } from "@/components/ui/FlameParticles";
 import { Send } from "lucide-react";
 import { z } from "zod";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Loader } from "@/components/ui/Loader";
 
 // Lazy load Lottie for better performance
 const Lottie = lazy(() => import("lottie-react"));
@@ -309,7 +310,7 @@ const Contact = () => {
                 {/* Help Center Animation */}
                 <div className="flex-1 flex items-center justify-center mb-6">
                   {helpCenterAnimation && (
-                    <Suspense fallback={<div className="w-full max-w-[400px] md:max-w-[500px] h-64 flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+                    <Suspense fallback={<div className="w-full max-w-[400px] md:max-w-[500px] h-64 flex items-center justify-center"><Loader /></div>}>
                       <Lottie
                         animationData={helpCenterAnimation}
                         loop={true}

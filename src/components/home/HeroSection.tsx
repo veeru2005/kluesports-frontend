@@ -1,18 +1,27 @@
+import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { Loader } from "@/components/ui/Loader";
 
 export const HeroSection = () => {
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   return (
     <section className="relative w-full mt-20 md:mt-0 md:min-h-screen flex items-center justify-center overflow-hidden bg-black">
       {/* Video Background */}
       <div className="relative w-full aspect-video md:absolute md:inset-0 md:aspect-auto z-0">
+        {!isVideoLoaded && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black z-10 gap-3">
+            <Loader />
+          </div>
+        )}
         <video
-          className="w-full h-full object-cover"
+          className={`w - full h - full object - cover transition - opacity duration - 500 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'} `}
           autoPlay
           muted
           loop
           playsInline
           preload="metadata"
+          onCanPlay={() => setIsVideoLoaded(true)}
         >
           <source src="https://res.cloudinary.com/dus3luhur/video/upload/v1769537336/intro-final-3_hjq6mc.mov" type="video/mp4" />
           Your browser does not support the video tag.

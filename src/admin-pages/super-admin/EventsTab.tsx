@@ -270,8 +270,8 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             )}
 
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-100 flex flex-col justify-end p-4">
-                                                <div className="absolute top-4 right-4">
-                                                    <span className="bg-black/60 border border-primary/30 text-primary px-2 py-0.5 rounded-full backdrop-blur-md text-[9px] font-display uppercase tracking-wider">
+                                                <div className="absolute top-4 w-full flex justify-center left-0">
+                                                    <span className="px-2 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold font-display uppercase tracking-wider shadow-sm">
                                                         {event.game}
                                                     </span>
                                                 </div>
