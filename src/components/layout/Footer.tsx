@@ -99,22 +99,22 @@ export const Footer = () => {
             </p>
 
             {/* Social Icons Row */}
-            <div className="flex gap-3">
-              <a href="https://www.instagram.com/klu__esports" target="_blank" rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
-                <img src="/instagram.svg" alt="IG" className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            <div className="flex gap-4">
+              <a href="https://www.instagram.com/klu__esports/" target="_blank" rel="noopener noreferrer"
+                className="w-12 h-12 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
+                <img src="/instagram.svg" alt="IG" className="w-6 h-6 group-hover:scale-110 transition-transform" />
               </a>
               <a href="https://discord.com/invite/pp9wnEjbt" target="_blank" rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
-                <img src="/discord.svg" alt="DC" className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                className="w-12 h-12 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
+                <img src="/discord.svg" alt="DC" className="w-6 h-6 group-hover:scale-110 transition-transform" />
               </a>
               <a href="https://www.youtube.com/@esports.kluniversity" target="_blank" rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
-                <img src="/youtube.svg" alt="YT" className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                className="w-12 h-12 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
+                <img src="/youtube.svg" alt="YT" className="w-6 h-6 group-hover:scale-110 transition-transform" />
               </a>
               <a href="https://www.linkedin.com/company/klu-esports/" target="_blank" rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
-                <img src="/Linkedin.svg" alt="LI" className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                className="w-12 h-12 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
+                <img src="/Linkedin.svg" alt="LI" className="w-6 h-6 group-hover:scale-110 transition-transform" />
               </a>
             </div>
           </div>
