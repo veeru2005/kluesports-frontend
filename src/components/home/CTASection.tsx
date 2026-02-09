@@ -50,7 +50,7 @@ export const CTASection = () => {
             className={`flex flex-col gap-6 items-center justify-center max-w-lg mx-auto w-[90%] md:w-full scroll-fade-up scroll-delay-200 ${linksAnim.isVisible ? 'scroll-visible' : ''}`}
           >
             <a
-              href="https://www.instagram.com/klu__esports?igsh=MXF6OW0waXl6NnQ3Ng=="
+              href="https://www.instagram.com/klu__esports"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/90 border-2 border-red-600 rounded-2xl hover:bg-black hover:border-red-500 transition-all group backdrop-blur-sm shadow-lg shadow-red-900/30 hover:shadow-red-600/40"
