@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Pencil, Trash2, Eye, Search } from "lucide-react";
+import { Pencil, Trash2, Eye, Search, Users } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
     Select,
@@ -211,12 +211,12 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         <SelectTrigger className="w-[140px] bg-black border-2 border-red-600 h-10 focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder="All Games" />
                         </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Games</SelectItem>
-                            <SelectItem value="Free Fire">Free Fire</SelectItem>
-                            <SelectItem value="BGMI">BGMI</SelectItem>
-                            <SelectItem value="Valorant">Valorant</SelectItem>
-                            <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
+                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                            <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">All Games</SelectItem>
+                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
+                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
+                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
+                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -291,112 +291,117 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                     ))}
                 </div>
             ) : (
-                <div className="w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
-                    <h3 className="text-xl font-bold text-white font-display mb-2">No Members Found</h3>
-                    <p className="text-white/60 font-body">
-                        {searchQuery || gameFilter !== "all" ? "No members found matching your search." : "There are no members registered yet."}
+                <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-red-600 rounded-2xl bg-black/40 w-full relative overflow-hidden group mt-10 shadow-[0_0_30px_rgba(220,38,38,0.2)]">
+                    <div className="absolute inset-0 bg-gradient-to-b from-red-600/[0.05] to-transparent pointer-events-none" />
+                    <div className="relative">
+                        <Users className="w-16 h-16 text-red-500 mb-4" style={{ filter: 'drop-shadow(0 0 18px rgba(220, 38, 38, 0.5))' }} />
+                    </div>
+                    <p className="text-xl font-display font-black uppercase tracking-[0.2em] text-white mb-2">No Members Found</p>
+                    <p className="text-[11px] text-white/40 font-display mb-8 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
+                        {searchQuery || gameFilter !== "all"
+                            ? `No members found matching your search criteria for ${gameFilter === 'all' ? 'all games' : gameFilter}.`
+                            : "There are no verified members registered in the community yet."}
                     </p>
                 </div>
             )}
 
             {/* Edit Dialog */}
             <Dialog open={!!editingMember} onOpenChange={(o) => o ? null : setEditingMember(null)}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-6">
+                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
                     <DialogHeader>
                         <DialogTitle>Edit Member</DialogTitle>
                         <DialogDescription>
                             Update member information
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="name">Name</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="name"
-                                value={formData.name || ""}
-                                readOnly
-                            />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-3">
+                        <div className="grid gap-1.5 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Name</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.name || "N/A"}</p>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="email"
-                                type="email"
-                                value={formData.email || ""}
-                                readOnly
-                            />
+
+                        <div className="grid gap-1.5 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">College ID</Label>
+                            <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                <input
+                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                    id="collegeId"
+                                    value={formData.collegeId || ""}
+                                    onChange={(e) => setFormData({ ...formData, collegeId: e.target.value })}
+                                />
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="inGameName">In-Game Name</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="inGameName"
-                                value={formData.inGameName || ""}
-                                readOnly
-                            />
+
+                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Game Assignment</Label>
+                            <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                <Select
+                                    value={formData.gameYouPlay || 'Free Fire'}
+                                    onValueChange={(val) => setFormData({ ...formData, gameYouPlay: val })}
+                                >
+                                    <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                        <SelectValue placeholder="Select game" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
+                                        <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
+                                        <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
+                                        <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="collegeId">College ID</Label>
-                            <Input
-                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="collegeId"
-                                value={formData.collegeId || ""}
-                                onChange={(e) => setFormData({ ...formData, collegeId: e.target.value })}
-                            />
+
+                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">In-Game Name</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.inGameName || "N/A"}</p>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="mobile">Mobile</Label>
-                            <Input
-                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="mobile"
-                                value={formData.mobile || ""}
-                                onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                            />
+
+                        <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4">
+                            <div className="grid gap-1.5 text-left md:flex-[1.6] overflow-hidden">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Email</Label>
+                                <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                    <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.email || "N/A"}</p>
+                                </div>
+                            </div>
+
+                            <div className="grid gap-1.5 text-left md:flex-1">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Mobile</Label>
+                                <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                    <input
+                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                        id="mobile"
+                                        value={formData.mobile || ""}
+                                        onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="gameYouPlay">Game Assignment</Label>
-                            <Select
-                                value={formData.gameYouPlay || 'Free Fire'}
-                                onValueChange={(val) => setFormData({ ...formData, gameYouPlay: val })}
-                            >
-                                <SelectTrigger className="bg-black border border-red-600 h-10 rounded-md px-3 focus:ring-0 focus:ring-offset-0">
-                                    <SelectValue placeholder="Select game" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="Free Fire">Free Fire</SelectItem>
-                                    <SelectItem value="BGMI">BGMI</SelectItem>
-                                    <SelectItem value="Valorant">Valorant</SelectItem>
-                                    <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
-                                </SelectContent>
-                            </Select>
+
+                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Bio</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.bio || "No bio set"}</p>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="bio">Bio</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="bio"
-                                value={formData.bio || ""}
-                                readOnly
-                            />
-                        </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="memberSince">Member Since</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="memberSince"
-                                value={formData.createdAt ? format(new Date(formData.createdAt), "PPP") : "N/A"}
-                                readOnly
-                            />
+
+                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Member Since</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center">{formData.createdAt ? format(new Date(formData.createdAt), "PPP") : "N/A"}</p>
+                            </div>
                         </div>
                     </div>
-                    <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-between w-full gap-2">
-                        <Button variant="outline" onClick={() => setEditingMember(null)} className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white px-8 h-10 w-full sm:w-auto">
+                    <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2 px-0">
+                        <Button variant="outline" onClick={() => setEditingMember(null)} className="flex-1 max-w-[140px] border-2 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdate} className="bg-red-600 hover:bg-red-700 text-white px-8 h-10 w-full sm:w-auto">Save Changes</Button>
-                    </DialogFooter>
+                        <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">Save Changes</Button>
+                    </div>
                 </DialogContent>
             </Dialog>
 
@@ -411,7 +416,7 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
-                        <AlertDialogCancel className="border-red-600 text-white hover:bg-red-600/10 mt-0">Cancel</AlertDialogCancel>
+                        <AlertDialogCancel className="border-2 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
                             className="bg-red-600 hover:bg-red-700 text-white"

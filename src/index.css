@@ -390,8 +390,8 @@
   /* Hero gradient overlay */
   .hero-gradient {
     background: radial-gradient(ellipse at bottom,
-        hsl(0, 85%, 15%, 0.4) 0%,
-        hsl(0, 0%, 4%) 70%);
+        hsl(0, 85%, 15%, 0.8) 0%,
+        transparent 90%);
   }
 
   /* Scrollbar styling */
@@ -633,6 +633,16 @@
       opacity: 0;
       transform: translateX(0) scale(0.5);
     }
+  }
+
+  /* Flame Card Style - Red/Orange glowing border */
+  .flame-card-style {
+    border: 2px solid hsl(0, 85%, 50%);
+    transition: all 0.3s ease;
+  }
+
+  .flame-card-style:hover {
+    border-color: hsl(15, 100%, 50%);
   }
 
   /* Custom flaming cursor (desktop only) */

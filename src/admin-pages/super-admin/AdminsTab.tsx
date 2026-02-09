@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Pencil } from "lucide-react";
+import { Plus, Trash2, Pencil, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
     Dialog,
@@ -47,6 +47,7 @@ interface Admin {
     createdAt?: string;
     password?: string;
     inGameName?: string;
+    inGameId?: string;
     collegeId?: string;
     bio?: string;
 }
@@ -63,19 +64,7 @@ const getRoleName = (role: string) => {
     return roleMap[role] || role;
 };
 
-const getTimeAgo = (dateString: string) => {
-    if (!dateString) return 'Never';
-    const now = new Date();
-    const loginDate = new Date(dateString);
-    const diffMs = now.getTime() - loginDate.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 60) return `${diffMins} min${diffMins !== 1 ? 's' : ''} ago`;
-    if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-};
 
 interface AdminsTabProps {
     admins: Admin[];
@@ -87,7 +76,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
     const [deletingAdmin, setDeletingAdmin] = useState<Admin | null>(null);
     const [gameFilter, setGameFilter] = useState("all");
     const [formData, setFormData] = useState<Partial<Admin>>({
-        role: "admin_freefire",
+        role: "",
     });
     const { toast } = useToast();
     const queryClient = useQueryClient();
@@ -122,12 +111,13 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
         setFormData({
             name: "",
             inGameName: "",
+            inGameId: "",
             collegeId: "",
             email: "",
             mobile: "",
             password: "",
-            role: "admin_freefire",
-            game: "Free Fire",
+            role: "",
+            game: "",
         } as any);
         setIsAddingAdmin(true);
     };
@@ -141,6 +131,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
             role: admin.role,
             game: admin.game,
             inGameName: admin.inGameName,
+            inGameId: admin.inGameId,
             collegeId: admin.collegeId,
             bio: admin.bio,
             createdAt: admin.createdAt || admin.created_at,
@@ -170,11 +161,12 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
             toast({
                 title: "Success",
                 description: "Admin created successfully",
+                variant: "success",
             });
 
             queryClient.invalidateQueries({ queryKey: ["admin-admins"] });
             setIsAddingAdmin(false);
-            setFormData({ role: "admin_freefire" });
+            setFormData({ role: "" });
         } catch (error: any) {
             toast({
                 title: "Error",
@@ -207,6 +199,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
             toast({
                 title: "Success",
                 description: "Admin updated successfully",
+                variant: "success",
             });
 
             queryClient.invalidateQueries({ queryKey: ["admin-admins"] });
@@ -241,6 +234,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
             toast({
                 title: "Success",
                 description: "Admin deleted successfully",
+                variant: "success",
             });
 
             queryClient.invalidateQueries({ queryKey: ["admin-admins"] });
@@ -285,11 +279,11 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                             <SelectValue placeholder="Filter by Game" />
                         </SelectTrigger>
                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                            <SelectItem value="all" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">All Games</SelectItem>
-                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">Free Fire</SelectItem>
-                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">BGMI</SelectItem>
-                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">Valorant</SelectItem>
-                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/20 focus:bg-red-600/20 focus:text-white">Call Of Duty</SelectItem>
+                            <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">All Games</SelectItem>
+                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
+                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
+                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
+                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -306,14 +300,14 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                             key={adminId}
                             className="bg-transparent rounded-xl border-2 border-red-600 hover:border-red-500 transition-all overflow-hidden"
                         >
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-3 md:p-4 bg-black gap-2 md:gap-4">
-                                <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto">
+                            <div className="flex flex-col md:grid md:grid-cols-12 items-center p-3 md:p-4 bg-black gap-2 md:gap-4">
+                                <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto md:col-span-5">
                                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
                                         <span className="font-display font-bold text-primary text-sm md:text-lg">
                                             {admin.name ? admin.name.charAt(0).toUpperCase() : '?'}
                                         </span>
                                     </div>
-                                    <div className="relative flex-1">
+                                    <div className="relative flex-1 min-w-0">
                                         <h3 className="font-display font-semibold text-sm md:text-base text-foreground truncate">
                                             {admin.name}
                                         </h3>
@@ -328,20 +322,24 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                                         {/* Only super admins can see last login time */}
                                         {user?.role === 'super_admin' && admin.lastLogin && (
                                             <p className="text-muted-foreground text-xs">
-                                                Last login: {getTimeAgo(admin.lastLogin)}
+                                                Last login: {format(new Date(admin.lastLogin), "PP p")}
                                             </p>
                                         )}
                                     </div>
                                 </div>
-                                <Badge className="hidden md:block bg-red-600 hover:bg-red-700 text-white border-0 text-xs md:text-sm">
-                                    {getRoleName(admin.role)}
-                                </Badge>
-                                <div className="flex flex-row items-center gap-2 w-full md:w-auto justify-between md:justify-end">
+
+                                <div className="hidden md:flex md:col-span-4 justify-center w-full">
+                                    <Badge className="bg-red-600 hover:bg-red-700 text-white border-0 text-xs md:text-sm whitespace-nowrap">
+                                        {getRoleName(admin.role)}
+                                    </Badge>
+                                </div>
+
+                                <div className="flex flex-row items-center gap-2 w-full md:w-auto justify-between md:justify-end md:col-span-3">
                                     <Badge className="md:hidden bg-red-600 hover:bg-red-700 text-white border-0 text-sm">
                                         {getRoleName(admin.role)}
                                     </Badge>
                                     {admin.role !== "super_admin" && (
-                                        <div className="flex gap-2">
+                                        <div className="flex gap-2 ml-auto md:ml-0">
                                             <Button
                                                 variant="outline"
                                                 size="sm"
@@ -367,12 +365,16 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                     );
                 })}
                 {(!sortedAdmins || sortedAdmins.length === 0) && (
-                    <div className="w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
-                        <h3 className="text-xl font-bold text-white font-display mb-2">No Admins Found</h3>
-                        <p className="text-white/60 font-body">
+                    <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-red-600 rounded-2xl bg-black/40 w-full relative overflow-hidden group mt-10 shadow-[0_0_30px_rgba(220,38,38,0.2)]">
+                        <div className="absolute inset-0 bg-gradient-to-b from-red-600/[0.05] to-transparent pointer-events-none" />
+                        <div className="relative">
+                            <ShieldCheck className="w-16 h-16 text-red-500 mb-4" style={{ filter: 'drop-shadow(0 0 18px rgba(220, 38, 38, 0.5))' }} />
+                        </div>
+                        <p className="text-xl font-display font-black uppercase tracking-[0.2em] text-white mb-2">No Admins Found</p>
+                        <p className="text-[11px] text-white/40 font-display mb-8 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
                             {gameFilter === "all"
-                                ? "There are no admins currently."
-                                : `There are no admins found for ${gameFilter}.`}
+                                ? "There are no administrative accounts registered in the system yet."
+                                : `There are no admins assigned to the ${gameFilter} category at the moment.`}
                         </p>
                     </div>
                 )}
@@ -380,224 +382,243 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
 
             {/* Add Admin Dialog */}
             <Dialog open={isAddingAdmin} onOpenChange={setIsAddingAdmin}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-6">
+                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
                     <DialogHeader>
                         <DialogTitle>Add New Admin</DialogTitle>
                         <DialogDescription>
                             Create a new admin account
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="add-name">Name *</Label>
-                            <Input
-                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="add-name"
-                                required
-                                value={formData.name || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, name: e.target.value })
-                                }
-                            />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5 py-3 sm:py-4">
+                        <div className="grid gap-2 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Name *</Label>
+                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                <input
+                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                    id="add-name"
+                                    required
+                                    value={formData.name || ""}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                />
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="add-ingamename">In-Game Name</Label>
-                            <Input
-                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="add-ingamename"
-                                value={(formData as any).inGameName || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, inGameName: e.target.value } as any)
-                                }
-                            />
+
+                        <div className="grid gap-2 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">College ID</Label>
+                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                <input
+                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                    id="add-collegeid"
+                                    value={formData.collegeId || ""}
+                                    maxLength={10}
+                                    onChange={(e) => setFormData({ ...formData, collegeId: e.target.value })}
+                                />
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="add-collegeid">College ID</Label>
-                            <Input
-                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="add-collegeid"
-                                value={(formData as any).collegeId || ""}
-                                maxLength={10}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, collegeId: e.target.value } as any)
-                                }
-                            />
+
+                        <div className="grid gap-2 text-left col-span-1 md:col-span-2">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Admin Role *</Label>
+                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                <Select
+                                    value={formData.role || ""}
+                                    onValueChange={(value) => {
+                                        setFormData({
+                                            ...formData,
+                                            role: value,
+                                            game: updateGameFromRole(value),
+                                        });
+                                    }}
+                                >
+                                    <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                        <SelectValue placeholder="Select Game" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectItem value="admin_freefire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire Admin</SelectItem>
+                                        <SelectItem value="admin_bgmi" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI Admin</SelectItem>
+                                        <SelectItem value="admin_valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant Admin</SelectItem>
+                                        <SelectItem value="admin_call_of_duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty Admin</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="add-email">Email *</Label>
-                            <Input
-                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="add-email"
-                                type="email"
-                                required
-                                value={formData.email || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, email: e.target.value })
-                                }
-                            />
+
+                        <div className="grid gap-2 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">In-Game Name *</Label>
+                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                <input
+                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                    id="add-ingamename"
+                                    required
+                                    value={formData.inGameName || ""}
+                                    onChange={(e) => setFormData({ ...formData, inGameName: e.target.value })}
+                                />
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="add-mobile">Mobile</Label>
-                            <Input
-                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="add-mobile"
-                                value={formData.mobile || ""}
-                                maxLength={10}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, mobile: e.target.value })
-                                }
-                            />
+
+                        <div className="grid gap-2 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">In-Game ID</Label>
+                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                <input
+                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                    id="add-ingameid"
+                                    value={formData.inGameId || ""}
+                                    onChange={(e) => setFormData({ ...formData, inGameId: e.target.value })}
+                                />
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="add-password">Password *</Label>
-                            <Input
-                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="add-password"
-                                type="password"
-                                required
-                                value={(formData as any).password || ""}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, password: e.target.value })
-                                }
-                            />
+
+                        <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4">
+                            <div className="grid gap-1.5 text-left md:flex-[1.6] overflow-hidden">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Email *</Label>
+                                <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[38px] flex items-center">
+                                    <input
+                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                        id="add-email"
+                                        type="email"
+                                        required
+                                        value={formData.email || ""}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid gap-1.5 text-left md:flex-1 overflow-hidden">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Mobile</Label>
+                                <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[38px] flex items-center">
+                                    <input
+                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                        id="add-mobile"
+                                        value={formData.mobile || ""}
+                                        maxLength={10}
+                                        onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="add-role">Admin Role *</Label>
-                            <Select
-                                value={formData.role || ""}
-                                onValueChange={(value) => {
-                                    setFormData({
-                                        ...formData,
-                                        role: value,
-                                        game: updateGameFromRole(value),
-                                    });
-                                }}
-                            >
-                                <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
-                                    <SelectValue placeholder="Select role" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="admin_freefire">Free Fire Admin</SelectItem>
-                                    <SelectItem value="admin_bgmi">BGMI Admin</SelectItem>
-                                    <SelectItem value="admin_valorant">Valorant Admin</SelectItem>
-                                    <SelectItem value="admin_call_of_duty">Call Of Duty Admin</SelectItem>
-                                </SelectContent>
-                            </Select>
+
+                        <div className="grid gap-2 text-left col-span-1 md:col-span-2">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Password *</Label>
+                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                <input
+                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                    id="add-password"
+                                    type="password"
+                                    required
+                                    value={formData.password || ""}
+                                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                />
+                            </div>
                         </div>
                     </div>
                     <DialogFooter className="flex-row gap-2">
-                        <Button variant="outline" onClick={() => setIsAddingAdmin(false)} className="flex-1">
+                        <Button variant="outline" onClick={() => setIsAddingAdmin(false)} className="flex-1 border-red-600 text-white hover:bg-red-600 hover:text-white transition-all duration-300">
                             Cancel
                         </Button>
-                        <Button onClick={handleCreate} className="flex-1">Create Admin</Button>
+                        <Button onClick={handleCreate} className="flex-1 bg-red-600 hover:bg-red-700 text-white transition-all duration-300">Create Admin</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
 
             {/* Edit Admin Dialog */}
             <Dialog open={!!editingAdmin} onOpenChange={(o) => o ? null : setEditingAdmin(null)}>
-                <DialogContent className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-6">
+                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
                     <DialogHeader>
                         <DialogTitle>Edit Admin</DialogTitle>
                         <DialogDescription>
                             Update admin information
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                            <Label htmlFor="edit-name">Name</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="edit-name"
-                                value={formData.name || ""}
-                                readOnly
-                            />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 py-3">
+                        <div className="grid gap-1.5 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Name</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.name || "N/A"}</p>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="edit-email">Email</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="edit-email"
-                                type="email"
-                                value={formData.email || ""}
-                                readOnly
-                            />
+
+                        <div className="grid gap-1.5 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">College ID</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.collegeId || "N/A"}</p>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="edit-mobile">Mobile</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="edit-mobile"
-                                value={formData.mobile || ""}
-                                readOnly
-                            />
+
+                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Admin Role</Label>
+                            <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                <Select
+                                    value={formData.role || ""}
+                                    onValueChange={(value) => {
+                                        setFormData({
+                                            ...formData,
+                                            role: value,
+                                            game: updateGameFromRole(value),
+                                        });
+                                    }}
+                                >
+                                    <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                        <SelectValue placeholder="Select role" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectItem value="admin_freefire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire Admin</SelectItem>
+                                        <SelectItem value="admin_bgmi" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI Admin</SelectItem>
+                                        <SelectItem value="admin_valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant Admin</SelectItem>
+                                        <SelectItem value="admin_call_of_duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty Admin</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="edit-ingame">In-Game Name</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="edit-ingame"
-                                value={formData.inGameName || ""}
-                                readOnly
-                            />
+
+                        <div className="grid gap-1.5 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">In-Game Name</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.inGameName || "N/A"}</p>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="edit-collegeid">College ID</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="edit-collegeid"
-                                value={formData.collegeId || ""}
-                                readOnly
-                            />
+
+                        <div className="grid gap-1.5 text-left">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">In-Game ID</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.inGameId || "N/A"}</p>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="edit-bio">Bio</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="edit-bio"
-                                value={formData.bio || ""}
-                                readOnly
-                            />
+
+                        <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4">
+                            <div className="grid gap-1.5 text-left md:flex-[1.6] overflow-hidden">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Email</Label>
+                                <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                    <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.email || "N/A"}</p>
+                                </div>
+                            </div>
+
+                            <div className="grid gap-1.5 text-left md:flex-1 overflow-hidden">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Mobile</Label>
+                                <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                    <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.mobile || "N/A"}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="edit-since">Member Since</Label>
-                            <Input
-                                className="bg-black/50 border-red-600/50 text-white/70 cursor-not-allowed focus-visible:ring-0 focus-visible:ring-offset-0"
-                                id="edit-since"
-                                value={formData.createdAt ? format(new Date(formData.createdAt), "PPP") : "N/A"}
-                                readOnly
-                            />
+
+                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Bio</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{formData.bio || "No bio set"}</p>
+                            </div>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="edit-role">Admin Role</Label>
-                            <Select
-                                value={formData.role || ""}
-                                onValueChange={(value) => {
-                                    setFormData({
-                                        ...formData,
-                                        role: value,
-                                        game: updateGameFromRole(value),
-                                    });
-                                }}
-                            >
-                                <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
-                                    <SelectValue placeholder="Select role" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="admin_freefire">Free Fire Admin</SelectItem>
-                                    <SelectItem value="admin_bgmi">BGMI Admin</SelectItem>
-                                    <SelectItem value="admin_valorant">Valorant Admin</SelectItem>
-                                    <SelectItem value="admin_call_of_duty">Call Of Duty Admin</SelectItem>
-                                </SelectContent>
-                            </Select>
+
+                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Member Since</Label>
+                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center cursor-not-allowed">
+                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center">{formData.createdAt ? format(new Date(formData.createdAt), "PPP") : "N/A"}</p>
+                            </div>
                         </div>
                     </div>
-                    <DialogFooter className="flex-row gap-2">
-                        <Button variant="outline" onClick={() => setEditingAdmin(null)} className="flex-1">
+                    <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2 px-0">
+                        <Button variant="outline" onClick={() => setEditingAdmin(null)} className="flex-1 max-w-[140px] border-2 border-red-600 text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdate} className="flex-1">Save Changes</Button>
-                    </DialogFooter>
+                        <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">Save Changes</Button>
+                    </div>
                 </DialogContent>
             </Dialog>
 
@@ -612,7 +633,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
-                        <AlertDialogCancel className="border-red-600 text-white hover:bg-red-600/10 mt-0">Cancel</AlertDialogCancel>
+                        <AlertDialogCancel className="border-2 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
                             className="bg-red-600 hover:bg-red-700 text-white"
@@ -623,6 +644,6 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </div>
+        </div >
     );
 };

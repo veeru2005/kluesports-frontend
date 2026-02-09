@@ -9,6 +9,7 @@ export interface User {
     username: string; // Used as In-Game Name fallback or display name
     name?: string;
     inGameName?: string;
+    inGameId?: string;
     collegeId?: string;
     mobile?: string;
     bio?: string;

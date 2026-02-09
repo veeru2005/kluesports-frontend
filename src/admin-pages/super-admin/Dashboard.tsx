@@ -30,6 +30,7 @@ import {
 import { MembersTab } from "./MembersTab";
 import { EventsTab } from "./EventsTab";
 import { AdminsTab } from "./AdminsTab";
+import RegistrationsPanel from "../components/RegistrationsPanel";
 
 const SuperAdminDashboard = () => {
     const { user } = useAuth();
@@ -83,7 +84,7 @@ const SuperAdminDashboard = () => {
     const getInitialTab = () => {
         const searchParams = new URLSearchParams(location.search);
         const tabParam = searchParams.get("tab");
-        if (tabParam && ["dashboard", "members", "events", "admins", "messages"].includes(tabParam)) {
+        if (tabParam && ["dashboard", "members", "events", "admins", "messages", "registrations"].includes(tabParam)) {
             return tabParam;
         }
         return "dashboard";
@@ -114,11 +115,31 @@ const SuperAdminDashboard = () => {
     const { data: events } = useQuery({
         queryKey: ["admin-events"],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events`, {
-                headers: getHeaders()
+            const [eventsRes, summaryRes] = await Promise.all([
+                fetch(`${import.meta.env.VITE_API_BASE_URL}/events`, {
+                    headers: getHeaders()
+                }),
+                fetch(`${import.meta.env.VITE_API_BASE_URL}/registrations/all-summary`)
+            ]);
+
+            if (!eventsRes.ok) throw new Error("Failed to fetch events");
+            const events = await eventsRes.json();
+            let summaries = [];
+            if (summaryRes.ok) {
+                summaries = await summaryRes.json();
+            }
+
+            return events.map((event: any) => {
+                const eventId = event._id?.toString() || event._id;
+                const summary = summaries.find((s: any) => {
+                    const summaryId = s._id?.toString() || s._id;
+                    return summaryId === eventId;
+                });
+                return {
+                    ...event,
+                    registrationCount: summary ? summary.count : 0
+                };
             });
-            if (!response.ok) throw new Error("Failed to fetch events");
-            return response.json();
         },
     });
 
@@ -166,7 +187,7 @@ const SuperAdminDashboard = () => {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const tabParam = searchParams.get("tab");
-        if (tabParam && ["dashboard", "members", "events", "admins", "messages"].includes(tabParam)) {
+        if (tabParam && ["dashboard", "members", "events", "admins", "messages", "registrations"].includes(tabParam)) {
             setActiveTab(tabParam);
         }
     }, [location.search]);
@@ -298,6 +319,15 @@ const SuperAdminDashboard = () => {
                             </div>
                         </TabsContent>
 
+                        {/* Registrations Tab */}
+                        <TabsContent value="registrations" className="m-0 p-0 border-none outline-none">
+                            <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
+                                <div className="mx-auto w-full max-w-7xl">
+                                    <RegistrationsPanel game="All" isSuperAdmin={true} />
+                                </div>
+                            </div>
+                        </TabsContent>
+
                         {/* Admins Tab */}
                         <TabsContent value="admins" className="m-0 p-0 border-none outline-none">
                             <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
@@ -312,63 +342,68 @@ const SuperAdminDashboard = () => {
                             <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
                                 <div className="mx-auto w-full max-w-7xl">
                                     {/* Date Filter */}
-                                    <div className="flex flex-nowrap items-center justify-end gap-1.5 md:gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-                                        <Calendar className="w-4 h-4 md:w-5 md:h-5 text-red-500 flex-shrink-0" />
+                                    <div className="flex flex-row justify-between items-center mb-6 gap-2 md:gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <h2 className="font-display font-semibold text-xl md:text-3xl">Messages</h2>
+                                        </div>
+                                        <div className="flex items-center justify-end gap-1 md:gap-3 overflow-x-auto scrollbar-hide min-w-0">
+                                            <Calendar className="w-4 h-4 md:w-5 md:h-5 text-red-500 flex-shrink-0" />
 
-                                        {/* Day Select */}
-                                        <Select value={dayFilter} onValueChange={setDayFilter}>
-                                            <SelectTrigger className="w-[65px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
-                                                <SelectValue placeholder="Day" />
-                                            </SelectTrigger>
-                                            <SelectContent className="bg-black border-2 border-red-600 rounded-lg max-h-[200px]">
-                                                {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                                                    <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600 focus:bg-red-600 focus:text-white data-[state=checked]:bg-red-600 data-[state=checked]:text-white text-xs md:text-sm cursor-pointer">
-                                                        {day}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                            {/* Day Select */}
+                                            <Select value={dayFilter} onValueChange={setDayFilter}>
+                                                <SelectTrigger className="w-[65px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                                                    <SelectValue placeholder="Day" />
+                                                </SelectTrigger>
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg max-h-[200px]">
+                                                    {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                                                        <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white text-xs md:text-sm cursor-pointer rounded-md m-1">
+                                                            {day}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
 
-                                        {/* Month Select */}
-                                        <Select value={monthFilter} onValueChange={setMonthFilter}>
-                                            <SelectTrigger className="w-[90px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
-                                                <SelectValue placeholder="Month" />
-                                            </SelectTrigger>
-                                            <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                                {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((m, idx) => (
-                                                    <SelectItem key={m} value={m} className="text-white hover:bg-red-600 focus:bg-red-600 focus:text-white data-[state=checked]:bg-red-600 data-[state=checked]:text-white text-xs md:text-sm cursor-pointer">
-                                                        {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][idx]}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                            {/* Month Select */}
+                                            <Select value={monthFilter} onValueChange={setMonthFilter}>
+                                                <SelectTrigger className="w-[90px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                                                    <SelectValue placeholder="Month" />
+                                                </SelectTrigger>
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                    {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((m, idx) => (
+                                                        <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white text-xs md:text-sm cursor-pointer rounded-md m-1">
+                                                            {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][idx]}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
 
-                                        {/* Year Select */}
-                                        <Select value={yearFilter} onValueChange={setYearFilter}>
-                                            <SelectTrigger className="w-[75px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
-                                                <SelectValue placeholder="Year" />
-                                            </SelectTrigger>
-                                            <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                                {["2024", "2025", "2026", "2027", "2028"].map((year) => (
-                                                    <SelectItem key={year} value={year} className="text-white hover:bg-red-600 focus:bg-red-600 focus:text-white data-[state=checked]:bg-red-600 data-[state=checked]:text-white text-xs md:text-sm cursor-pointer">
-                                                        {year}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                            {/* Year Select */}
+                                            <Select value={yearFilter} onValueChange={setYearFilter}>
+                                                <SelectTrigger className="w-[75px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                                                    <SelectValue placeholder="Year" />
+                                                </SelectTrigger>
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                    {["2024", "2025", "2026", "2027", "2028"].map((year) => (
+                                                        <SelectItem key={year} value={year} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white text-xs md:text-sm cursor-pointer rounded-md m-1">
+                                                            {year}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
 
-                                        {(dayFilter || monthFilter || yearFilter) && (
-                                            <button
-                                                onClick={() => {
-                                                    setDayFilter("");
-                                                    setMonthFilter("");
-                                                    setYearFilter("");
-                                                }}
-                                                className="flex items-center justify-center p-2 text-red-500 hover:text-red-400 transition-colors flex-shrink-0"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </button>
-                                        )}
+                                            {(dayFilter || monthFilter || yearFilter) && (
+                                                <button
+                                                    onClick={() => {
+                                                        setDayFilter("");
+                                                        setMonthFilter("");
+                                                        setYearFilter("");
+                                                    }}
+                                                    className="flex items-center justify-center p-2 text-red-500 hover:text-red-400 transition-colors flex-shrink-0"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                     <div
                                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
@@ -411,10 +446,10 @@ const SuperAdminDashboard = () => {
 
                                                     {/* Sender info */}
                                                     <div className="space-y-1 mb-4">
-                                                        <p className="text-sm text-muted-foreground">
+                                                        <p className="text-sm text-white">
                                                             <span className="text-red-500 font-semibold">From:</span> {msg.name}
                                                         </p>
-                                                        <p className="text-sm text-muted-foreground">
+                                                        <p className="text-sm text-white">
                                                             <span className="text-red-500 font-semibold">Email:</span> {msg.email}
                                                         </p>
                                                     </div>
@@ -435,10 +470,14 @@ const SuperAdminDashboard = () => {
                                                 </div>
                                             ))}
                                         {(!messages || messages.length === 0) && (
-                                            <div className="col-span-full w-full glass-dark border-2 border-red-600 rounded-xl p-12 text-center my-8">
-                                                <h3 className="text-xl font-bold text-white font-display mb-2">No Messages Found</h3>
-                                                <p className="text-white/60 font-body">
-                                                    No messages found.
+                                            <div className="col-span-full flex flex-col items-center justify-center py-16 text-center border-2 border-red-600 rounded-2xl bg-black/40 w-full relative overflow-hidden group mt-10 shadow-[0_0_30px_rgba(220,38,38,0.2)]">
+                                                <div className="absolute inset-0 bg-gradient-to-b from-red-600/[0.05] to-transparent pointer-events-none" />
+                                                <div className="relative">
+                                                    <Mail className="w-16 h-16 text-red-500 mb-4" style={{ filter: 'drop-shadow(0 0 18px rgba(220, 38, 38, 0.5))' }} />
+                                                </div>
+                                                <p className="text-xl font-display font-black uppercase tracking-[0.2em] text-white mb-2">No Messages Found</p>
+                                                <p className="text-[11px] text-white/40 font-display mb-8 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
+                                                    Your communication hub is currently empty. Direct inquiries from community members will appear here once they start reaching out.
                                                 </p>
                                             </div>
                                         )}

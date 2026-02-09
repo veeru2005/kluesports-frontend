@@ -86,6 +86,13 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                 Events
                             </button>
 
+                            <button
+                                onClick={() => onTabChange ? onTabChange("registrations") : navigate(`${baseUrl}?tab=registrations`)}
+                                className={`nav-link font-display text-lg uppercase tracking-wider transition-colors ${activeTab === "registrations" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                            >
+                                Registrations
+                            </button>
+
                             {user?.role === 'super_admin' && (
                                 <button
                                     onClick={() => onTabChange ? onTabChange("admins") : navigate(`${baseUrl}?tab=admins`)}
@@ -165,6 +172,12 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                     className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "events" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                                 >
                                     Events
+                                </button>
+                                <button
+                                    onClick={() => { onTabChange ? onTabChange("registrations") : navigate(`${baseUrl}?tab=registrations`); setIsMobileMenuOpen(false); }}
+                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "registrations" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
+                                >
+                                    Registrations
                                 </button>
                                 {user?.role === 'super_admin' && (
                                     <button

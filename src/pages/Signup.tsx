@@ -6,12 +6,13 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useAuth } from "@/contexts/AuthContext";
-import { Flame, Eye, EyeOff, Mail, Shield, User, Phone } from "lucide-react";
+import { Flame, Eye, EyeOff, Mail, Shield, User, Phone, Gamepad2 } from "lucide-react";
 import { z } from "zod";
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   inGameName: z.string().min(2, "In-game name must be at least 2 characters"),
+  inGameId: z.string().min(2, "In-game ID must be at least 2 characters"),
   collegeId: z.string().regex(/^\d{10}$/, "College ID must be exactly 10 digits"),
   gameYouPlay: z.enum(["Free Fire", "BGMI", "Valorant", "Call Of Duty"], {
     errorMap: () => ({ message: "Please select a game" }),
@@ -29,6 +30,7 @@ const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
     inGameName: "",
+    inGameId: "",
     collegeId: "",
     gameYouPlay: "" as "" | "Free Fire" | "BGMI" | "Valorant" | "Call Of Duty",
     email: "",
@@ -256,25 +258,6 @@ const Signup = () => {
                     )}
                   </div>
 
-                  {/* In-Game Name Field */}
-                  <div className="space-y-2">
-                    <Label htmlFor="inGameName" className="font-display flex items-center gap-2">
-                      <User className="w-4 h-4" />
-                      In-Game Name
-                    </Label>
-                    <Input
-                      id="inGameName"
-                      name="inGameName"
-                      value={formData.inGameName}
-                      onChange={handleChange}
-                      placeholder="Your Game Tag"
-                      className={`bg-muted border-border ${errors.inGameName ? "border-destructive" : ""}`}
-                    />
-                    {errors.inGameName && (
-                      <p className="text-destructive text-sm">{errors.inGameName}</p>
-                    )}
-                  </div>
-
                   {/* College ID Field */}
                   <div className="space-y-2">
                     <Label htmlFor="collegeId" className="font-display flex items-center gap-2">
@@ -295,8 +278,8 @@ const Signup = () => {
                     )}
                   </div>
 
-                  {/* Game You Play Dropdown */}
-                  <div className="space-y-2">
+                  {/* Game You Play Dropdown (Full Width) */}
+                  <div className="space-y-2 col-span-1 md:col-span-2">
                     <Label htmlFor="gameYouPlay" className="font-display flex items-center gap-2">
                       <Flame className="w-4 h-4" />
                       Game You Play
@@ -317,6 +300,44 @@ const Signup = () => {
                     </select>
                     {errors.gameYouPlay && (
                       <p className="text-destructive text-sm">{errors.gameYouPlay}</p>
+                    )}
+                  </div>
+
+                  {/* In-Game Name Field */}
+                  <div className="space-y-2">
+                    <Label htmlFor="inGameName" className="font-display flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      In-Game Name
+                    </Label>
+                    <Input
+                      id="inGameName"
+                      name="inGameName"
+                      value={formData.inGameName}
+                      onChange={handleChange}
+                      placeholder="Your Game Tag"
+                      className={`bg-muted border-border ${errors.inGameName ? "border-destructive" : ""}`}
+                    />
+                    {errors.inGameName && (
+                      <p className="text-destructive text-sm">{errors.inGameName}</p>
+                    )}
+                  </div>
+
+                  {/* In-Game ID Field */}
+                  <div className="space-y-2">
+                    <Label htmlFor="inGameId" className="font-display flex items-center gap-2">
+                      <Gamepad2 className="w-4 h-4" />
+                      In-Game ID
+                    </Label>
+                    <Input
+                      id="inGameId"
+                      name="inGameId"
+                      value={formData.inGameId}
+                      onChange={handleChange}
+                      placeholder="Your Numeric ID"
+                      className={`bg-muted border-border ${errors.inGameId ? "border-destructive" : ""}`}
+                    />
+                    {errors.inGameId && (
+                      <p className="text-destructive text-sm">{errors.inGameId}</p>
                     )}
                   </div>
 

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Users, ArrowRight } from "lucide-react";
+import { Calendar, MapPin, Users, ArrowRight, Clock } from "lucide-react";
+import { Loader } from "@/components/ui/Loader";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { mockEvents } from "@/lib/mock-data";
@@ -9,9 +10,6 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 export const EventsPreview = () => {
   const navigate = useNavigate();
   const titleAnim = useScrollAnimation();
-  const event1Anim = useScrollAnimation();
-  const event2Anim = useScrollAnimation();
-  const event3Anim = useScrollAnimation();
 
   const { data: events, isLoading } = useQuery({
     queryKey: ["home-upcoming-events"],
@@ -24,7 +22,11 @@ export const EventsPreview = () => {
         // Filter future events and sort by date
         const upcoming = data
           .filter((e: any) => new Date(e.event_date) > new Date())
-          .sort((a: any, b: any) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
+          .sort((a: any, b: any) => {
+            const dateA = new Date(a.createdAt || a.created_at || a.event_date).getTime();
+            const dateB = new Date(b.createdAt || b.created_at || b.event_date).getTime();
+            return dateB - dateA;
+          });
 
         return upcoming.slice(0, 3);
       } catch (error) {
@@ -32,6 +34,8 @@ export const EventsPreview = () => {
         return [];
       }
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
   });
 
   const displayEvents = events || [];
@@ -53,29 +57,23 @@ export const EventsPreview = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading ? (
-            [...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="glass-dark rounded-xl h-64 animate-pulse"
-              />
-            ))
+            <div className="col-span-full flex justify-center py-12">
+              <Loader />
+            </div>
           ) : displayEvents.length > 0 ? (
-            displayEvents.map((event, index) => {
-              const eventAnims = [event1Anim, event2Anim, event3Anim];
-              const eventAnim = eventAnims[index] || { elementRef: null, isVisible: false };
+            displayEvents.map((event) => {
               return (
                 <div
-                  key={event.id}
-                  ref={eventAnim.elementRef}
-                  className={`glass-dark rounded-xl overflow-hidden border border-red-600 hover:border-red-500 transition-all group hover:ember-glow scroll-scale scroll-delay-${index * 100} ${eventAnim.isVisible ? 'scroll-visible' : ''}`}
+                  key={event.id || event._id}
+                  className="glass-dark rounded-xl overflow-hidden border border-red-600/50 md:border-red-600 transition-all group w-[95%] md:w-full mx-auto"
                 >
                   {/* Event header with gradient */}
                   <div className="h-2 bg-flame-gradient" />
 
                   <div className="p-6">
-                    <div className="flex flex-wrap items-center gap-2 mb-4">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-display font-medium">
-                        <Calendar className="w-3.5 h-3.5" />
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary border border-primary text-white text-[10px] font-bold font-display uppercase tracking-wider shadow-sm">
+                        <Calendar className="w-3.5 h-3.5 text-white" />
                         {format(new Date(event.event_date), "MMM dd, yyyy")}
                       </div>
                       {event.game && (
@@ -92,17 +90,18 @@ export const EventsPreview = () => {
                       {event.description}
                     </p>
 
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4 text-primary" />
+                    <div className="flex flex-wrap items-center gap-3 text-sm">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 text-muted-foreground text-xs font-display border border-primary hover:border-primary transition-colors">
+                        <MapPin className="w-3.5 h-3.5 text-primary" />
                         {event.location || "TBA"}
                       </div>
-                      {event.max_participants && (
-                        <div className="flex items-center gap-1">
-                          <Users className="w-4 h-4 text-primary" />
-                          {event.max_participants} slots
-                        </div>
-                      )}
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 text-muted-foreground text-xs font-display border border-primary hover:border-primary transition-colors">
+                        <Clock className="w-3.5 h-3.5 text-primary" />
+                        <span>
+                          {format(new Date(event.event_date), "h:mm a")}
+                          {event.end_time && ` - ${format(new Date(event.end_time), "h:mm a")}`}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -133,6 +132,8 @@ export const EventsPreview = () => {
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
+
+
       </div>
     </section>
   );

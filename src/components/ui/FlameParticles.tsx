@@ -24,20 +24,25 @@ export const FlameParticles = () => {
 
         const colors = ["#dc2626", "#ef4444", "#f97316", "#fbbf24"];
 
-        // Increased from 60 to 100 particles for more visibility
-        for (let i = 0; i < 100; i++) {
+        // Adjust particle count based on screen size (less for mobile)
+        const isMobile = window.innerWidth < 768;
+        const particleCount = isMobile ? 60 : 150;
+
+        for (let i = 0; i < particleCount; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 // Spread particles across the full height so they appear immediately
                 y: Math.random() * canvas.height,
-                // Increased size range from 1-5 to 2-6 for better visibility
-                size: Math.random() * 4 + 2,
-                // Increased speed from 1-3 to 1.5-3.5 for faster animation
+                // Increased size range from 2-6 to 3-8 for better visibility
+                size: Math.random() * 5 + 3,
+                // Increased speed from 1.5-3.5
                 speedY: Math.random() * 2 + 1.5,
-                opacity: Math.random() * 0.7 + 0.3,
+                opacity: Math.random() * 0.5 + 0.5,
                 color: colors[Math.floor(Math.random() * colors.length)],
             });
         }
+
+        let animationId: number;
 
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -60,13 +65,13 @@ export const FlameParticles = () => {
                 if (particle.y < -10 || particle.opacity <= 0) {
                     particle.y = canvas.height + 10;
                     particle.x = Math.random() * canvas.width;
-                    particle.opacity = Math.random() * 0.7 + 0.3;
+                    particle.opacity = Math.random() * 0.5 + 0.5;
                 }
             });
 
             ctx.globalAlpha = 1;
             ctx.shadowBlur = 0;
-            requestAnimationFrame(animate);
+            animationId = requestAnimationFrame(animate);
         };
 
         animate();
@@ -77,7 +82,11 @@ export const FlameParticles = () => {
         };
 
         window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+            cancelAnimationFrame(animationId);
+        };
     }, []);
 
     return (

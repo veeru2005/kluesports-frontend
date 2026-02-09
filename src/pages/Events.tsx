@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { mockEvents } from "@/lib/mock-data";
 import { Calendar, MapPin, Users, Clock, X, Gamepad2 } from "lucide-react";
 import { format } from "date-fns";
@@ -9,6 +10,7 @@ import { FlameParticles } from "@/components/ui/FlameParticles";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Loader } from "@/components/ui/Loader";
+import { useAuth } from "@/contexts/AuthContext";
 
 const placeholderEvents = [
   {
@@ -86,61 +88,109 @@ interface EventCardProps {
   event: any;
   index: number;
   isPast?: boolean;
+  onRegister?: (event: any) => void;
+  isRegistered?: boolean;
+  userRole?: string;
 }
 
-const EventCard = ({ event, index, isPast }: EventCardProps) => (
+const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }: EventCardProps) => (
   <Dialog>
-    <DialogTrigger asChild>
-      <div
-        className="glass-dark rounded-xl overflow-hidden border border-border hover:border-primary/40 transition-all group hover:ember-glow flex flex-col h-full cursor-pointer relative w-[90%] sm:w-full mx-auto sm:mx-0"
-        style={{ animationDelay: `${index * 0.1}s` }}
-      >
-        <div className="aspect-[4/5] w-full bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden flex items-center justify-center border-b border-border/50">
-          {event.image_url ? (
-            <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
-          ) : (
-            <div className="text-center p-6 bg-black/20 w-full h-full flex flex-col items-center justify-center">
-              <div className="text-primary/20 font-display font-bold text-3xl uppercase tracking-tighter">
-                KLU <span className="flame-text opacity-40">ESPORTS</span>
-              </div>
+    <div
+      className="glass-dark rounded-xl overflow-hidden flame-card-style transition-all group flex flex-col h-full relative w-[90%] sm:w-full mx-auto sm:mx-0"
+      style={{ animationDelay: `${index * 0.1}s` }}
+    >
+      {/* Image section - not clickable */}
+      <div className="aspect-[3/4] w-full relative overflow-hidden flex items-center justify-center">
+        {event.image_url ? (
+          <img
+            src={event.image_url}
+            alt={event.title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="text-center p-6 bg-black/20 w-full h-full flex flex-col items-center justify-center">
+            <div className="text-primary/20 font-display font-bold text-3xl uppercase tracking-tighter">
+              KLU <span className="flame-text opacity-40">ESPORTS</span>
             </div>
+          </div>
+        )}
+
+        {/* Badge Overlays */}
+        <div className="absolute top-4 left-0 right-0 z-10 flex justify-center items-start pointer-events-none">
+          {event.game && (
+            <span className="px-2 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold font-display uppercase tracking-wider shadow-sm">
+              {event.game}
+            </span>
           )}
-
-          {/* Badge Overlays */}
-          <div className="absolute top-4 left-0 right-0 z-10 flex justify-center items-start pointer-events-none">
-            {event.game && (
-              <span className="px-2 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold font-display uppercase tracking-wider shadow-sm">
-                {event.game}
-              </span>
-            )}
-          </div>
-
-          {/* Title & Date Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex flex-col justify-end p-5 sm:p-4">
-            <h3 className="text-white font-display font-bold text-base sm:text-lg uppercase tracking-wider mb-0.5 leading-tight drop-shadow-lg">
-              {event.title}
-            </h3>
-            <div className="flex items-center gap-2 text-white/90">
-              <Calendar className="w-3.5 h-3.5 text-red-600 drop-shadow-md" />
-              <span className="font-display font-medium text-[10px] sm:text-xs tracking-widest uppercase drop-shadow-md">
-                {format(new Date(event.event_date), "MMM dd, yyyy")}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
-    </DialogTrigger>
+
+      {/* Slots Progress Bar & View Details Button */}
+      <div className="pt-1.5 pb-3 px-3 bg-black/30 space-y-2">
+        {/* Slots Progress Section */}
+        {(() => {
+          const filled = event.registrationCount || 0;
+          const total = event.max_participants || 1;
+          const percentFilled = (filled / total) * 100;
+          const isFull = filled >= total;
+          const isManuallyClosed = event.is_registration_open === false;
+          const colorClass = percentFilled < 50 ? "bg-green-500" : percentFilled < 80 ? "bg-orange-500" : "bg-red-500";
+
+          return (
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-xs sm:text-sm font-display uppercase tracking-wider">
+                <span className="text-white font-bold">
+                  {`${filled}/${total} slots filled`}
+                </span>
+                <span className="text-white font-bold">{Math.max(0, total - filled)} left</span>
+              </div>
+              <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className={`h-full ${isManuallyClosed ? 'bg-gray-500' : isFull ? 'bg-red-500' : colorClass} rounded-full transition-all duration-500`}
+                  style={{ width: `${Math.min(percentFilled, 100)}%` }}
+                />
+              </div>
+            </div>
+          );
+        })()}
+
+        <DialogTrigger asChild>
+          <Button
+            variant={event.is_registration_open === false ? "outline" : "flame"}
+            className={`w-full h-auto min-h-[2.25rem] py-2 whitespace-normal leading-tight text-[10px] font-bold tracking-widest uppercase cursor-pointer ${event.is_registration_open === false
+              ? "bg-neutral-800 text-gray-400 border-neutral-700 hover:bg-neutral-800 hover:text-gray-400 hover:border-neutral-700"
+              : (event.max_participants && (event.registrationCount || 0) >= event.max_participants)
+                ? "bg-red-900/50 text-red-200 border-red-900/50 hover:bg-red-900/50 shadow-none"
+                : ""
+              }`}
+          >
+            {event.is_registration_open === false
+              ? "Registration Not Opened"
+              : (event.max_participants && (event.registrationCount || 0) >= event.max_participants)
+                ? "Registrations Closed"
+                : "View Details & Register Now"}
+          </Button>
+        </DialogTrigger>
+      </div>
+    </div>
     <DialogContent className="glass-dark border-2 border-primary w-[85vw] max-w-[500px] text-white px-8 pb-8 pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)] [&>button]:hidden">
-      <div className="overflow-y-auto custom-scrollbar flex flex-col gap-8">
+      <div className="overflow-y-auto custom-scrollbar flex flex-col gap-6">
 
         {/* Top Header Section */}
         <div className="flex items-center justify-between w-full">
           <div>
-            {isPast && (
-              <span className="bg-red-600/90 border border-red-500 text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg">
-                Completed
-              </span>
-            )}
+            {(() => {
+              const slotsLeft = event.max_participants - (event.registrationCount || 0);
+              const percentLeft = (slotsLeft / event.max_participants) * 100;
+              const colorClass = percentLeft > 50 ? "bg-green-500" : percentLeft > 20 ? "bg-orange-500" : "bg-red-500";
+              const isClosed = event.is_registration_open === false || slotsLeft <= 0;
+
+              return (
+                <span className={`border ${isClosed ? 'bg-gray-600 border-gray-600' : `${colorClass} border-transparent`} text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg`}>
+                  {isClosed ? "REGISTRATION CLOSED" : `${slotsLeft} SLOTS LEFT`}
+                </span>
+              );
+            })()}
           </div>
 
           <div>
@@ -172,7 +222,8 @@ const EventCard = ({ event, index, isPast }: EventCardProps) => (
           <div className="flex items-center gap-4">
             <Clock className="w-5 h-5 text-primary shrink-0" />
             <span className="font-display tracking-wide uppercase text-sm">
-              {format(new Date(event.event_date), "h:mm a")} - {format(new Date(new Date(event.event_date).getTime() + 2 * 60 * 60 * 1000), "h:mm a")}
+              {format(new Date(event.event_date), "h:mm a")}
+              {event.end_time && ` - ${format(new Date(event.end_time), "h:mm a")}`}
             </span>
           </div>
           <div className="flex items-center gap-4">
@@ -181,21 +232,59 @@ const EventCard = ({ event, index, isPast }: EventCardProps) => (
           </div>
           <div className="flex items-center gap-4">
             <Users className="w-5 h-5 text-primary shrink-0" />
-            <span className="font-display tracking-wide uppercase text-sm">Limited Slots</span>
+            <span className="font-display tracking-wide uppercase text-sm">{event.max_participants ? `${event.max_participants} Slots` : "Unlimited Slots"}</span>
           </div>
         </div>
 
-        {/* Action Button */}
-        <div className="pt-1">
-          {!isPast ? (
-            <Button variant="flame" className="w-full h-11 text-sm uppercase tracking-[0.2em] shadow-lg shadow-primary/20">
-              Register Now
+        {/* Action Buttons */}
+        <div className="flex flex-row gap-3">
+          <DialogClose asChild>
+            <Button
+              variant="flame-outline"
+              className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display hover:text-white"
+            >
+              Close
             </Button>
-          ) : (
+          </DialogClose>
+          {!isPast && onRegister && (
             <DialogClose asChild>
-              <button className="w-full h-12 rounded-full border-2 border-red-600 bg-transparent hover:bg-red-600 hover:text-white text-white font-display text-sm transition-all uppercase tracking-widest shadow-sm hover:shadow-lg flex items-center justify-center outline-none">
-                Close
-              </button>
+              {isRegistered ? (
+                <Button
+                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display bg-green-600 text-white border border-green-600 hover:bg-green-600 cursor-not-allowed shadow-[0_0_15px_-5px_rgba(34,197,94,0.5)]"
+                  disabled
+                >
+                  Registered
+                </Button>
+              ) : userRole && userRole !== 'user' ? (
+                <Button
+                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display bg-red-600/50 text-white border border-red-600/50 cursor-not-allowed"
+                  disabled
+                >
+                  Admin Restricted
+                </Button>
+              ) : event.is_registration_open === false ? (
+                <Button
+                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display bg-gray-600 text-white border border-gray-600 cursor-not-allowed"
+                  disabled
+                >
+                  Registration Not Opened
+                </Button>
+              ) : (event.max_participants && (event.registrationCount || 0) >= event.max_participants) ? (
+                <Button
+                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display bg-red-600 text-white border border-red-600 cursor-not-allowed shadow-[0_0_15px_-5px_rgba(220,38,38,0.5)]"
+                  disabled
+                >
+                  Registrations Closed
+                </Button>
+              ) : (
+                <Button
+                  variant="flame"
+                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display hover:text-white"
+                  onClick={() => onRegister(event)}
+                >
+                  Register Now
+                </Button>
+              )}
             </DialogClose>
           )}
         </div>
@@ -204,7 +293,119 @@ const EventCard = ({ event, index, isPast }: EventCardProps) => (
   </Dialog>
 );
 
+
+
+const PastEventCard = ({ event, index }: { event: any, index: number }) => (
+  <Dialog>
+    <DialogTrigger asChild>
+      <div
+        className="glass-dark rounded-xl overflow-hidden flame-card-style transition-all group flex flex-col h-full cursor-pointer relative w-[90%] sm:w-full mx-auto sm:mx-0"
+        style={{ animationDelay: `${index * 0.1}s` }}
+      >
+        <div className="aspect-[3/4] w-full relative overflow-hidden flex items-center justify-center border-b border-white/5">
+          {event.image_url ? (
+            <img
+              src={event.image_url}
+              alt={event.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="text-center p-6 bg-black/20 w-full h-full flex flex-col items-center justify-center">
+              <div className="text-primary/20 font-display font-bold text-3xl uppercase tracking-tighter">
+                KLU <span className="flame-text opacity-40">ESPORTS</span>
+              </div>
+            </div>
+          )}
+
+          {/* Badge Overlays */}
+          <div className="absolute top-4 left-0 right-0 z-10 flex justify-center items-start pointer-events-none">
+            {event.game && (
+              <span className="px-2 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold font-display uppercase tracking-wider shadow-sm">
+                {event.game}
+              </span>
+            )}
+          </div>
+
+          {/* Title & Date Overlay */}
+
+        </div>
+      </div>
+    </DialogTrigger>
+    <DialogContent className="glass-dark border-2 border-primary w-[85vw] max-w-[500px] text-white px-8 pb-8 pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)] [&>button]:hidden">
+      <div className="overflow-y-auto custom-scrollbar flex flex-col gap-8">
+
+        {/* Top Header Section */}
+        <div className="flex items-center justify-between w-full">
+          <div>
+            <span className="bg-primary/90 border border-primary text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg">
+              Completed
+            </span>
+          </div>
+
+          <div>
+            {event.game && (
+              <span className="bg-primary/90 border border-primary text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg">
+                {event.game}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Title & Description */}
+        <div className="space-y-3">
+          <h2 className="text-2xl font-bold text-white font-display leading-tight text-left uppercase tracking-tight">
+            {event.title}
+          </h2>
+          <p className="text-white/60 text-sm leading-relaxed text-left font-body">
+            {event.description}
+          </p>
+        </div>
+
+
+        {/* Details List - Vertical Stack */}
+        <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border border-primary/50 shadow-[0_0_15px_-5px_hsl(var(--primary)/0.2)]">
+          <div className="flex items-center gap-4">
+            <Calendar className="w-5 h-5 text-primary shrink-0" />
+            <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Clock className="w-5 h-5 text-primary shrink-0" />
+            <span className="font-display tracking-wide uppercase text-sm">
+              {format(new Date(event.event_date), "h:mm a")}
+              {event.end_time && ` - ${format(new Date(event.end_time), "h:mm a")}`}
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <MapPin className="w-5 h-5 text-primary shrink-0" />
+            <span className="font-display tracking-wide uppercase text-sm truncate">{event.location || "TBA"}</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Users className="w-5 h-5 text-primary shrink-0" />
+            <span className="font-display tracking-wide uppercase text-sm">{event.max_participants ? `${event.max_participants} Slots` : "Unlimited Slots"}</span>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="pt-4 flex flex-row gap-3">
+          <DialogClose asChild>
+            <Button
+              variant="flame-outline"
+              className="h-12 text-sm uppercase tracking-[0.2em] font-display hover:text-white w-full"
+            >
+              Close
+            </Button>
+          </DialogClose>
+        </div>
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+
+
+
 const Events = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const titleAnim = useScrollAnimation();
   const upcomingHeaderAnim = useScrollAnimation();
   const upcomingGridAnim = useScrollAnimation();
@@ -214,15 +415,64 @@ const Events = () => {
   const { data: events, isLoading } = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      const [eventsRes, summaryRes] = await Promise.all([
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/events`),
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/registrations/all-summary`)
+      ]);
+
+      if (!eventsRes.ok) throw new Error('Failed to fetch events');
+      const events = await eventsRes.json();
+      let summaries = [];
+      if (summaryRes.ok) {
+        summaries = await summaryRes.json();
       }
-      return response.json();
+
+      return events.map((event: any) => {
+        const eventId = event._id?.toString() || event._id;
+        const summary = summaries.find((s: any) => {
+          const summaryId = s._id?.toString() || s._id;
+          return summaryId === eventId;
+        });
+        return {
+          ...event,
+          registrationCount: summary ? summary.count : 0
+        };
+      });
     },
   });
 
+  const { data: myRegistrations } = useQuery({
+    queryKey: ["myRegistrations"],
+    queryFn: async () => {
+      const token = localStorage.getItem("inferno_token");
+      if (!token) return [];
+
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/registrations/my`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!response.ok) return [];
+        return response.json();
+      } catch (e) {
+        return [];
+      }
+    },
+    initialData: []
+  });
+
+  const registeredEventIds = new Set(myRegistrations?.map((r: any) => r.eventId) || []);
+
   const displayEvents = events?.length ? events : [];
+
+  const handleRegister = (event: any) => {
+    const eventId = event._id || event.id;
+    const params = new URLSearchParams({
+      eventId,
+      eventTitle: event.title,
+      game: event.game
+    });
+    navigate(`/register?${params.toString()}`);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -266,19 +516,24 @@ const Events = () => {
 
             <Tabs defaultValue="all" className="space-y-8">
               <div className="flex justify-center">
-                <TabsList className="glass-dark border border-border p-1 flex flex-wrap justify-center gap-1 sm:gap-0 h-auto">
-                  <TabsTrigger value="all" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">All</TabsTrigger>
+                <TabsList className="glass-dark border border-primary/20 p-1 flex flex-wrap justify-center gap-1 sm:gap-0 h-auto">
+                  <TabsTrigger value="all" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">ALL</TabsTrigger>
                   <TabsTrigger value="Free Fire" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">Free Fire</TabsTrigger>
                   <TabsTrigger value="BGMI" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">BGMI</TabsTrigger>
                   <TabsTrigger value="Valorant" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">Valorant</TabsTrigger>
+                  <TabsTrigger value="Call Of Duty" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">COD</TabsTrigger>
                 </TabsList>
               </div>
 
-              {["all", "Free Fire", "BGMI", "Valorant"].map((tab) => {
+              {["all", "Free Fire", "BGMI", "Valorant", "Call Of Duty"].map((tab) => {
                 const now = new Date();
                 const upcoming = displayEvents
                   .filter((e) => (tab === "all" || e.game === tab) && new Date(e.event_date) >= now)
-                  .sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime());
+                  .sort((a, b) => {
+                    const dateA = new Date(a.createdAt || a.created_at || a.event_date).getTime();
+                    const dateB = new Date(b.createdAt || b.created_at || b.event_date).getTime();
+                    return dateB - dateA;
+                  });
 
                 return (
                   <TabsContent key={tab} value={tab} className="outline-none">
@@ -291,7 +546,14 @@ const Events = () => {
                         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8"
                       >
                         {upcoming.map((event, index) => (
-                          <EventCard key={event.id || event._id} event={event} index={index} />
+                          <EventCard
+                            key={event.id || event._id}
+                            event={event}
+                            index={index}
+                            onRegister={handleRegister}
+                            isRegistered={registeredEventIds.has(event._id || event.id)}
+                            userRole={user?.role}
+                          />
                         ))}
                       </div>
                     ) : (
@@ -320,28 +582,33 @@ const Events = () => {
               ref={conductedHeaderAnim.elementRef}
               className={`flex items-center justify-center gap-4 mb-12 scroll-fade-up ${conductedHeaderAnim.isVisible ? 'scroll-visible' : ''}`}
             >
-              <div className="h-[1px] flex-1 bg-gradient-to-l from-white/20 to-transparent" />
-              <h2 className="font-display font-bold text-2xl md:text-3xl uppercase tracking-widest whitespace-nowrap px-4 text-white text-center">
+              <div className="h-[1px] flex-1 bg-gradient-to-l from-primary/50 to-transparent" />
+              <h2 className="font-display font-bold text-2xl md:text-4xl uppercase tracking-widest whitespace-nowrap px-4 text-center">
                 <span className="flame-text">EVENTS</span> CONDUCTED
               </h2>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-white/20 to-transparent" />
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-primary/50 to-transparent" />
             </div>
 
             <Tabs defaultValue="all" className="space-y-8">
               <div className="flex justify-center">
-                <TabsList className="glass-dark border border-white/5 p-1 flex flex-wrap justify-center gap-1 sm:gap-0 h-auto">
-                  <TabsTrigger value="all" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">Completed</TabsTrigger>
+                <TabsList className="glass-dark border border-primary/20 p-1 flex flex-wrap justify-center gap-1 sm:gap-0 h-auto">
+                  <TabsTrigger value="all" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">ALL</TabsTrigger>
                   <TabsTrigger value="Free Fire" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">Free Fire</TabsTrigger>
                   <TabsTrigger value="BGMI" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">BGMI</TabsTrigger>
                   <TabsTrigger value="Valorant" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">Valorant</TabsTrigger>
+                  <TabsTrigger value="Call Of Duty" className="font-display px-3 sm:px-6 text-sm sm:text-base uppercase tracking-tighter">COD</TabsTrigger>
                 </TabsList>
               </div>
 
-              {["all", "Free Fire", "BGMI", "Valorant"].map((tab) => {
+              {["all", "Free Fire", "BGMI", "Valorant", "Call Of Duty"].map((tab) => {
                 const now = new Date();
                 const past = displayEvents
                   .filter((e) => (tab === "all" || e.game === tab) && new Date(e.event_date) < now)
-                  .sort((a, b) => new Date(b.event_date).getTime() - new Date(a.event_date).getTime());
+                  .sort((a, b) => {
+                    const dateA = new Date(a.createdAt || a.created_at || a.event_date).getTime();
+                    const dateB = new Date(b.createdAt || b.created_at || b.event_date).getTime();
+                    return dateB - dateA;
+                  });
 
                 return (
                   <TabsContent key={tab} value={tab} className="outline-none">
@@ -350,7 +617,7 @@ const Events = () => {
                         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8"
                       >
                         {past.map((event, index) => (
-                          <EventCard key={event.id || event._id} event={event} index={index} isPast />
+                          <PastEventCard key={event.id || event._id} event={event} index={index} />
                         ))}
                       </div>
                     ) : (
@@ -360,7 +627,7 @@ const Events = () => {
                           <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-primary mx-auto mb-4" />
                           <h3 className="text-white font-display text-xl sm:text-2xl uppercase tracking-widest mb-3">No Events Completed</h3>
                           <p className="text-muted-foreground font-body text-sm sm:text-base max-w-md mx-auto leading-relaxed">
-                            No {tab === "all" ? "" : tab} events have been completed yet. Stay tuned for results!
+                            No {tab === "all" ? "" : tab} events have been completed. Stay tuned for results!
                           </p>
                         </div>
                       </div>
