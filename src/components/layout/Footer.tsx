@@ -100,7 +100,7 @@ export const Footer = () => {
 
             {/* Social Icons Row */}
             <div className="flex gap-3">
-              <a href="https://www.instagram.com/klu__esports/" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.instagram.com/klu__esports?igsh=MXF6OW0waXl6NnQ3Ng==" target="_blank" rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
                 <img src="/instagram.svg" alt="IG" className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </a>
