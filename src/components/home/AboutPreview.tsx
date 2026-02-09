@@ -40,8 +40,8 @@ export const AboutPreview = () => {
             ref={leftContent.elementRef}
             className={`text-center md:text-left scroll-fade-left ${leftContent.isVisible ? 'scroll-visible' : ''}`}
           >
-            <h1 className="font-display font-bold text-5xl md:text-7xl mb-8 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-[hsl(0,85%,50%)] after:to-transparent">
-              BORN
+            <h1 className="font-display font-bold text-4xl md:text-6xl mb-8 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-32 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+              LEVEL <span className="flame-text">UP</span>
             </h1>
             <p className="text-muted-foreground font-body text-lg md:text-xl leading-relaxed mb-6 md:mb-10">
               KLU ESPORTS isn't just a gaming club—it's a movement. Founded by elite

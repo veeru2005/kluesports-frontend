@@ -112,7 +112,7 @@ export const Navbar = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="gap-2 text-sm px-4 py-2 bg-black border-primary text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                      className="gap-2 text-[15px] px-5 py-2.5 bg-black border-primary text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all h-auto"
                     >
                       <User className="w-4 h-4" />
                       Profile
@@ -158,7 +158,7 @@ export const Navbar = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => navigate("/login")}
-                    className="gap-2 text-sm px-4 py-1.5 h-auto bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                    className="gap-2 text-[15px] px-5 py-2 bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all h-auto"
                   >
                     <LogIn className="w-4 h-4" />
                     Login
@@ -167,7 +167,7 @@ export const Navbar = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => navigate("/signup")}
-                    className="text-sm px-4 py-1.5 h-auto bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                    className="text-[15px] px-5 py-2 bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all h-auto"
                   >
                     Join Now
                   </Button>
@@ -253,7 +253,7 @@ export const Navbar = () => {
                             navigate("/login");
                             setIsOpen(false);
                           }}
-                          className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                          className="flex-1 gap-2 border border-red-600 text-[15px] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 py-3 h-auto"
                         >
                           <LogIn className="w-4 h-4" />
                           Login
@@ -264,7 +264,7 @@ export const Navbar = () => {
                             navigate("/signup");
                             setIsOpen(false);
                           }}
-                          className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                          className="flex-1 gap-2 border border-red-600 text-[15px] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 py-3 h-auto"
                         >
                           Join Now
                         </Button>
