@@ -3,7 +3,7 @@ import { ArrowRight, MapPin, Mail, Phone, ChevronRight } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="bg-black/95 border-t-2 border-red-600 pt-16 pb-8 relative overflow-hidden">
+    <footer className="bg-black/95 border-t-2 border-red-600 pt-16 pb-14 md:pb-8 relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute top-0 left-1/4 w-1/2 h-full bg-red-900/5 blur-[120px] pointer-events-none" />
 
@@ -22,7 +22,7 @@ export const Footer = () => {
                 <span className="font-display font-bold text-xl flame-text leading-none">
                   KLU ESPORTS
                 </span>
-                <span className="text-xs text-white font-medium uppercase leading-tight tracking-[0.04em]">
+                <span className="text-xs text-white font-medium uppercase leading-tight tracking-[0.03em]">
                   Gaming Community
                 </span>
               </div>
@@ -79,12 +79,6 @@ export const Footer = () => {
                   esports.kluniversity@gmail.com
                 </span>
               </li>
-              <li className="flex gap-3 items-center">
-                <Phone className="w-5 h-5 text-red-600 shrink-0" />
-                <span className="text-gray-400 text-base font-semibold transition-colors duration-300 hover:text-white">
-                  +91 8317677542
-                </span>
-              </li>
             </ul>
           </div>
 
@@ -121,22 +115,22 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4">
-          <p className="text-gray-300 text-base text-center md:text-left font-medium">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-400 text-sm md:text-base text-center md:text-left font-medium">
             © {new Date().getFullYear()} KLU Esports Club. All rights reserved.
           </p>
-          <p className="text-gray-300 text-base text-center md:text-right flex items-center gap-2 font-medium">
-            Designed and Developed by
+          <div className="text-gray-400 text-xs sm:text-sm md:text-base flex items-center justify-center md:justify-end gap-1.5 font-medium whitespace-nowrap">
+            <span>Designed and Developed by</span>
             <a
               href="https://www.linkedin.com/in/veerendra-chowdary-sunkavalli-513b58309/"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors flex items-center gap-1.5 group"
+              className="transition-colors flex items-center gap-1 group"
             >
               <img src="/Linkedin.svg" alt="In" className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              <span className="flame-text font-medium">S. Veerendra Chowdary</span>
+              <span className="flame-text font-semibold">S. Veerendra Chowdary</span>
             </a>
-          </p>
+          </div>
         </div>
       </div>
     </footer>

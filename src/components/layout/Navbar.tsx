@@ -79,10 +79,10 @@ export const Navbar = () => {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="font-display font-bold text-2xl flame-text leading-none">
+                <span className="font-display font-bold text-xl flame-text leading-none uppercase tracking-wider">
                   KLU ESPORTS
                 </span>
-                <span className="text-sm text-white font-medium uppercase leading-tight tracking-[0.06em]">
+                <span className="text-xs text-white font-medium uppercase leading-tight tracking-[0.085em]">
                   Gaming Community
                 </span>
               </div>
@@ -94,7 +94,7 @@ export const Navbar = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`nav-link font-display text-lg uppercase tracking-wider transition-colors ${location.pathname === link.path
+                  className={`nav-link font-display text-sm uppercase tracking-[0.1em] transition-colors ${location.pathname === link.path
                     ? "text-primary active"
                     : "text-foreground/80 hover:text-primary"
                     }`}
@@ -111,10 +111,10 @@ export const Navbar = () => {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="outline"
-                      size="default"
-                      className="gap-2 text-lg px-6 py-2 bg-black border-primary text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                      size="sm"
+                      className="gap-2 text-sm px-4 py-2 bg-black border-primary text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
                     >
-                      <User className="w-5 h-5" />
+                      <User className="w-4 h-4" />
                       Profile
                     </Button>
                   </DropdownMenuTrigger>
@@ -156,18 +156,18 @@ export const Navbar = () => {
                 <>
                   <Button
                     variant="outline"
-                    size="default"
+                    size="sm"
                     onClick={() => navigate("/login")}
-                    className="gap-2 text-lg px-6 py-2 h-auto bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                    className="gap-2 text-sm px-4 py-1.5 h-auto bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
                   >
-                    <LogIn className="w-5 h-5" />
+                    <LogIn className="w-4 h-4" />
                     Login
                   </Button>
                   <Button
                     variant="outline"
-                    size="default"
+                    size="sm"
                     onClick={() => navigate("/signup")}
-                    className="text-lg px-6 py-2 h-auto bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                    className="text-sm px-4 py-1.5 h-auto bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
                   >
                     Join Now
                   </Button>
@@ -195,7 +195,7 @@ export const Navbar = () => {
                     key={link.path}
                     to={link.path}
                     onClick={() => setIsOpen(false)}
-                    className={`font-display text-lg uppercase tracking-wider py-3 text-center rounded-lg transition-all ${location.pathname === link.path
+                    className={`font-display text-base uppercase tracking-wider py-3 text-center rounded-lg transition-all ${location.pathname === link.path
                       ? "text-primary border-2 border-red-600 bg-red-600/10"
                       : "text-foreground/80 hover:text-primary"
                       }`}

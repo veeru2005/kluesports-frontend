@@ -123,7 +123,7 @@ const Signup = () => {
       await verifySignupOTP(formData.email, formData, otp);
 
       toast({
-        title: "Welcome to KLU-Esports!",
+        title: "Welcome to KLU ESPORTS!",
         description: "Your account has been created successfully.",
         variant: "success",
       });
@@ -195,6 +195,12 @@ const Signup = () => {
     setResendTimer(0);
   };
 
+  const maskEmail = (email: string) => {
+    const [user, domain] = email.split("@");
+    if (user.length <= 4) return `${user[0]}***@${domain}`;
+    return `${user.substring(0, 4)}*******@${domain}`;
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden py-8 pb-20">
       {/* Background effects */}
@@ -227,7 +233,7 @@ const Signup = () => {
           {/* Signup Card */}
           <div className="bg-black/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 md:p-8 border-2 border-red-600 overflow-hidden">
             <h1 className="font-display font-bold text-2xl sm:text-3xl text-center mb-2">
-              JOIN THE <span className="flame-text">KLU-Esports</span>
+              JOIN THE <span className="flame-text">KLU ESPORTS</span>
             </h1>
             <p className="text-muted-foreground text-center font-body mb-8">
               {otpSent
@@ -477,8 +483,8 @@ const Signup = () => {
                 <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 rounded-lg p-6 border-2 border-primary/30">
                   <form onSubmit={handleVerifyOTP} className="space-y-6">
                     <div className="space-y-3">
-                      <Label htmlFor="otp" className="font-display flex items-center gap-2 text-lg">
-                        <Shield className="w-5 h-5 text-primary" />
+                      <Label htmlFor="otp" className="font-display flex items-center gap-2 text-base">
+                        <Shield className="w-4 h-4 text-primary" />
                         Enter OTP
                       </Label>
                       <Input
@@ -491,8 +497,8 @@ const Signup = () => {
                         maxLength={6}
                         className="bg-background/80 border-primary/50 text-center text-lg tracking-widest font-body font-semibold focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0"
                       />
-                      <p className="text-sm text-center font-medium">
-                        OTP sent to <span className="text-primary font-bold">{formData.email}</span>
+                      <p className="text-sm text-center font-medium opacity-80">
+                        OTP sent to <span className="text-primary font-bold">{maskEmail(formData.email)}</span>
                       </p>
                     </div>
 

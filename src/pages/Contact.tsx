@@ -183,11 +183,11 @@ const Contact = () => {
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Get In Touch
               </span>
-              <h1 className="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-3">
+              <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-6xl mb-4 whitespace-nowrap uppercase">
                 CONTACT <span className="flame-text">US</span>
               </h1>
-              <p className="text-1xl text-muted-foreground font-body max-w-2xl mx-auto">
-                Have questions? Need support? The KLU-ESPORTS team is here to help. Reach out and let's talk.
+              <p className="text-base sm:text-lg text-muted-foreground font-body max-w-2xl mx-auto leading-relaxed px-4 md:px-0">
+                Have questions? Need support? The KLU ESPORTS team is here to help.
               </p>
             </div>
           </div>
@@ -198,11 +198,11 @@ const Contact = () => {
           <div className="container mx-auto px-4">
             <div
               ref={formAnim.elementRef}
-              className={`grid lg:grid-cols-[1fr_1.3fr] gap-8 items-start scroll-fade-up ${formAnim.isVisible ? 'scroll-visible' : ''}`}
+              className={`grid lg:grid-cols-[0.9fr_1.4fr] gap-8 items-stretch scroll-fade-up ${formAnim.isVisible ? 'scroll-visible' : ''}`}
             >
               {/* Contact Form */}
-              <div className="bg-black rounded-xl p-6 border-2 border-red-600 flex flex-col">
-                <h2 className="font-display font-bold text-2xl mb-6">
+              <div className="glass-dark rounded-2xl p-8 border border-red-600/50 flex flex-col hover:border-red-600 transition-colors shadow-2xl">
+                <h2 className="font-display font-bold text-2xl mb-8 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                   Send Us A Message
                 </h2>
                 <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
@@ -217,7 +217,7 @@ const Contact = () => {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Your name"
-                        className={`bg-black border-2 border-red-600 rounded-lg ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 ${errors.name ? "border-destructive" : ""
+                        className={`bg-white/5 border border-white/10 rounded-xl px-4 py-3 ring-0 focus-visible:ring-1 focus-visible:ring-primary focus:border-primary transition-all ${errors.name ? "border-destructive" : ""
                           }`}
                       />
                       {errors.name && (
@@ -235,7 +235,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="your@email.com"
-                        className={`bg-black border-2 border-red-600 rounded-lg ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 ${errors.email ? "border-destructive" : ""
+                        className={`bg-white/5 border border-white/10 rounded-xl px-4 py-3 ring-0 focus-visible:ring-1 focus-visible:ring-primary focus:border-primary transition-all ${errors.email ? "border-destructive" : ""
                           }`}
                       />
                       {errors.email && (
@@ -253,7 +253,7 @@ const Contact = () => {
                       value={formData.subject}
                       onChange={handleChange}
                       placeholder="What's this about?"
-                      className="bg-black border-2 border-red-600 rounded-lg ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 ring-0 focus-visible:ring-1 focus-visible:ring-primary focus:border-primary transition-all"
                     />
                   </div>
                   <div className="space-y-2">
@@ -267,7 +267,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="Tell us what's on your mind..."
                       rows={7}
-                      className={`bg-black border-2 border-red-600 rounded-lg ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none ${errors.message ? "border-destructive" : ""
+                      className={`bg-white/5 border border-white/10 rounded-xl px-4 py-3 ring-0 focus-visible:ring-1 focus-visible:ring-primary focus:border-primary transition-all resize-none ${errors.message ? "border-destructive" : ""
                         }`}
                     />
                     {errors.message && (
@@ -281,7 +281,7 @@ const Contact = () => {
                     variant="flame"
                     size="lg"
                     disabled={isSubmitting}
-                    className="w-full h-12 text-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300"
+                    className="w-full h-14 text-lg bg-primary hover:bg-primary/90 rounded-xl transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-[0.98]"
                   >
                     {isSubmitting ? (
                       "Sending..."
@@ -297,31 +297,30 @@ const Contact = () => {
 
               {/* Other Ways To Reach Us (Side) */}
               <div className="flex flex-col h-full">
-                <div className="mb-6">
-                  <h2 className="font-display font-bold text-3xl mb-4">
+                <div className="mb-4">
+                  <h2 className="font-display font-bold text-2xl mb-4 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                     Other Ways To Reach Us
                   </h2>
-                  <p className="text-muted-foreground font-body text-lg">
-                    We're active across multiple platforms. Choose the one that works
-                    best for you and we'll be there.
+                  <p className="text-muted-foreground font-body text-sm md:text-base mt-4 leading-relaxed">
+                    Choose your preferred platform to connect with our elite community below.
                   </p>
                 </div>
 
                 {/* Help Center Animation */}
-                <div className="flex-1 flex items-center justify-center mb-6">
+                <div className="flex-1 flex items-center justify-center py-0 mb-2 relative min-h-[250px] md:min-h-[300px]">
                   {helpCenterAnimation && (
-                    <Suspense fallback={<div className="w-full max-w-[400px] md:max-w-[500px] h-64 flex items-center justify-center"><Loader /></div>}>
+                    <Suspense fallback={<div className="w-full max-w-[300px] h-48 flex items-center justify-center"><Loader /></div>}>
                       <Lottie
                         animationData={helpCenterAnimation}
                         loop={true}
-                        className="w-full max-w-[400px] md:max-w-[500px]"
+                        className="w-full max-w-[800px] md:max-w-[600px] transform scale-[1.32] sm:scale-[1.5] md:scale-110 lg:scale-100 transition-transform origin-center"
                       />
                     </Suspense>
                   )}
                 </div>
 
                 {/* Social Media Links - Responsive Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {[
                     {
                       icon: GmailIcon,
@@ -350,21 +349,21 @@ const Contact = () => {
                   ].map((item, index) => (
                     <div
                       key={index}
-                      className="glass-dark rounded-xl p-5 text-center border border-red-600 hover:border-red-500 transition-all group hover:ember-glow"
+                      className="glass-dark rounded-2xl px-2 py-5 text-center border border-primary/40 hover:border-primary transition-all group hover:ember-glow cursor-pointer flex flex-col items-center"
                     >
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                          <item.icon className="w-7 h-7" />
-                        </div>
-                        <div>
-                          <h3 className="font-display font-semibold text-lg text-foreground mb-1">
-                            {item.title}
-                          </h3>
-                          <p className="text-primary font-body mb-1 text-xs leading-tight truncate" title={item.value}>{item.value}</p>
-                          <p className="text-muted-foreground font-body text-xs leading-tight">
-                            {item.description}
-                          </p>
-                        </div>
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors mb-4">
+                        <item.icon className="w-6 h-6" />
+                      </div>
+                      <div className="w-full flex flex-col items-center">
+                        <h3 className="font-display font-semibold text-base text-foreground mb-1">
+                          {item.title}
+                        </h3>
+                        <p className="text-primary font-body text-[9px] font-medium w-full break-all" title={item.value}>
+                          {item.value}
+                        </p>
+                        <p className="text-muted-foreground font-body text-[10px] leading-tight mt-1 opacity-70">
+                          {item.description}
+                        </p>
                       </div>
                     </div>
                   ))}

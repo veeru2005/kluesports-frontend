@@ -27,7 +27,7 @@ interface AuthContextType {
     login: (email: string, role?: UserRole) => Promise<void>;
     logout: () => Promise<void>;
     signup: (email: string, username: string) => Promise<void>;
-    sendOTP: (email: string, purpose: 'login' | 'signup', password?: string) => Promise<{ success: boolean; message: string }>;
+    sendOTP: (email: string, purpose: 'login' | 'signup', password?: string) => Promise<{ success: boolean; message: string; user?: User; token?: string }>;
     verifyLoginOTP: (email: string, otp: string) => Promise<void>;
     verifySignupOTP: (identifier: string, userData: any, otp: string) => Promise<void>;
     updateUser: (updatedUser: User) => void;
@@ -163,7 +163,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const sendOTP = async (email: string, purpose: 'login' | 'signup', password?: string) => {
-        return sendOTPService(email, purpose, password);
+        const result = await sendOTPService(email, purpose, password);
+
+        // If login was successful without OTP (for standard users)
+        if (result.success && result.user && result.token) {
+            setUser(result.user);
+            localStorage.setItem("inferno_user", JSON.stringify(result.user));
+            localStorage.setItem("inferno_token", result.token);
+        }
+
+        return result;
     };
 
     const verifyLoginOTP = async (email: string, otp: string) => {

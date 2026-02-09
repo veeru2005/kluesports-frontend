@@ -35,11 +35,11 @@ export const CTASection = () => {
             ref={titleAnim.elementRef}
             className={`scroll-fade-up ${titleAnim.isVisible ? 'scroll-visible' : ''}`}
           >
-            <h2 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl mb-6">
-              READY TO JOIN THE <br /> <span className="flame-text">KLU-Esports</span>?
+            <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl mb-6">
+              READY TO JOIN THE <br /> <span className="flame-text">KLU ESPORTS</span>?
             </h2>
 
-            <p className="text-xl text-muted-foreground font-body mb-10 max-w-xl mx-auto">
+            <p className="text-lg text-muted-foreground font-body mb-10 max-w-xl mx-auto">
               Step into the arena. Prove your worth. Become a legend among legends.
               The flames are waiting.
             </p>
@@ -55,8 +55,8 @@ export const CTASection = () => {
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/90 border-2 border-red-600 rounded-2xl hover:bg-black hover:border-red-500 transition-all group backdrop-blur-sm shadow-lg shadow-red-900/30 hover:shadow-red-600/40"
             >
-              <img src="/instagram.svg" alt="Instagram" className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
-              <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">Instagram</span>
+              <img src="/instagram.svg" alt="Instagram" className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+              <span className="text-base md:text-lg font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">Instagram</span>
             </a>
 
             <a
@@ -65,8 +65,8 @@ export const CTASection = () => {
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/90 border-2 border-red-600 rounded-2xl hover:bg-black hover:border-red-500 transition-all group backdrop-blur-sm shadow-lg shadow-red-900/30 hover:shadow-red-600/40"
             >
-              <img src="/discord.svg" alt="Discord" className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
-              <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">Discord</span>
+              <img src="/discord.svg" alt="Discord" className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+              <span className="text-base md:text-lg font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">Discord</span>
             </a>
 
             <a
@@ -75,8 +75,8 @@ export const CTASection = () => {
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/90 border-2 border-red-600 rounded-2xl hover:bg-black hover:border-red-500 transition-all group backdrop-blur-sm shadow-lg shadow-red-900/30 hover:shadow-red-600/40"
             >
-              <img src="/youtube.svg" alt="YouTube" className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
-              <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">YouTube</span>
+              <img src="/youtube.svg" alt="YouTube" className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+              <span className="text-base md:text-lg font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">YouTube</span>
             </a>
 
             <a
@@ -85,8 +85,8 @@ export const CTASection = () => {
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-4 px-6 py-4 md:px-8 md:py-6 bg-black/90 border-2 border-red-600 rounded-2xl hover:bg-black hover:border-red-500 transition-all group backdrop-blur-sm shadow-lg shadow-red-900/30 hover:shadow-red-600/40"
             >
-              <img src="/Linkedin.svg" alt="LinkedIn" className="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" />
-              <span className="text-lg md:text-xl font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">LinkedIn</span>
+              <img src="/Linkedin.svg" alt="LinkedIn" className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+              <span className="text-base md:text-lg font-display text-white tracking-widest uppercase group-hover:scale-110 transition-transform">LinkedIn</span>
             </a>
           </div>
         </div>

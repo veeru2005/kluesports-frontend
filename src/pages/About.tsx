@@ -56,11 +56,11 @@ const About = () => {
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Our Story
               </span>
-              <h1 className="font-display font-bold text-4xl sm:text-4xl md:text-6xl lg:text-7xl mb-3">
+              <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-3 whitespace-nowrap">
                 ABOUT <span className="flame-text">KLU ESPORTS</span>
               </h1>
-              <p className="text-1xl text-muted-foreground font-body max-w-2xl mx-auto">
-                From passionate gamers to the most recognized gaming community. This is our journey.
+              <p className="text-base sm:text-lg text-muted-foreground font-body max-w-2xl mx-auto leading-relaxed px-4 md:px-0">
+                Our journey from passionate gamers to an elite community.
               </p>
             </div>
           </div>
@@ -74,12 +74,12 @@ const About = () => {
                 ref={storyAnim.elementRef}
                 className={`scroll-fade-left ${storyAnim.isVisible ? 'scroll-visible' : ''}`}
               >
-                <h2 className="font-display font-bold text-4xl mb-6 section-title">
+                <h2 className="font-display font-bold text-3xl mb-6 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                   THE <span className="flame-text">ORIGIN</span>
                 </h2>
                 <div className="space-y-4 text-muted-foreground font-body text-lg leading-relaxed">
                   <p>
-                    KLU-Esports was born in 2019 from a simple belief: gaming communities
+                    KLU ESPORTS was born in 2019 from a simple belief: gaming communities
                     should be more than just casual gatherings. They should be forges
                     where champions are made.
                   </p>
@@ -105,7 +105,7 @@ const About = () => {
                     key={index}
                     className="glass-dark rounded-xl p-8 text-center border border-red-600 hover:border-red-500 transition-all hover:ember-glow"
                   >
-                    <div className="font-display font-bold text-4xl text-primary mb-2">
+                    <div className="font-display font-bold text-3xl text-primary mb-2">
                       {stat.value}
                     </div>
                     <div className="text-muted-foreground font-body text-lg">
@@ -128,7 +128,7 @@ const About = () => {
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
                 What We Stand For
               </span>
-              <h2 className="font-display font-bold text-4xl md:text-5xl section-title mx-auto">
+              <h2 className="font-display font-bold text-3xl md:text-4xl relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                 OUR <span className="flame-text">VALUES</span>
               </h2>
             </div>
@@ -165,10 +165,10 @@ const About = () => {
               <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-8 ember-pulse">
                 <Target className="w-10 h-10 text-primary" />
               </div>
-              <h2 className="font-display font-bold text-4xl md:text-5xl mb-6">
+              <h2 className="font-display font-bold text-3xl md:text-4xl mb-6 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                 OUR <span className="flame-text">MISSION</span>
               </h2>
-              <p className="text-xl text-muted-foreground font-body leading-relaxed">
+              <p className="text-lg text-muted-foreground font-body leading-relaxed">
                 To create the ultimate proving ground for gamers. A place where skill
                 is tested, legends are born, and the flames of competition burn
                 eternal. We exist to elevate gaming from a pastime to a passion, and

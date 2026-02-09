@@ -20,7 +20,7 @@ export const sendOTP = async (
     identifier: string,
     purpose: 'login' | 'signup',
     password?: string // Added password for login verification
-): Promise<{ success: boolean; message: string }> => {
+): Promise<{ success: boolean; message: string; user?: any; token?: string }> => {
     try {
         const response = await fetch(`${API_URL}/send`, {
             method: 'POST',
@@ -39,6 +39,8 @@ export const sendOTP = async (
         return {
             success: true,
             message: data.message,
+            user: data.user,
+            token: data.token
         };
     } catch (error: any) {
         console.error('Error sending OTP:', error);

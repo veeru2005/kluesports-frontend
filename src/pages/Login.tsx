@@ -41,6 +41,19 @@ const Login = () => {
       const result = await sendOTP(email, "login", password);
 
       if (result.success) {
+        // If login was successful immediately (no OTP needed for standard users)
+        if (result.user && result.token) {
+          toast({
+            title: "Welcome back!",
+            description: result.message || "You have successfully logged in.",
+            variant: "success",
+          });
+
+          // Redirect based on role (standard users go to home or profile)
+          navigate("/");
+          return;
+        }
+
         toast({
           title: "OTP Sent!",
           description: result.message,
@@ -154,6 +167,12 @@ const Login = () => {
     setResendTimer(0);
   };
 
+  const maskEmail = (email: string) => {
+    const [user, domain] = email.split("@");
+    if (user.length <= 4) return `${user[0]}***@${domain}`;
+    return `${user.substring(0, 4)}*******@${domain}`;
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden py-8 pb-32">
       {/* Background effects */}
@@ -191,7 +210,7 @@ const Login = () => {
             <p className="text-muted-foreground text-center font-body mb-8">
               {otpSent
                 ? "Enter the OTP sent to your email"
-                : "Login to access your KLU-Esports account"}
+                : "Login to access your KLU ESPORTS account"}
             </p>
 
             {!otpSent ? (
@@ -267,7 +286,7 @@ const Login = () => {
                     <line x1="22" y1="2" x2="11" y2="13"></line>
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                   </svg>
-                  <span className="text-base">{isLoading ? "Sending OTP..." : "Send OTP"}</span>
+                  <span className="text-base">{isLoading ? "Logging in..." : "Login"}</span>
                 </button>
               </form>
             ) : (
@@ -276,8 +295,8 @@ const Login = () => {
                 <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 rounded-lg p-6 border-2 border-primary/30">
                   <form onSubmit={handleVerifyOTP} className="space-y-6">
                     <div className="space-y-3">
-                      <Label htmlFor="otp" className="font-display flex items-center gap-2 text-lg">
-                        <Shield className="w-5 h-5 text-primary" />
+                      <Label htmlFor="otp" className="font-display flex items-center gap-2 text-base">
+                        <Shield className="w-4 h-4 text-primary" />
                         One-Time Password
                       </Label>
                       <Input
@@ -290,8 +309,8 @@ const Login = () => {
                         maxLength={6}
                         className="bg-background/80 border-primary/50 text-center text-lg tracking-widest font-body font-semibold focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0"
                       />
-                      <p className="text-sm text-center font-medium">
-                        OTP sent to <span className="text-primary font-bold">{email}</span>
+                      <p className="text-sm text-center font-medium opacity-80">
+                        OTP sent to <span className="text-primary font-bold">{maskEmail(email)}</span>
                       </p>
                     </div>
 

@@ -56,7 +56,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                     <span className="font-display font-bold text-2xl flame-text leading-none">
                                         KLU ESPORTS
                                     </span>
-                                    <span className="text-xs text-white font-medium uppercase leading-tight tracking-[0.16em]">
+                                    <span className="text-xs text-white font-medium uppercase leading-tight tracking-[0.17em]">
                                         Gaming Community
                                     </span>
                                 </div>
@@ -67,28 +67,28 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                         <div className="hidden md:flex items-center gap-8">
                             <button
                                 onClick={() => onTabChange ? onTabChange("dashboard") : navigate(`${baseUrl}?tab=dashboard`)}
-                                className={`nav-link font-display text-lg uppercase tracking-wider transition-colors ${activeTab === "dashboard" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "dashboard" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                             >
                                 Dashboard
                             </button>
 
                             <button
                                 onClick={() => onTabChange ? onTabChange("members") : navigate(`${baseUrl}?tab=members`)}
-                                className={`nav-link font-display text-lg uppercase tracking-wider transition-colors ${activeTab === "members" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "members" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                             >
                                 Members
                             </button>
 
                             <button
                                 onClick={() => onTabChange ? onTabChange("events") : navigate(`${baseUrl}?tab=events`)}
-                                className={`nav-link font-display text-lg uppercase tracking-wider transition-colors ${activeTab === "events" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "events" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                             >
                                 Events
                             </button>
 
                             <button
                                 onClick={() => onTabChange ? onTabChange("registrations") : navigate(`${baseUrl}?tab=registrations`)}
-                                className={`nav-link font-display text-lg uppercase tracking-wider transition-colors ${activeTab === "registrations" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "registrations" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                             >
                                 Registrations
                             </button>
@@ -96,7 +96,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                             {user?.role === 'super_admin' && (
                                 <button
                                     onClick={() => onTabChange ? onTabChange("admins") : navigate(`${baseUrl}?tab=admins`)}
-                                    className={`nav-link font-display text-lg uppercase tracking-wider transition-colors ${activeTab === "admins" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                    className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "admins" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                                 >
                                     Admins
                                 </button>
@@ -105,7 +105,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                             {(user?.role === 'super_admin' || user?.role?.startsWith('admin_')) && (
                                 <button
                                     onClick={() => onTabChange ? onTabChange("messages") : navigate(`${baseUrl}?tab=messages`)}
-                                    className={`nav-link font-display text-lg uppercase tracking-wider transition-colors ${activeTab === "messages" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                    className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "messages" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                                 >
                                     Messages
                                 </button>
@@ -116,20 +116,20 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                         <div className="hidden md:flex items-center gap-4">
                             <Button
                                 variant="outline"
-                                size="default"
+                                size="sm"
                                 onClick={() => navigate("/profile")}
-                                className="gap-2 text-lg px-6 py-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                                className="gap-2 text-sm px-4 py-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
                             >
-                                <User className="w-5 h-5" />
+                                <User className="w-4 h-4" />
                                 Profile
                             </Button>
                             <Button
                                 variant="outline"
-                                size="default"
+                                size="sm"
                                 onClick={handleLogout}
-                                className="gap-2 text-lg px-6 py-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                                className="gap-2 text-sm px-4 py-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
                             >
-                                <LogOut className="w-5 h-5" />
+                                <LogOut className="w-4 h-4" />
                                 Logout
                             </Button>
                         </div>

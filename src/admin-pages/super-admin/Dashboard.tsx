@@ -221,11 +221,11 @@ const SuperAdminDashboard = () => {
                                     </div>
 
                                     <div className="relative">
-                                        <h1 className="font-display font-bold text-4xl md:text-6xl lg:text-8xl tracking-tight uppercase leading-none mb-2 md:mb-4 text-white">
+                                        <h1 className="font-display font-bold text-3xl md:text-5xl lg:text-6xl tracking-tight uppercase leading-none mb-2 md:mb-4 text-white">
                                             WELCOME BACK
                                         </h1>
 
-                                        <h2 className="font-display font-bold text-3xl md:text-5xl lg:text-7xl tracking-tight uppercase leading-none drop-shadow-[0_0_30px_rgba(220,38,38,0.6)] relative">
+                                        <h2 className="font-display font-bold text-3xl md:text-5xl lg:text-6xl tracking-tight uppercase leading-none drop-shadow-[0_0_30px_rgba(220,38,38,0.6)] relative">
                                             <span className="flame-text">{user?.name || user?.username || user?.email?.split('@')[0] || 'Super Admin'}</span>
                                         </h2>
                                     </div>

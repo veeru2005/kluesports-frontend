@@ -239,7 +239,7 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                             key={member.id}
                             className="bg-transparent rounded-xl border-2 border-red-600 flex flex-col hover:border-red-500 transition-all overflow-hidden group"
                         >
-                            <div className="p-2.5 md:p-6 flex flex-col items-center justify-center text-center gap-1.5 md:gap-3 bg-black">
+                            <div className="p-2.5 md:p-6 flex flex-col items-center justify-center text-center gap-5 md:gap-3 bg-black">
                                 <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-red-600/20 flex items-center justify-center ring-2 ring-red-600/30">
                                     <span className="font-display font-bold text-lg md:text-3xl text-red-500">
                                         {(member.name || member.inGameName || "U").charAt(0).toUpperCase()}

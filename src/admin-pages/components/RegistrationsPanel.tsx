@@ -159,9 +159,9 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                 headers.push(`P${i} Name`, `P${i} Email`, `P${i} College ID`, `P${i} Mobile`, `P${i} Riot ID`, `P${i} Peak Rank`, `P${i} Current Rank`, `P${i} Level`);
             }
         } else {
-            headers.push("Lead In-Game ID");
+            headers.push("Lead In-Game Name");
             for (let i = 2; i <= 4; i++) {
-                headers.push(`P${i} Name`, `P${i} Email`, `P${i} College ID`, `P${i} Mobile`, `P${i} In-Game ID`);
+                headers.push(`P${i} Name`, `P${i} Email`, `P${i} College ID`, `P${i} Mobile`, `P${i} In-Game Name`);
             }
         }
 
@@ -200,14 +200,14 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                     );
                 });
             } else {
-                row.push(`"${reg.teamLead?.inGameId || ''}"`);
+                row.push(`"${reg.teamLead?.inGameName || reg.teamLead?.inGameId || ''}"`);
                 [reg.player2, reg.player3, reg.player4].forEach((p) => {
                     row.push(
                         `"${p?.name || ''}"`,
                         `"${p?.email || ''}"`,
                         `"${p?.collegeId || ''}"`,
                         `"${p?.mobileNumber || ''}"`,
-                        `"${p?.inGameId || ''}"`
+                        `"${p?.inGameName || p?.inGameId || ''}"`
                     );
                 });
             }
@@ -310,7 +310,7 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
 
                                 <div className="flex flex-col gap-2 min-w-0">
-                                    <div className="bg-red-600/90 text-white text-[8px] px-2 py-0.5 rounded-full uppercase font-bold tracking-[0.12em] shrink-0 w-fit shadow-[0_0_15px_-5px_rgba(220,38,38,0.5)] border border-red-500/20">
+                                    <div className="bg-black border border-red-600 text-red-500 text-[8px] px-2 py-0.5 rounded-full uppercase font-bold tracking-[0.12em] shrink-0 w-fit shadow-[0_0_10px_rgba(220,38,38,0.2)]">
                                         {event.game || selectedGame}
                                     </div>
                                     <h3 className="font-display font-black text-xl text-white uppercase tracking-wider truncate">
@@ -336,7 +336,7 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                                     </div>
                                 </div>
 
-                                <div className="w-full flex items-center justify-between mt-1 pt-3 border-t border-red-600/60">
+                                <div className="w-full flex items-center justify-between mt-5 pt-3 border-t border-red-600/60">
                                     <div className="flex items-center gap-2.5 text-gray-300">
                                         <Users className="w-4 h-4 text-red-500 shrink-0" />
                                         <span className="text-sm font-bold tracking-tight">

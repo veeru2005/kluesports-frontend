@@ -14,7 +14,7 @@ interface PlayerInfo {
     accountVerified?: boolean;
     collegeId: string;
     mobileNumber: string;
-    inGameId?: string;
+    inGameName?: string;
     riotId?: string;
     peakRank?: string;
     currentRank?: string;
@@ -27,7 +27,7 @@ interface TeamLeadInfo {
     discordId: string;
     mobileNumber: string;
     email: string;
-    inGameId?: string;
+    inGameName?: string;
     riotId?: string;
     peakRank?: string;
     currentRank?: string;
@@ -58,7 +58,7 @@ const EventRegistration = () => {
         discordId: "",
         mobileNumber: "",
         email: "",
-        inGameId: "",
+        inGameName: "",
         riotId: "",
         peakRank: "",
         currentRank: "",
@@ -66,10 +66,10 @@ const EventRegistration = () => {
     });
 
     const [players, setPlayers] = useState<PlayerInfo[]>([
-        { name: "", email: "", accountVerified: false, collegeId: "", mobileNumber: "", inGameId: "", riotId: "", peakRank: "", currentRank: "", level: "" },
-        { name: "", email: "", accountVerified: false, collegeId: "", mobileNumber: "", inGameId: "", riotId: "", peakRank: "", currentRank: "", level: "" },
-        { name: "", email: "", accountVerified: false, collegeId: "", mobileNumber: "", inGameId: "", riotId: "", peakRank: "", currentRank: "", level: "" },
-        { name: "", email: "", accountVerified: false, collegeId: "", mobileNumber: "", inGameId: "", riotId: "", peakRank: "", currentRank: "", level: "" }
+        { name: "", email: "", accountVerified: false, collegeId: "", mobileNumber: "", inGameName: "", riotId: "", peakRank: "", currentRank: "", level: "" },
+        { name: "", email: "", accountVerified: false, collegeId: "", mobileNumber: "", inGameName: "", riotId: "", peakRank: "", currentRank: "", level: "" },
+        { name: "", email: "", accountVerified: false, collegeId: "", mobileNumber: "", inGameName: "", riotId: "", peakRank: "", currentRank: "", level: "" },
+        { name: "", email: "", accountVerified: false, collegeId: "", mobileNumber: "", inGameName: "", riotId: "", peakRank: "", currentRank: "", level: "" }
     ]);
 
     useEffect(() => {
@@ -104,7 +104,7 @@ const EventRegistration = () => {
                 mobileNumber: user.mobile || "",
                 collegeId: user.collegeId || "",
                 riotId: user.inGameId || user.inGameName || "",
-                inGameId: user.inGameId || user.inGameName || ""
+                inGameName: user.inGameName || ""
             }));
         }
     }, [user]);
@@ -182,7 +182,7 @@ const EventRegistration = () => {
                         name: data.user.name || updated[index].name,
                         collegeId: data.user.collegeId || updated[index].collegeId,
                         mobileNumber: data.user.mobile || updated[index].mobileNumber,
-                        inGameId: data.user.inGameId || data.user.inGameName || updated[index].inGameId,
+                        inGameName: data.user.inGameName || updated[index].inGameName,
                         riotId: data.user.inGameId || data.user.inGameName || updated[index].riotId,
                         accountVerified: true
                     };
@@ -282,7 +282,7 @@ const EventRegistration = () => {
                     discordId: teamLead.discordId,
                     mobileNumber: teamLead.mobileNumber,
                     email: teamLead.email,
-                    inGameId: teamLead.inGameId
+                    inGameName: teamLead.inGameName
                 },
                 player2: isValorant ? {
                     name: players[0].name,
@@ -298,7 +298,7 @@ const EventRegistration = () => {
                     email: players[0].email,
                     collegeId: players[0].collegeId,
                     mobileNumber: players[0].mobileNumber,
-                    inGameId: players[0].inGameId
+                    inGameName: players[0].inGameName
                 },
                 player3: isValorant ? {
                     name: players[1].name,
@@ -314,7 +314,7 @@ const EventRegistration = () => {
                     email: players[1].email,
                     collegeId: players[1].collegeId,
                     mobileNumber: players[1].mobileNumber,
-                    inGameId: players[1].inGameId
+                    inGameName: players[1].inGameName
                 },
                 player4: isValorant ? {
                     name: players[2].name,
@@ -330,7 +330,7 @@ const EventRegistration = () => {
                     email: players[2].email,
                     collegeId: players[2].collegeId,
                     mobileNumber: players[2].mobileNumber,
-                    inGameId: players[2].inGameId
+                    inGameName: players[2].inGameName
                 }
             };
 
@@ -577,10 +577,10 @@ const EventRegistration = () => {
                                 </>
                             ) : (
                                 <div className="space-y-2">
-                                    <Label className="text-red-500 font-display uppercase text-xs tracking-wider">In-Game ID *</Label>
+                                    <Label className="text-red-500 font-display uppercase text-xs tracking-wider">In-Game Name *</Label>
                                     <Input
-                                        value={teamLead.inGameId}
-                                        onChange={(e) => setTeamLead({ ...teamLead, inGameId: e.target.value })}
+                                        value={teamLead.inGameName}
+                                        onChange={(e) => setTeamLead({ ...teamLead, inGameName: e.target.value })}
                                         className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
                                         required
                                     />
@@ -714,10 +714,10 @@ const EventRegistration = () => {
                                     </>
                                 ) : (
                                     <div className="space-y-2">
-                                        <Label className="text-red-500 font-display uppercase text-xs tracking-wider">In-Game ID *</Label>
+                                        <Label className="text-red-500 font-display uppercase text-xs tracking-wider">In-Game Name *</Label>
                                         <Input
-                                            value={players[idx]?.inGameId || ""}
-                                            onChange={(e) => handlePlayerChange(idx, "inGameId", e.target.value)}
+                                            value={players[idx]?.inGameName || ""}
+                                            onChange={(e) => handlePlayerChange(idx, "inGameName", e.target.value)}
                                             className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-red-600/50 text-white"
                                                 }`}
                                             required

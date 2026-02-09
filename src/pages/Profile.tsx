@@ -229,8 +229,8 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
                     <span className="font-display font-black text-white uppercase text-sm">{details.teamLead?.name}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-white/40 text-[11px] uppercase font-black font-display tracking-wider">In-Game ID</span>
-                    <span className="font-display text-red-500 font-black text-sm tracking-tight">{details.teamLead?.inGameId || details.teamLead?.riotId || 'N/A'}</span>
+                    <span className="text-white/40 text-[11px] uppercase font-black font-display tracking-wider">In-Game Name</span>
+                    <span className="font-display text-red-500 font-black text-sm tracking-tight">{details.teamLead?.inGameName || details.teamLead?.inGameId || details.teamLead?.riotId || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-white/40 text-[11px] uppercase font-black font-display tracking-wider">Email</span>
@@ -265,8 +265,8 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
                           <div className="flex flex-col">
                             <span className="font-display font-black text-white text-[13px] uppercase tracking-tight mb-0.5">{player.name || 'Unknown'}</span>
                             <div className="flex flex-col">
-                              <span className="font-display text-red-500 text-[10px] font-black uppercase tracking-tight leading-none">{player.inGameId || player.riotId || 'N/A'}</span>
-                              <span className="text-[8px] text-white/20 uppercase font-black tracking-widest font-display leading-tight">In-Game ID</span>
+                              <span className="font-display text-red-500 text-[10px] font-black uppercase tracking-tight leading-none">{player.inGameName || player.inGameId || player.riotId || 'N/A'}</span>
+                              <span className="text-[8px] text-white/20 uppercase font-black tracking-widest font-display leading-tight">In-Game Name</span>
                             </div>
                           </div>
                         </div>

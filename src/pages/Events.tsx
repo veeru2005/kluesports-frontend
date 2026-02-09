@@ -36,7 +36,7 @@ const placeholderEvents = [
   {
     id: "3",
     title: "Pro League Qualifiers",
-    description: "Your chance to prove yourself and qualify for the KLU-Esports Pro League. Top performers earn their spot among the elite.",
+    description: "Your chance to prove yourself and qualify for the KLU ESPORTS Pro League. Top performers earn their spot among the elite.",
     event_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     location: "Competitive Arena",
     max_participants: 32,
@@ -490,10 +490,10 @@ const Events = () => {
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Join The Battle
               </span>
-              <h1 className="font-display font-bold text-4xl md:text-6xl lg:text-7xl mb-3">
+              <h1 className="font-display font-bold text-4xl md:text-6xl lg:text-6xl mb-3 whitespace-nowrap uppercase">
                 <span className="text">EVENTS</span>
               </h1>
-              <p className="text-1xl text-muted-foreground font-body max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg text-muted-foreground font-body max-w-2xl mx-auto leading-relaxed px-4 md:px-0">
                 From weekly tournaments to championship finals, find your next battle below.
               </p>
             </div>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Iceland&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -85,9 +85,18 @@
     /* Firefox */
   }
 
-  h1,
-  h2,
-  h3,
+  h1 {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply font-display text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  h3 {
+    @apply font-display text-2xl md:text-3xl;
+  }
+
   h4,
   h5,
   h6 {

@@ -45,11 +45,11 @@ const Team = () => {
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-2 block">
                 Meet The Legends
               </span>
-              <h1 className="font-display font-bold text-5xl md:text-6xl lg:text-7xl mb-3">
+              <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-3 whitespace-nowrap">
                 OUR <span className="flame-text">TEAM</span>
               </h1>
-              <p className="text-1xl text-muted-foreground font-body max-w-2xl mx-auto">
-                The warriors who lead the charge with unique skills and unwavering dedication.
+              <p className="text-base sm:text-lg text-muted-foreground font-body max-w-2xl mx-auto leading-relaxed px-4 md:px-0">
+                The warriors who lead the charge with unwavering dedication.
               </p>
             </div>
           </div>

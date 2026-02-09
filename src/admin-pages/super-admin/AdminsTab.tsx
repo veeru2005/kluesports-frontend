@@ -300,7 +300,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                             key={adminId}
                             className="bg-transparent rounded-xl border-2 border-red-600 hover:border-red-500 transition-all overflow-hidden"
                         >
-                            <div className="flex flex-col md:grid md:grid-cols-12 items-center p-3 md:p-4 bg-black gap-2 md:gap-4">
+                            <div className="flex flex-col md:grid md:grid-cols-12 items-center p-3 md:p-4 bg-black gap-5 md:gap-4">
                                 <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto md:col-span-5">
                                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
                                         <span className="font-display font-bold text-primary text-sm md:text-lg">
@@ -329,13 +329,13 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                                 </div>
 
                                 <div className="hidden md:flex md:col-span-4 justify-center w-full">
-                                    <Badge className="bg-red-600 hover:bg-red-700 text-white border-0 text-xs md:text-sm whitespace-nowrap">
+                                    <Badge className="bg-black border-2 border-red-600 text-red-500 hover:bg-red-600 hover:text-white transition-all duration-300 text-[10px] md:text-xs whitespace-nowrap uppercase tracking-widest font-bold px-4 py-1 shadow-[0_0_15px_rgba(220,38,38,0.1)]">
                                         {getRoleName(admin.role)}
                                     </Badge>
                                 </div>
 
                                 <div className="flex flex-row items-center gap-2 w-full md:w-auto justify-between md:justify-end md:col-span-3">
-                                    <Badge className="md:hidden bg-red-600 hover:bg-red-700 text-white border-0 text-sm">
+                                    <Badge className="md:hidden bg-black border-2 border-red-600 text-red-500 text-[10px] uppercase tracking-widest font-bold px-3 py-1 shadow-[0_0_10px_rgba(220,38,38,0.1)]">
                                         {getRoleName(admin.role)}
                                     </Badge>
                                     {admin.role !== "super_admin" && (

@@ -384,22 +384,22 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                     <div className="inline-block px-4 md:px-6 py-2 md:py-3 rounded-full border-2 border-red-600 bg-black backdrop-blur-sm transition-all duration-300 hover:bg-red-600 group cursor-default">
                                         <div className="flex items-center gap-2 md:gap-3">
                                             <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:text-white transition-colors" />
-                                            <span className="text-white text-xs md:text-base font-medium tracking-widest uppercase group-hover:text-white transition-colors">{game} Admin Dashboard</span>
+                                            <span className="text-white text-xs md:text-base font-medium tracking-widest uppercase transition-colors"><span className="text-red-500 font-bold group-hover:text-white transition-colors">{game}</span> Admin Dashboard</span>
                                         </div>
                                     </div>
 
                                     <div className="relative">
-                                        <h1 className="font-display font-bold text-4xl md:text-6xl lg:text-8xl tracking-tight uppercase leading-none mb-2 md:mb-4 text-white">
+                                        <h1 className="font-display font-bold text-3xl md:text-5xl lg:text-6xl tracking-tight uppercase leading-none mb-2 md:mb-4 text-white">
                                             WELCOME BACK
                                         </h1>
 
-                                        <h2 className="font-display font-bold text-3xl md:text-5xl lg:text-7xl tracking-tight uppercase leading-none drop-shadow-[0_0_30px_rgba(220,38,38,0.6)] relative">
+                                        <h2 className="font-display font-bold text-3xl md:text-5xl lg:text-6xl tracking-tight uppercase leading-none drop-shadow-[0_0_30px_rgba(220,38,38,0.6)] relative">
                                             <span className="flame-text">{user?.name || user?.username || user?.email?.split('@')[0] || 'Admin'}</span>
                                         </h2>
                                     </div>
 
                                     <p className="text-sm md:text-xl lg:text-2xl text-muted-foreground font-body max-w-3xl mx-auto leading-relaxed drop-shadow-lg px-2">
-                                        Manage your {game} community, oversee events, and track member engagement all in one place.
+                                        Manage your <span className="text-red-500 font-bold">{game}</span> community, oversee events, and track member engagement all in one place.
                                     </p>
 
                                     <div
@@ -482,7 +482,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                 key={member.id}
                                                 className="bg-black/80 backdrop-blur-sm rounded-xl border-2 border-red-600 flex flex-col hover:border-red-500 transition-all overflow-hidden group"
                                             >
-                                                <div className="p-2.5 md:p-6 flex flex-col items-center justify-center text-center gap-1.5 md:gap-3 bg-black">
+                                                <div className="p-2.5 md:p-6 flex flex-col items-center justify-center text-center gap-5 md:gap-3 bg-black">
                                                     <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-red-600/20 flex items-center justify-center ring-2 ring-red-600/30">
                                                         <span className="font-display font-bold text-lg md:text-3xl text-red-500">
                                                             {(member.full_name || member.name || member.username || "U").charAt(0).toUpperCase()}
@@ -746,7 +746,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                             <p className="text-[11px] text-white/40 font-display mb-8 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
                                                 {searchQuery
                                                     ? `No members found matching your search for "${searchQuery}" in ${game}.`
-                                                    : `There are no verified members registered for ${game} yet.`}
+                                                    : <>There are no verified members registered for <span className="text-red-500 font-bold">{game}</span> yet.</>}
                                             </p>
                                         </div>
                                     )}
@@ -1333,7 +1333,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                 </div>
                                                 <p className="text-xl font-display font-black uppercase tracking-[0.2em] text-white mb-2">No Events Found</p>
                                                 <p className="text-[11px] text-white/40 font-display mb-8 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
-                                                    There are no events scheduled for {game} at the moment. Ignite the community by creating your first tournament.
+                                                    There are no events scheduled for <span className="text-red-500 font-bold">{game}</span> at the moment. Ignite the community by creating your first tournament.
                                                 </p>
                                             </div>
                                         )}

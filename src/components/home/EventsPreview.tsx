@@ -50,7 +50,7 @@ export const EventsPreview = () => {
           <span className="font-display text-primary uppercase tracking-widest text-base mb-4 block">
             Upcoming Battles
           </span>
-          <h2 className="font-display font-bold text-5xl md:text-6xl section-title mx-auto">
+          <h2 className="font-display font-bold text-4xl md:text-5xl mx-auto mb-6">
             NEXT <span className="flame-text">EVENTS</span>
           </h2>
         </div>
@@ -83,10 +83,10 @@ export const EventsPreview = () => {
                       )}
                     </div>
 
-                    <h3 className="font-display font-bold text-2xl text-foreground mb-3 group-hover:text-primary transition-colors">
+                    <h3 className="font-display font-bold text-xl text-foreground mb-3 group-hover:text-primary transition-colors">
                       {event.title}
                     </h3>
-                    <p className="text-muted-foreground font-body text-lg mb-6 line-clamp-2">
+                    <p className="text-muted-foreground font-body text-base mb-6 line-clamp-2">
                       {event.description}
                     </p>
 
@@ -126,7 +126,7 @@ export const EventsPreview = () => {
             variant="flame-outline"
             size="lg"
             onClick={() => navigate("/events")}
-            className="group text-lg px-8 py-6"
+            className="group text-base px-8 py-5"
           >
             View All Events
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
