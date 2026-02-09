@@ -508,8 +508,8 @@ const Events = () => {
               className={`flex items-center justify-center gap-4 mb-12 scroll-fade-up ${upcomingHeaderAnim.isVisible ? 'scroll-visible' : ''}`}
             >
               <div className="h-[1px] flex-1 bg-gradient-to-l from-primary/50 to-transparent" />
-              <h2 className="font-display font-bold text-2xl md:text-4xl uppercase tracking-widest whitespace-nowrap px-4 text-center">
-                UPCOMING <span className="flame-text">EVENTS</span>
+              <h2 className="font-display font-bold text-2xl md:text-4xl uppercase tracking-widest text-center relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-24 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+                UPCOMING <span className="flame-text text-nowrap">EVENTS</span>
               </h2>
               <div className="h-[1px] flex-1 bg-gradient-to-r from-primary/50 to-transparent" />
             </div>
@@ -583,8 +583,8 @@ const Events = () => {
               className={`flex items-center justify-center gap-4 mb-12 scroll-fade-up ${conductedHeaderAnim.isVisible ? 'scroll-visible' : ''}`}
             >
               <div className="h-[1px] flex-1 bg-gradient-to-l from-primary/50 to-transparent" />
-              <h2 className="font-display font-bold text-2xl md:text-4xl uppercase tracking-widest whitespace-nowrap px-4 text-center">
-                <span className="flame-text">EVENTS</span> CONDUCTED
+              <h2 className="font-display font-bold text-2xl md:text-4xl uppercase tracking-widest text-center relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-24 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+                <span className="flame-text text-nowrap">EVENTS</span> CONDUCTED
               </h2>
               <div className="h-[1px] flex-1 bg-gradient-to-r from-primary/50 to-transparent" />
             </div>

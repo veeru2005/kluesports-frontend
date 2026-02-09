@@ -50,7 +50,7 @@ export const EventsPreview = () => {
           <span className="font-display text-primary uppercase tracking-widest text-base mb-4 block">
             Upcoming Battles
           </span>
-          <h2 className="font-display font-bold text-4xl md:text-5xl mx-auto mb-6">
+          <h2 className="font-display font-bold text-4xl md:text-5xl mx-auto mb-6 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
             NEXT <span className="flame-text">EVENTS</span>
           </h2>
         </div>

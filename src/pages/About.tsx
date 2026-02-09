@@ -128,7 +128,7 @@ const About = () => {
               <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
                 What We Stand For
               </span>
-              <h2 className="font-display font-bold text-3xl md:text-4xl relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+              <h2 className="font-display font-bold text-3xl md:text-4xl relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                 OUR <span className="flame-text">VALUES</span>
               </h2>
             </div>
@@ -165,7 +165,7 @@ const About = () => {
               <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-8 ember-pulse">
                 <Target className="w-10 h-10 text-primary" />
               </div>
-              <h2 className="font-display font-bold text-3xl md:text-4xl mb-6 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+              <h2 className="font-display font-bold text-3xl md:text-4xl mb-6 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                 OUR <span className="flame-text">MISSION</span>
               </h2>
               <p className="text-lg text-muted-foreground font-body leading-relaxed">
