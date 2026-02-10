@@ -412,3 +412,4 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
 };
 
 export default RegistrationsPanel;
+
