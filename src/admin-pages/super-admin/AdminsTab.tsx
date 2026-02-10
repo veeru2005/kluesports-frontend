@@ -329,13 +329,13 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                                 </div>
 
                                 <div className="hidden md:flex md:col-span-4 justify-center w-full">
-                                    <Badge className="bg-black border-2 border-red-600 text-red-500 hover:bg-red-600 hover:text-white transition-all duration-300 text-[10px] md:text-xs whitespace-nowrap uppercase tracking-widest font-bold px-4 py-1 shadow-[0_0_15px_rgba(220,38,38,0.1)]">
+                                    <Badge className="bg-red-600 border-2 border-red-600 text-white hover:bg-red-700 transition-all duration-300 text-[10px] md:text-xs whitespace-nowrap uppercase tracking-widest font-bold px-4 py-1 shadow-[0_0_15px_rgba(220,38,38,0.2)]">
                                         {getRoleName(admin.role)}
                                     </Badge>
                                 </div>
 
                                 <div className="flex flex-row items-center gap-2 w-full md:w-auto justify-between md:justify-end md:col-span-3">
-                                    <Badge className="md:hidden bg-black border-2 border-red-600 text-red-500 text-[10px] uppercase tracking-widest font-bold px-3 py-1 shadow-[0_0_10px_rgba(220,38,38,0.1)]">
+                                    <Badge className="md:hidden bg-red-600 border-2 border-red-600 text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 shadow-[0_0_10px_rgba(220,38,38,0.2)]">
                                         {getRoleName(admin.role)}
                                     </Badge>
                                     {admin.role !== "super_admin" && (
@@ -374,7 +374,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <p className="text-[11px] text-white/40 font-display mb-8 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
                             {gameFilter === "all"
                                 ? "There are no administrative accounts registered in the system yet."
-                                : `There are no admins assigned to the ${gameFilter} category at the moment.`}
+                                : <>There are no admins assigned to the <span className="text-red-500 font-bold">{gameFilter}</span> category at the moment.</>}
                         </p>
                     </div>
                 )}

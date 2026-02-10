@@ -310,7 +310,7 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
 
                                 <div className="flex flex-col gap-2 min-w-0">
-                                    <div className="bg-black border border-red-600 text-red-500 text-[8px] px-2 py-0.5 rounded-full uppercase font-bold tracking-[0.12em] shrink-0 w-fit shadow-[0_0_10px_rgba(220,38,38,0.2)]">
+                                    <div className="bg-red-600 border border-red-600 text-white text-[8px] px-2 py-0.5 rounded-full uppercase font-bold tracking-[0.12em] shrink-0 w-fit shadow-[0_0_10px_rgba(220,38,38,0.2)]">
                                         {event.game || selectedGame}
                                     </div>
                                     <h3 className="font-display font-black text-xl text-white uppercase tracking-wider truncate">

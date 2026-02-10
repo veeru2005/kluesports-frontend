@@ -356,7 +356,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                     <p className="text-[11px] text-white/40 font-display mb-8 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
                         {gameFilter === "all"
                             ? "There are no upcoming gaming events scheduled in the community yet."
-                            : `There are no events found for the ${gameFilter} category at the moment.`}
+                            : <>There are no events found for the <span className="text-red-500 font-bold">{gameFilter}</span> category at the moment.</>}
                     </p>
                 </div>
             ) : (

@@ -745,7 +745,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                             <p className="text-xl font-display font-black uppercase tracking-[0.2em] text-white mb-2">No Members Found</p>
                                             <p className="text-[11px] text-white/40 font-display mb-8 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
                                                 {searchQuery
-                                                    ? `No members found matching your search for "${searchQuery}" in ${game}.`
+                                                    ? <>No members found matching your search for <span className="text-red-500 font-bold">"{searchQuery}"</span> in <span className="text-red-500 font-bold">{game}</span>.</>
                                                     : <>There are no verified members registered for <span className="text-red-500 font-bold">{game}</span> yet.</>}
                                             </p>
                                         </div>

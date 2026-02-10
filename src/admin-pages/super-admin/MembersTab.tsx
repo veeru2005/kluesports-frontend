@@ -299,7 +299,7 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                     <p className="text-xl font-display font-black uppercase tracking-[0.2em] text-white mb-2">No Members Found</p>
                     <p className="text-[11px] text-white/40 font-display mb-8 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
                         {searchQuery || gameFilter !== "all"
-                            ? `No members found matching your search criteria for ${gameFilter === 'all' ? 'all games' : gameFilter}.`
+                            ? <>No members found matching your search criteria for <span className="text-red-500 font-bold">{gameFilter === 'all' ? 'all games' : gameFilter}</span>.</>
                             : "There are no verified members registered in the community yet."}
                     </p>
                 </div>
