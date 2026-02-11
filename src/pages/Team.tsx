@@ -4,15 +4,22 @@ import { useQuery } from "@tanstack/react-query";
 import { FlameParticles } from "@/components/ui/FlameParticles";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-import { Linkedin, Instagram, Mail } from "lucide-react";
+// SVG icons imported via public folder
 
 const placeholderTeam = [
-  { id: "1", name: "Phoenix", role: "Team Captain", bio: "Professional FPS player with 10+ years of competitive experience.", avatar_url: null, social_links: { linkedin: "#", instagram: "#", email: "mailto:phoenix@kluesports.com" } },
-  { id: "2", name: "Shadow", role: "Strategist", bio: "Master tactician and former esports coach for top-tier teams.", avatar_url: null, social_links: { linkedin: "#", instagram: "#", email: "mailto:shadow@kluesports.com" } },
-  { id: "3", name: "Blaze", role: "Content Lead", bio: "Streaming sensation with 1M+ followers across platforms.", avatar_url: null, social_links: { linkedin: "#", instagram: "#", email: "mailto:blaze@kluesports.com" } },
-  { id: "4", name: "Viper", role: "Community Manager", bio: "Building communities and fostering competitive spirit since 2015.", avatar_url: null, social_links: { linkedin: "#", instagram: "#", email: "mailto:viper@kluesports.com" } },
-  { id: "5", name: "Storm", role: "Pro Player", bio: "Multiple championship winner in FPS and Battle Royale games.", avatar_url: null, social_links: { linkedin: "#", instagram: "#", email: "mailto:storm@kluesports.com" } },
-  { id: "6", name: "Ember", role: "Events Coordinator", bio: "Organizing epic gaming events and tournaments worldwide.", avatar_url: null, social_links: { linkedin: "#", instagram: "#", email: "mailto:ember@kluesports.com" } },
+  { id: "2200032351", name: "S. Rohith Kumar", role: "President (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770793344/PHOTO-2026-02-11-12-25-59_tz8rvp.jpg", social_links: { linkedin: "https://www.linkedin.com/in/singaraju-rohith-kumar-847262260?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/rohith_kumar_1?igsh=MWJhM255Nm8yNWhqMg==", email: "mailto:singarju.rohith@gmail.com" } },
+  { id: "2100049002", name: "Jammi Neeraj", role: "Ex President (2022-2025)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770808915/1678283966113_cnyw2a.jpg", social_links: { linkedin: "https://www.linkedin.com/in/neeraj-jammi-028039213?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", instagram: "https://www.instagram.com/urstruly__neeraj?igsh=MTc2ZHp2amJmcm9uag==", email: "mailto:jammineeraj@gmail.com" } },
+  { id: "2200080018", name: "N. Arya Satya Ananth", role: "Vice President (2022-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770808915/PHOTO-2026-02-11-16-48-56_moz7z6.jpg", social_links: { linkedin: "https://www.linkedin.com/in/arya-satya-ananth-8b6247255?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/arya_satya_ananth_?igsh=bGU2OTRzams4Mm8=32", email: "mailto:aaryasatya4@gmail.com" } },
+  { id: "2200032965", name: "Yarlagadda Sri", role: "Mobile Lead (2024-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770793344/PHOTO-2026-02-10-18-04-19_on6pmk.jpg", social_links: { linkedin: "https://www.linkedin.com/in/yarlagadda-sri?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", instagram: "https://www.instagram.com/sri_yar_224?utm_source=qr&igsh=dGt1cWx4dmR2dWxr", email: "mailto:srichowdary224@gmail.com" } },
+  { id: "2200070011", name: "K. Pramod Kumar", role: "Mobile Vice Lead (2024-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770810039/Screenshot_2025-06-17_112132_jjuzvw.png", social_links: { linkedin: "https://www.linkedin.com/in/k-pramod-kumar-556517285/", instagram: "https://www.instagram.com/pramod_p_s_p_k/", email: "mailto:2200070011me@gmail.com" } },
+  { id: "2300030282", name: "K. Ram Dattu", role: "PC Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770809431/IMG_20260211_165435_e3ss9i.jpg", social_links: { linkedin: "https://www.linkedin.com/in/ram-dattu-kadiyala-807039301?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", instagram: "https://www.instagram.com/ram_dattu_29?igsh=ZnE4emVmNGNmM2J6", email: "mailto:ramdattu54@gmail.com" } },
+  { id: "2300033292", name: "P. Santosh Reddy", role: "BGMI Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770809392/IMG_6344_omlmyx.jpg", social_links: { linkedin: "https://www.linkedin.com/in/p-sri-santosh-reddy-0023741b1/", instagram: "https://www.instagram.com/_santu.exe/?utm_source=ig_web_button_share_sheet", email: "mailto:santoshreed@gmail.com" } },
+  { id: "2300031334", name: "M. Anji Reddy", role: "Free Fire Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770821751/IMG_20260211_202427_ujj0rw.jpg", social_links: { linkedin: "https://www.linkedin.com/in/anji-reddy-modugula-6689953ab?utm_source=share_via&utm_content=profile&utm_medium=member_ios", instagram: "https://www.instagram.com/_.bannu._10?igsh=NWJuMjhkd2txMjc5", email: "mailto:modugulaanjireddy000@gmail.com" } },
+  { id: "2400031211", name: "B. Nayan", role: "Valorant Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770824448/1768636090408_iikhxw.jpg", social_links: { linkedin: "https://www.linkedin.com/in/nayan-balla-0b339534a/", instagram: "https://www.instagram.com/arya_satya_ananth_?igsh=bGU2OTRzams4Mm8=32", email: "mailto:ballasandhya1902@gmail.com" } },
+  { id: "2400031114", name: "Deepak Kumar", role: "COD Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770823024/IMG_20260211_204600_az4gxp.jpg", social_links: { linkedin: "https://www.linkedin.com/in/deepak-kumar-707a07339?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/_deepakz.x?igsh=eTg2NWI3dTg2OHl1", email: "mailto:dky.deepak7361@gmail.com" } },
+  { id: "2300033269", name: "E. Praveen Kumar", role: "Designing Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770823853/IMG_20260211_205944_fr1hzm.jpg", social_links: { linkedin: "https://in.linkedin.com/in/epuri-praveen-kumar-6a8655319", instagram: "https://www.instagram.com/mrperfect._irfan?igsh=MXZnNnYxZDFvajkwYQ==", email: "mailto:epuripraveenkumar2006@gmail.com" } },
+  { id: "2400031095", name: "V. Pujitha", role: "PR Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770824449/IMG_20260211_210847_cuzd5y.jpg", social_links: { linkedin: "www.linkedin.com/in/pujitha-vempala-991202365", instagram: "https://www.instagram.com/puji_vempala/", email: "mailto:pujithavempala2007@gmail.com" } },
+  { id: "2400040139", name: "P. Mounusha", role: "Social Media Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770824449/IMG_20260211_210808_eziz1n.jpg", social_links: { linkedin: "https://www.linkedin.com/in/mounusha-pasam-0b368636a?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/mouni_3207?igsh=YzQwdjB6MzI5YnVv", email: "mailto:pasammounusha@gmail.com" } },
 ];
 
 const Team = () => {
@@ -60,10 +67,10 @@ const Team = () => {
           <div className="container mx-auto px-4">
             <div
               ref={gridAnim.elementRef}
-              className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-sm sm:max-w-none mx-auto scroll-fade-up ${gridAnim.isVisible ? 'scroll-visible' : ''}`}
+              className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 mx-auto scroll-fade-up ${gridAnim.isVisible ? 'scroll-visible' : ''}`}
             >
               {isLoading
-                ? [...Array(6)].map((_, i) => (
+                ? [...Array(10)].map((_, i) => (
                   <div
                     key={i}
                     className="glass-dark rounded-xl aspect-square animate-pulse"
@@ -72,11 +79,11 @@ const Team = () => {
                 : displayTeam.map((member, index) => (
                   <div
                     key={member.id}
-                    className="glass-dark rounded-xl overflow-hidden border border-red-600 hover:border-red-500 transition-all group hover:ember-glow"
+                    className="glass-dark rounded-xl overflow-hidden border border-red-600 hover:border-red-500 transition-all group hover:ember-glow flex flex-col h-full"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Avatar/Image area - Square aspect ratio */}
-                    <div className="aspect-[4/3] relative overflow-hidden">
+                    <div className="aspect-square relative overflow-hidden">
                       {member.avatar_url ? (
                         <img
                           src={member.avatar_url}
@@ -96,42 +103,44 @@ const Team = () => {
                     {/* Separator line */}
                     <div className="w-full h-[1px] bg-red-600/50"></div>
 
-                    <div className="p-4">
-                      <h3 className="font-display font-bold text-lg text-foreground group-hover:text-primary transition-colors mb-1">
-                        {member.name}
-                      </h3>
-                      <p className="text-primary font-display text-xs uppercase tracking-wider mb-2">
-                        {member.role}
-                      </p>
-                      <p className="text-muted-foreground font-body text-sm mb-3 line-clamp-1">
-                        {member.bio}
-                      </p>
+                    <div className="p-3 sm:p-4 flex flex-col flex-1">
+                      <div className="flex-1">
+                        <h3 className="font-display font-bold text-base sm:text-lg text-foreground group-hover:text-primary transition-colors mb-1">
+                          {member.name}
+                        </h3>
+                        <p className="text-primary font-display text-[10px] sm:text-xs uppercase tracking-wider mb-2">
+                          {member.role}
+                        </p>
+                        <p className="text-muted-foreground font-body text-sm mb-1 line-clamp-1">
+                          ID: {member.id}
+                        </p>
+                      </div>
 
                       {/* Social Links */}
                       {member.social_links && (
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 pt-2">
                           {(member.social_links as any).linkedin && (
                             <a
                               href={(member.social_links as any).linkedin}
-                              className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all"
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600/50 hover:border-red-500 group/link"
                             >
-                              <Linkedin className="w-4 h-4" />
+                              <img src="/Linkedin.svg" alt="LinkedIn" className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover/link:scale-110" />
                             </a>
                           )}
                           {(member.social_links as any).instagram && (
                             <a
                               href={(member.social_links as any).instagram}
-                              className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all"
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600/50 hover:border-red-500 group/link"
                             >
-                              <Instagram className="w-4 h-4" />
+                              <img src="/instagram.svg" alt="Instagram" className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover/link:scale-110" />
                             </a>
                           )}
                           {(member.social_links as any).email && (
                             <a
                               href={(member.social_links as any).email}
-                              className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all"
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600/50 hover:border-red-500 group/link"
                             >
-                              <Mail className="w-4 h-4" />
+                              <img src="/gmail.svg" alt="Email" className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover/link:scale-110" />
                             </a>
                           )}
                         </div>
@@ -144,7 +153,7 @@ const Team = () => {
         </section>
       </main>
       <Footer />
-    </div>
+    </div >
   );
 };
 

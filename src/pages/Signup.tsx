@@ -17,7 +17,7 @@ const signupSchema = z.object({
   gameYouPlay: z.enum(["Free Fire", "BGMI", "Valorant", "Call Of Duty"], {
     errorMap: () => ({ message: "Please select a game" }),
   }),
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Invalid email address").endsWith("@gmail.com", "Only Gmail addresses are accepted"),
   mobile: z.string().regex(/^\d{10}$/, "Mobile number must be exactly 10 digits"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string().min(6, "Please confirm your password"),
@@ -349,21 +349,26 @@ const Signup = () => {
 
                   {/* Email Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="font-display flex items-center gap-2">
-                      <Mail className="w-4 h-4" />
-                      Email
-                    </Label>
+                    <div className="flex items-center justify-between gap-2">
+                      <Label htmlFor="email" className="font-display flex items-center gap-2">
+                        <Mail className="w-4 h-4" />
+                        Email
+                      </Label>
+                      <span className="text-[10px] text-primary/80 font-medium italic">
+                        Only Gmail addresses are accepted
+                      </span>
+                    </div>
                     <Input
                       id="email"
                       name="email"
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="your@email.com"
+                      placeholder="yourname@gmail.com"
                       className={`bg-muted border-border ${errors.email ? "border-destructive" : ""}`}
                     />
                     {errors.email && (
-                      <p className="text-destructive text-sm">{errors.email}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.email}</p>
                     )}
                   </div>
 
