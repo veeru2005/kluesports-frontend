@@ -41,7 +41,7 @@ export const EventsPreview = () => {
   const displayEvents = events || [];
 
   return (
-    <section className="py-24 bg-card/50">
+    <section className="py-16 md:py-16 bg-card/50">
       <div className="container mx-auto px-4">
         <div
           ref={titleAnim.elementRef}

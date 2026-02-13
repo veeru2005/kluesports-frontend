@@ -82,6 +82,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
         max_participants: "",
         image_url: "",
         is_registration_open: false,
+        game: game || "",
     });
     const [eventToDelete, setEventToDelete] = useState<any>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -263,6 +264,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                 max_participants: "",
                 image_url: "",
                 is_registration_open: false,
+                game: game || "",
             });
         },
     });
@@ -342,7 +344,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
             return;
         }
 
-        createEventMutation.mutate({ ...newEvent, game });
+        createEventMutation.mutate({ ...newEvent, game: newEvent.game || game });
     };
 
     const getBaseUrl = (g: string) => {
@@ -781,7 +783,8 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         location: "",
                                                         max_participants: "",
                                                         image_url: "",
-                                                        is_registration_open: false
+                                                        is_registration_open: false,
+                                                        game: game || ""
                                                     });
                                                     setEventDialogOpen(true);
                                                 }}
@@ -801,7 +804,8 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         location: "",
                                                         max_participants: "",
                                                         image_url: "",
-                                                        is_registration_open: false
+                                                        is_registration_open: false,
+                                                        game: game || ""
                                                     });
                                                 }
                                             }}>
@@ -812,6 +816,25 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         </DialogTitle>
                                                     </DialogHeader>
                                                     <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+                                                        {user?.role === 'super_admin' && (
+                                                            <div className="space-y-2">
+                                                                <Label>Game</Label>
+                                                                <Select
+                                                                    value={newEvent.game || game}
+                                                                    onValueChange={(val: any) => setNewEvent({ ...newEvent, game: val })}
+                                                                >
+                                                                    <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0">
+                                                                        <SelectValue placeholder="Select Game" />
+                                                                    </SelectTrigger>
+                                                                    <SelectContent className="bg-black border-2 border-red-600 text-white">
+                                                                        <SelectItem value="Free Fire">Free Fire</SelectItem>
+                                                                        <SelectItem value="BGMI">BGMI</SelectItem>
+                                                                        <SelectItem value="Valorant">Valorant</SelectItem>
+                                                                        <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
+                                                                    </SelectContent>
+                                                                </Select>
+                                                            </div>
+                                                        )}
                                                         <div className="space-y-2">
                                                             <Label>Title</Label>
                                                             <Input
@@ -1329,7 +1352,8 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                                 location: event.location,
                                                                                 max_participants: event.max_participants?.toString() || "",
                                                                                 image_url: event.image_url || "",
-                                                                                is_registration_open: event.is_registration_open !== undefined ? event.is_registration_open : true
+                                                                                is_registration_open: event.is_registration_open !== undefined ? event.is_registration_open : true,
+                                                                                game: event.game || game || ""
                                                                             });
                                                                             setEventDialogOpen(true);
                                                                         }}

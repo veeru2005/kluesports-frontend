@@ -123,7 +123,7 @@ export const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm md:text-base text-center md:text-left font-medium">
-            © {new Date().getFullYear()} KLU Esports Club. All rights reserved.
+            © {new Date().getFullYear()} KLU ESPORTS CLUB. All rights reserved.
           </p>
           <div className="text-gray-400 text-xs sm:text-sm md:text-base flex items-center justify-center md:justify-end gap-1.5 font-medium whitespace-nowrap">
             <span>Designed and Developed by</span>

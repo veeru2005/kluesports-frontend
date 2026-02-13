@@ -95,7 +95,7 @@ const About = () => {
                     Under the visionary guidance of our Director of SAC, <a href="https://www.linkedin.com/in/psaivijay/" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline">Pisini Sai Vijay Sir</a>, the club has evolved from a small gathering into a powerhouse. He staunchly encourages all forms of competitive gaming, bridging the gap between <span className="text-white">Mobile Esports</span> and <span className="text-white">PC Gaming</span> to ensure every gamer finds their stage.
                   </p>
                   <p className="text-muted-foreground/90">
-                    What started in 2019 has grown into a movement where champions are forged. With the support of KL SAC, we host major tournaments, live streams, and championship series that attract competitors from across the nation.
+                    What started in 2020 has grown into a movement where champions are forged. With the support of KL SAC, we host major tournaments, live streams, and championship series that attract competitors from across the nation.
                   </p>
                 </div>
               </div>
@@ -104,15 +104,15 @@ const About = () => {
               <div className="flex flex-col gap-8">
                 <div className="relative flex justify-center items-center">
                   <div className="relative group w-48 h-48 md:w-56 md:h-56 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-primary/20 rounded-full blur-[50px] opacity-40 group-hover:opacity-60 transition-opacity duration-700" />
-                    <div className="absolute inset-0 border border-primary/20 rounded-full scale-90 group-hover:scale-95 transition-transform duration-700" />
-                    <div className="absolute inset-0 border border-dashed border-primary/30 rounded-full animate-[spin_60s_linear_infinite] scale-110" />
+                    <div className="absolute inset-0 bg-red-600/30 rounded-full blur-[50px] opacity-70 transition-opacity duration-700" />
+                    <div className="absolute inset-0 border-2 border-red-500 rounded-full scale-[1.02] shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-transform duration-700" />
+                    <div className="absolute inset-0 border-2 border-dashed border-red-500 rounded-full animate-[spin_60s_linear_infinite] scale-[1.12]" />
 
-                    <div className="relative z-10 p-6 bg-black/40 backdrop-blur-xl rounded-full border border-white/10 shadow-2xl group-hover:border-primary/30 transition-colors duration-500 w-full h-full flex items-center justify-center">
+                    <div className="relative z-10 p-0 bg-black/40 backdrop-blur-xl rounded-full border-2 border-red-600 shadow-2xl transition-colors duration-500 w-full h-full flex items-center justify-center overflow-hidden">
                       <img
                         src="https://res.cloudinary.com/dus3luhur/image/upload/v1770969671/486415839_1833976170708272_11642_v8y9cr.jpg"
                         alt="KLU Esports Origin Logo"
-                        className="w-[90%] h-[90%] object-cover rounded-full drop-shadow-[0_0_20px_rgba(220,38,38,0.5)] group-hover:drop-shadow-[0_0_30px_rgba(220,38,38,0.8)] transition-all duration-500 transform group-hover:scale-105"
+                        className="w-full h-full object-cover rounded-full drop-shadow-[0_0_30px_rgba(220,38,38,0.8)] transition-all duration-500"
                       />
                     </div>
                   </div>
@@ -171,7 +171,7 @@ const About = () => {
 
                     {/* Updated: Badge Text */}
                     <div className="absolute bottom-4 left-4 z-20">
-                      <div className="bg-primary px-4 py-1 rounded text-black font-bold font-display text-sm inline-block mb-2 shadow-[0_0_15px_rgba(220,38,38,0.5)]">
+                      <div className="bg-primary px-4 py-1 rounded text-white font-bold font-display text-sm inline-block mb-2 shadow-[0_0_15px_rgba(220,38,38,0.5)]">
                         DIRECTOR OF KL SAC
                       </div>
                     </div>
