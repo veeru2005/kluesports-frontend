@@ -129,7 +129,7 @@ const Team = () => {
                           {(member.social_links as any).linkedin && (
                             <a
                               href={(member.social_links as any).linkedin}
-                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600/50 hover:border-red-500 group/link"
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-[#FF0000] hover:border-[#FF0000] group/link"
                             >
                               <img src="/Linkedin.svg" alt="LinkedIn" className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover/link:scale-110" />
                             </a>
@@ -137,7 +137,7 @@ const Team = () => {
                           {(member.social_links as any).instagram && (
                             <a
                               href={(member.social_links as any).instagram}
-                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600/50 hover:border-red-500 group/link"
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-[#FF0000] hover:border-[#FF0000] group/link"
                             >
                               <img src="/instagram.svg" alt="Instagram" className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover/link:scale-110" />
                             </a>
@@ -145,7 +145,7 @@ const Team = () => {
                           {(member.social_links as any).email && (
                             <a
                               href={(member.social_links as any).email}
-                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600/50 hover:border-red-500 group/link"
+                              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-[#FF0000] hover:border-[#FF0000] group/link"
                             >
                               <img src="/gmail.svg" alt="Email" className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover/link:scale-110" />
                             </a>

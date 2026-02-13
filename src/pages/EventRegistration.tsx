@@ -391,7 +391,7 @@ const EventRegistration = () => {
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
-            <div className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b-2 border-red-600">
+            <div className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b-2 border-[#FF0000]">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center h-16">
                         <button
@@ -408,9 +408,9 @@ const EventRegistration = () => {
             {/* Form */}
             <main className="container mx-auto px-4 py-8 pb-24 md:pb-12 max-w-3xl">
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-600/20 border border-red-600 mb-4">
-                        <Gamepad2 className="w-5 h-5 text-red-500" />
-                        <span className="font-display uppercase tracking-wider text-sm text-red-500">{game}</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FF0000] border border-[#FF0000] mb-4 shadow-[0_0_15px_rgba(255,0,0,0.3)]">
+                        <Gamepad2 className="w-5 h-5 text-white" />
+                        <span className="font-display uppercase tracking-wider text-sm text-white">{game}</span>
                     </div>
                     <h1 className="font-display font-bold text-3xl md:text-4xl text-white uppercase mb-2">
                         Event Registration
@@ -422,7 +422,7 @@ const EventRegistration = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-8">
                     {/* Team Info */}
-                    <div className="glass-dark rounded-xl p-6 border border-red-600 space-y-6">
+                    <div className="glass-dark rounded-xl p-6 border-2 border-[#FF0000] space-y-6">
                         <h2 className="font-display font-bold text-xl text-white uppercase flex items-center gap-2">
                             <Users className="w-5 h-5 text-red-500" />
                             Team Information
@@ -434,7 +434,7 @@ const EventRegistration = () => {
                                 <Input
                                     value={teamName}
                                     onChange={(e) => setTeamName(e.target.value)}
-                                    className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                     required
                                 />
                             </div>
@@ -483,7 +483,7 @@ const EventRegistration = () => {
                     </div>
 
                     {/* Team Lead */}
-                    <div className="glass-dark rounded-xl p-6 border border-red-600 space-y-6">
+                    <div className="glass-dark rounded-xl p-6 border-2 border-[#FF0000] space-y-6">
                         <h2 className="font-display font-bold text-xl text-white uppercase">
                             Team Lead (Player 1)
                         </h2>
@@ -494,7 +494,7 @@ const EventRegistration = () => {
                                 <Input
                                     value={teamLead.name}
                                     onChange={(e) => setTeamLead({ ...teamLead, name: e.target.value })}
-                                    className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                     required
                                 />
                             </div>
@@ -503,7 +503,7 @@ const EventRegistration = () => {
                                 <Input
                                     value={teamLead.collegeId}
                                     onChange={(e) => setTeamLead({ ...teamLead, collegeId: e.target.value })}
-                                    className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                     required
                                 />
                             </div>
@@ -512,7 +512,7 @@ const EventRegistration = () => {
                                 <Input
                                     value={teamLead.discordId}
                                     onChange={(e) => setTeamLead({ ...teamLead, discordId: e.target.value })}
-                                    className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                     required
                                 />
                             </div>
@@ -521,7 +521,7 @@ const EventRegistration = () => {
                                 <Input
                                     value={teamLead.mobileNumber}
                                     onChange={(e) => setTeamLead({ ...teamLead, mobileNumber: e.target.value })}
-                                    className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                     required
                                     maxLength={10}
                                 />
@@ -532,7 +532,7 @@ const EventRegistration = () => {
                                     type="email"
                                     value={teamLead.email}
                                     onChange={(e) => setTeamLead({ ...teamLead, email: e.target.value })}
-                                    className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                    className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                     required
                                 />
                             </div>
@@ -543,7 +543,7 @@ const EventRegistration = () => {
                                         <Input
                                             value={teamLead.riotId}
                                             onChange={(e) => setTeamLead({ ...teamLead, riotId: e.target.value })}
-                                            className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                            className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                             required
                                         />
                                     </div>
@@ -552,7 +552,7 @@ const EventRegistration = () => {
                                         <Input
                                             value={teamLead.peakRank}
                                             onChange={(e) => setTeamLead({ ...teamLead, peakRank: e.target.value })}
-                                            className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                            className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                             required
                                         />
                                     </div>
@@ -561,7 +561,7 @@ const EventRegistration = () => {
                                         <Input
                                             value={teamLead.currentRank}
                                             onChange={(e) => setTeamLead({ ...teamLead, currentRank: e.target.value })}
-                                            className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                            className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                             required
                                         />
                                     </div>
@@ -570,7 +570,7 @@ const EventRegistration = () => {
                                         <Input
                                             value={teamLead.level}
                                             onChange={(e) => setTeamLead({ ...teamLead, level: e.target.value })}
-                                            className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                            className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                             required
                                         />
                                     </div>
@@ -581,7 +581,7 @@ const EventRegistration = () => {
                                     <Input
                                         value={teamLead.inGameName}
                                         onChange={(e) => setTeamLead({ ...teamLead, inGameName: e.target.value })}
-                                        className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                        className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                         required
                                     />
                                 </div>
@@ -591,7 +591,7 @@ const EventRegistration = () => {
 
                     {/* Other Players */}
                     {[...Array(teamSize - 1)].map((_, idx) => (
-                        <div key={idx} className="glass-dark rounded-xl p-6 border border-red-600/70 space-y-6">
+                        <div key={idx} className="glass-dark rounded-xl p-6 border-2 border-[#FF0000] space-y-6">
                             <h2 className="font-display font-bold text-xl text-white uppercase">
                                 Player {idx + 2}
                             </h2>
@@ -615,7 +615,7 @@ const EventRegistration = () => {
                                                 value={players[idx]?.email || ""}
                                                 onChange={(e) => handlePlayerChange(idx, "email", e.target.value)}
                                                 placeholder="Enter member's account email"
-                                                className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 ${players[idx]?.accountVerified ? "border-green-600/50 focus:border-green-600" : "border-red-600/50 focus:border-red-600"
+                                                className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 outline-none ${players[idx]?.accountVerified ? "border-green-600/50 focus:border-green-600" : "border-[#FF0000] focus:border-[#FF0000]"
                                                     }`}
                                                 required
                                             />
@@ -623,7 +623,7 @@ const EventRegistration = () => {
                                                 type="button"
                                                 variant="outline"
                                                 onClick={() => verifyMemberAccount(idx, players[idx]?.email)}
-                                                className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white shrink-0"
+                                                className="border-[#FF0000] text-[#FF0000] hover:bg-[#FF0000] hover:text-white shrink-0 transition-all duration-300"
                                                 disabled={!players[idx]?.email || !players[idx]?.email.includes('@')}
                                             >
                                                 Check
@@ -642,7 +642,7 @@ const EventRegistration = () => {
                                     <Input
                                         value={players[idx]?.name || ""}
                                         onChange={(e) => handlePlayerChange(idx, "name", e.target.value)}
-                                        className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-red-600/50 text-white"
+                                        className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 outline-none ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-[#FF0000] text-white focus:border-[#FF0000]"
                                             }`}
                                         required
                                         readOnly={players[idx]?.accountVerified}
@@ -653,7 +653,7 @@ const EventRegistration = () => {
                                     <Input
                                         value={players[idx]?.collegeId || ""}
                                         onChange={(e) => handlePlayerChange(idx, "collegeId", e.target.value)}
-                                        className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-red-600/50 text-white"
+                                        className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 outline-none ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-[#FF0000] text-white focus:border-[#FF0000]"
                                             }`}
                                         required
                                         readOnly={players[idx]?.accountVerified}
@@ -664,7 +664,7 @@ const EventRegistration = () => {
                                     <Input
                                         value={players[idx]?.mobileNumber || ""}
                                         onChange={(e) => handlePlayerChange(idx, "mobileNumber", e.target.value)}
-                                        className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-red-600/50 text-white"
+                                        className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 outline-none ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-[#FF0000] text-white focus:border-[#FF0000]"
                                             }`}
                                         required
                                         maxLength={10}
@@ -678,7 +678,7 @@ const EventRegistration = () => {
                                             <Input
                                                 value={players[idx]?.riotId || ""}
                                                 onChange={(e) => handlePlayerChange(idx, "riotId", e.target.value)}
-                                                className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-red-600/50 text-white"
+                                                className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 outline-none ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-[#FF0000] text-white focus:border-[#FF0000]"
                                                     }`}
                                                 required
                                                 readOnly={players[idx]?.accountVerified}
@@ -689,7 +689,7 @@ const EventRegistration = () => {
                                             <Input
                                                 value={players[idx]?.peakRank || ""}
                                                 onChange={(e) => handlePlayerChange(idx, "peakRank", e.target.value)}
-                                                className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                                 required
                                             />
                                         </div>
@@ -698,7 +698,7 @@ const EventRegistration = () => {
                                             <Input
                                                 value={players[idx]?.currentRank || ""}
                                                 onChange={(e) => handlePlayerChange(idx, "currentRank", e.target.value)}
-                                                className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                                 required
                                             />
                                         </div>
@@ -707,7 +707,7 @@ const EventRegistration = () => {
                                             <Input
                                                 value={players[idx]?.level || ""}
                                                 onChange={(e) => handlePlayerChange(idx, "level", e.target.value)}
-                                                className="bg-black border border-red-600/50 focus:border-red-600 text-white focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                                                 required
                                             />
                                         </div>
@@ -718,7 +718,7 @@ const EventRegistration = () => {
                                         <Input
                                             value={players[idx]?.inGameName || ""}
                                             onChange={(e) => handlePlayerChange(idx, "inGameName", e.target.value)}
-                                            className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-red-600/50 text-white"
+                                            className={`bg-black border focus-visible:ring-0 focus-visible:ring-offset-0 outline-none ${players[idx]?.accountVerified ? "border-green-600/30 text-white/50 cursor-not-allowed" : "border-[#FF0000] text-white focus:border-[#FF0000]"
                                                 }`}
                                             required
                                             readOnly={players[idx]?.accountVerified}

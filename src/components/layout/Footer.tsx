@@ -101,19 +101,19 @@ export const Footer = () => {
             {/* Social Icons Row */}
             <div className="flex gap-4">
               <a href="https://www.instagram.com/klu__esports?igsh=MXF6OW0waXl6NnQ3Ng==" target="_blank" rel="noopener noreferrer"
-                className="w-12 h-12 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
+                className="w-12 h-12 rounded-lg bg-black border border-[#FF0000] flex items-center justify-center hover:shadow-[0_0_15px_rgba(255,0,0,0.5)] hover:border-[#FF0000] hover:-translate-y-1 transition-all group">
                 <img src="/instagram.svg" alt="IG" className="w-6 h-6 group-hover:scale-110 transition-transform" />
               </a>
               <a href="https://discord.com/invite/pp9wnEjbt" target="_blank" rel="noopener noreferrer"
-                className="w-12 h-12 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
+                className="w-12 h-12 rounded-lg bg-black border border-[#FF0000] flex items-center justify-center hover:shadow-[0_0_15px_rgba(255,0,0,0.5)] hover:border-[#FF0000] hover:-translate-y-1 transition-all group">
                 <img src="/discord.svg" alt="DC" className="w-6 h-6 group-hover:scale-110 transition-transform" />
               </a>
               <a href="https://www.youtube.com/@esports.kluniversity" target="_blank" rel="noopener noreferrer"
-                className="w-12 h-12 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
+                className="w-12 h-12 rounded-lg bg-black border border-[#FF0000] flex items-center justify-center hover:shadow-[0_0_15px_rgba(255,0,0,0.5)] hover:border-[#FF0000] hover:-translate-y-1 transition-all group">
                 <img src="/youtube.svg" alt="YT" className="w-6 h-6 group-hover:scale-110 transition-transform" />
               </a>
               <a href="https://www.linkedin.com/company/klu-esports/" target="_blank" rel="noopener noreferrer"
-                className="w-12 h-12 rounded-lg bg-black border border-red-600 flex items-center justify-center hover:shadow-[0_0_15px_rgba(220,38,38,0.6)] hover:border-red-500 hover:-translate-y-1 transition-all group">
+                className="w-12 h-12 rounded-lg bg-black border border-[#FF0000] flex items-center justify-center hover:shadow-[0_0_15px_rgba(255,0,0,0.5)] hover:border-[#FF0000] hover:-translate-y-1 transition-all group">
                 <img src="/Linkedin.svg" alt="LI" className="w-6 h-6 group-hover:scale-110 transition-transform" />
               </a>
             </div>

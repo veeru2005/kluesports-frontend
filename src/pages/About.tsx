@@ -81,13 +81,13 @@ const About = () => {
                   <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
                     Our Beginning
                   </span>
-                  <h2 className="font-display font-bold text-3xl md:text-4xl mb-8 leading-tight relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+                  <h2 className="font-display font-bold text-3xl md:text-4xl mb-8 leading-tight relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-[#FF0000] after:to-transparent">
                     THE <span className="flame-text">ORIGIN</span>
                   </h2>
                 </div>
 
                 {/* Updated: Border wraps all paragraphs now */}
-                <div className="space-y-6 font-body text-lg leading-relaxed border-l-4 border-primary/80 pl-6 py-4 bg-gradient-to-r from-primary/5 to-transparent rounded-r-lg">
+                <div className="space-y-6 font-body text-lg leading-relaxed border-l-4 border-[#FF0000] pl-6 py-4 bg-gradient-to-r from-red-600/10 to-transparent rounded-r-lg">
                   <p className="text-xl text-white font-medium">
                     The <span className="text-primary font-bold">KLU ESPORTS CLUB</span> operates proudly under the dynamic banner of the <span className="text-white">KL University Student Activity Center (KL SAC), at KL University</span>.
                   </p>
@@ -191,7 +191,7 @@ const About = () => {
                         href="https://www.linkedin.com/in/psaivijay/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600/50 hover:border-red-500 hover:shadow-[0_0_15px_rgba(220,38,38,0.3)] group/link"
+                        className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-[#FF0000] hover:shadow-[0_0_15px_rgba(255,0,0,0.3)] group/link"
                         title="Connect on LinkedIn"
                       >
                         <img src="/Linkedin.svg" alt="LinkedIn" className="w-5 h-5 transition-transform group-hover/link:scale-110" />
@@ -329,7 +329,7 @@ const About = () => {
               <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-8 ember-pulse">
                 <Target className="w-10 h-10 text-primary" />
               </div>
-              <h2 className="font-display font-bold text-3xl md:text-4xl mb-6 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+              <h2 className="font-display font-bold text-3xl md:text-4xl mb-6 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-[#FF0000] after:to-transparent">
                 OUR <span className="flame-text">MISSION</span>
               </h2>
               <p className="text-lg text-muted-foreground font-body leading-relaxed">

@@ -214,7 +214,7 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
 
 
         {/* Details List - Vertical Stack */}
-        <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border border-primary/50 shadow-[0_0_15px_-5px_hsl(var(--primary)/0.2)]">
+        <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
           <div className="flex items-center gap-4">
             <Calendar className="w-5 h-5 text-primary shrink-0" />
             <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
@@ -363,7 +363,7 @@ const PastEventCard = ({ event, index }: { event: any, index: number }) => (
 
 
         {/* Details List - Vertical Stack */}
-        <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border border-primary/50 shadow-[0_0_15px_-5px_hsl(var(--primary)/0.2)]">
+        <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
           <div className="flex items-center gap-4">
             <Calendar className="w-5 h-5 text-primary shrink-0" />
             <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
@@ -557,7 +557,7 @@ const Events = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="col-span-full py-16 px-6 sm:px-12 text-center glass-dark rounded-3xl border-2 border-red-600 mx-auto w-[90%] sm:w-full max-w-3xl relative overflow-hidden">
+                      <div className="col-span-full py-16 px-6 sm:px-12 text-center glass-dark rounded-3xl border-2 border-[#FF0000] mx-auto w-[90%] sm:w-full max-w-3xl relative overflow-hidden">
                         <div className="absolute inset-0 bg-red-600/5 blur-3xl" />
                         <div className="relative z-10">
                           <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-primary mx-auto mb-4" />
@@ -621,7 +621,7 @@ const Events = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="col-span-full py-16 px-6 sm:px-12 text-center glass-dark rounded-3xl border-2 border-red-600 mx-auto w-[90%] sm:w-full max-w-3xl relative overflow-hidden">
+                      <div className="col-span-full py-16 px-6 sm:px-12 text-center glass-dark rounded-3xl border-2 border-[#FF0000] mx-auto w-[90%] sm:w-full max-w-3xl relative overflow-hidden">
                         <div className="absolute inset-0 bg-red-600/5 blur-3xl" />
                         <div className="relative z-10">
                           <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-primary mx-auto mb-4" />
