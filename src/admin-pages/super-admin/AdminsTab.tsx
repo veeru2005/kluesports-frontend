@@ -510,8 +510,8 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                             </div>
                         </div>
                     </div>
-                    <DialogFooter className="flex-row gap-2">
-                        <Button variant="outline" onClick={() => setIsAddingAdmin(false)} className="flex-1 border-red-600 text-white hover:bg-red-600 hover:text-white transition-all duration-300">
+                    <DialogFooter className="!flex !flex-row !justify-between sm:!justify-between gap-2">
+                        <Button variant="ghost" onClick={() => setIsAddingAdmin(false)} className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300">
                             Cancel
                         </Button>
                         <Button onClick={handleCreate} className="flex-1 bg-red-600 hover:bg-red-700 text-white transition-all duration-300">Create Admin</Button>
@@ -614,7 +614,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         </div>
                     </div>
                     <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2 px-0">
-                        <Button variant="outline" onClick={() => setEditingAdmin(null)} className="flex-1 max-w-[140px] border-2 border-red-600 text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
+                        <Button variant="ghost" onClick={() => setEditingAdmin(null)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
                             Cancel
                         </Button>
                         <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-[#FF0000] hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">Save Changes</Button>
@@ -633,7 +633,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
-                        <AlertDialogCancel className="border-2 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
+                        <AlertDialogCancel className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
                             className="bg-[#FF0000] hover:bg-red-700 text-white"

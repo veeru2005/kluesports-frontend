@@ -397,7 +397,7 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         </div>
                     </div>
                     <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2 px-0">
-                        <Button variant="outline" onClick={() => setEditingMember(null)} className="flex-1 max-w-[140px] border-2 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
+                        <Button variant="ghost" onClick={() => setEditingMember(null)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
                             Cancel
                         </Button>
                         <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">Save Changes</Button>
@@ -416,7 +416,7 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
-                        <AlertDialogCancel className="border-2 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
+                        <AlertDialogCancel className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
                             className="bg-red-600 hover:bg-red-700 text-white"

@@ -336,14 +336,26 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                                     </div>
                                 </div>
 
-                                <div className="w-full flex items-center justify-between mt-5 pt-3 border-t border-[#FF0000]/60">
-                                    <div className="flex items-center gap-2.5 text-gray-300">
+                                {/* Super admin mobile: Teams count above the line, right corner */}
+                                {isSuperAdmin && (
+                                    <div className="flex sm:hidden items-center justify-end gap-2.5 text-gray-300 mt-1">
                                         <Users className="w-4 h-4 text-red-500 shrink-0" />
                                         <span className="text-sm font-bold tracking-tight">
                                             {regCount} / {event.max_participants || '60'} Teams
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-3">
+                                )}
+
+                                <div className="w-full flex flex-row items-center justify-between mt-1 sm:mt-5 pt-3 border-t border-[#FF0000]/60">
+                                    {/* Teams count - below the line, left side (desktop always, mobile only for game admin) */}
+                                    <div className={`${isSuperAdmin ? 'hidden sm:flex' : 'flex'} items-center gap-2.5 text-gray-300`}>
+                                        <Users className="w-4 h-4 text-red-500 shrink-0" />
+                                        <span className="text-sm font-bold tracking-tight">
+                                            {regCount} / {event.max_participants || '60'} Teams
+                                        </span>
+                                    </div>
+                                    {/* Buttons row */}
+                                    <div className={`flex items-center ${isSuperAdmin ? 'justify-between w-full sm:w-auto sm:gap-3' : 'gap-3'}`}>
                                         {isSuperAdmin && (
                                             <Button
                                                 size="sm"

@@ -746,14 +746,14 @@ const Profile = () => {
 
               {/* Security */}
               {!isEditing && (
-                <div className="glass-dark rounded-xl p-8 border-2 border-[#FF0000] shadow-2xl relative overflow-hidden">
+                <div className="glass-dark rounded-xl p-5 sm:p-8 border-2 border-[#FF0000] shadow-2xl relative overflow-hidden">
                   <h2 className="font-display font-bold text-2xl mb-6 uppercase">Account <span className="flame-text">Security</span></h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Button variant="outline" className="flex-1 gap-2 border-[#FF0000] hover:bg-red-700" onClick={() => { setEmailDialogOpen(true); setOtpStep(1); }}>
-                      <Mail className="w-4 h-4" /> Change Email
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <Button variant="outline" className="flex-1 gap-2.5 border-[#FF0000] hover:bg-red-700 h-12 px-5 justify-center text-sm font-display" onClick={() => { setEmailDialogOpen(true); setOtpStep(1); }}>
+                      <Mail className="w-4 h-4 shrink-0" /> Change Email
                     </Button>
-                    <Button variant="outline" className="flex-1 gap-2 border-[#FF0000] hover:bg-red-700" onClick={() => { setPassDialogOpen(true); setOtpStep(1); }}>
-                      <Lock className="w-4 h-4" /> Change Password
+                    <Button variant="outline" className="flex-1 gap-2.5 border-[#FF0000] hover:bg-red-700 h-12 px-5 justify-center text-sm font-display" onClick={() => { setPassDialogOpen(true); setOtpStep(1); }}>
+                      <Lock className="w-4 h-4 shrink-0" /> Change Password
                     </Button>
                   </div>
                 </div>
@@ -765,7 +765,7 @@ const Profile = () => {
 
       {/* Dialogs */}
       <Dialog open={emailDialogOpen} onOpenChange={(open) => { setEmailDialogOpen(open); if (!open) setOtpStep(1); }}>
-        <DialogContent className="bg-black border-2 border-red-600 text-white rounded-2xl gap-6">
+        <DialogContent className="bg-black border-2 border-red-600 text-white rounded-2xl gap-6 w-[88vw] max-w-sm">
           <DialogHeader>
             <DialogTitle className="font-display text-2xl uppercase">Change Email</DialogTitle>
             <DialogDescription className="text-muted-foreground">
@@ -780,8 +780,8 @@ const Profile = () => {
             {(otpStep === 2 || otpStep === 4) && <Input placeholder="000000" maxLength={6} className="bg-black border-red-600 text-center tracking-[1em] text-2xl" value={securityData.otp} onChange={e => setSecurityData({ ...securityData, otp: e.target.value })} />}
             {otpStep === 3 && <Input placeholder="new@example.com" className="bg-black border-red-600 h-12" value={securityData.newEmail} onChange={e => setSecurityData({ ...securityData, newEmail: e.target.value })} />}
           </div>
-          <DialogFooter className="gap-3">
-            <Button variant="ghost" onClick={() => setEmailDialogOpen(false)}>Cancel</Button>
+          <DialogFooter className="!flex !flex-row !justify-between sm:!justify-between gap-3">
+            <Button variant="ghost" className="border border-[#FF0000] bg-transparent hover:bg-[#FF0000] hover:text-white text-white" onClick={() => setEmailDialogOpen(false)}>Cancel</Button>
             {otpStep === 1 && <Button variant="flame" onClick={handleSendCurrentEmailOTP} disabled={isSecurityLoading}>Send Code</Button>}
             {otpStep === 2 && <Button variant="flame" onClick={handleVerifyCurrentEmailOTP} disabled={isSecurityLoading}>Verify</Button>}
             {otpStep === 3 && <Button variant="flame" onClick={handleSendNewEmailOTP} disabled={isSecurityLoading}>Send to New</Button>}
@@ -791,7 +791,7 @@ const Profile = () => {
       </Dialog>
 
       <Dialog open={passDialogOpen} onOpenChange={setPassDialogOpen}>
-        <DialogContent className="bg-black border-2 border-red-600 text-white rounded-2xl gap-6">
+        <DialogContent className="bg-black border-2 border-red-600 text-white rounded-2xl gap-6 w-[88vw] max-w-sm">
           <DialogHeader><DialogTitle className="font-display text-2xl uppercase">Change Password</DialogTitle></DialogHeader>
           <div className="py-4 space-y-4">
             {otpStep === 1 && <div className="flex justify-center"><ShieldCheck className="w-16 h-16 text-red-600 animate-pulse" /></div>}
@@ -803,8 +803,8 @@ const Profile = () => {
               </div>
             )}
           </div>
-          <DialogFooter className="gap-3">
-            <Button variant="ghost" onClick={() => setPassDialogOpen(false)}>Cancel</Button>
+          <DialogFooter className="!flex !flex-row !justify-between sm:!justify-between gap-3">
+            <Button variant="ghost" className="border border-[#FF0000] bg-transparent hover:bg-[#FF0000] hover:text-white text-white" onClick={() => setPassDialogOpen(false)}>Cancel</Button>
             {otpStep === 1 && <Button variant="flame" onClick={handleSendPasswordOTP} disabled={isSecurityLoading}>Send Code</Button>}
             {otpStep === 2 && <Button variant="flame" onClick={handleVerifyPasswordOTP} disabled={isSecurityLoading}>Verify Code</Button>}
             {otpStep === 3 && <Button variant="flame" onClick={handleResetPassword} disabled={isSecurityLoading}>Update Password</Button>}

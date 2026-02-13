@@ -688,7 +688,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                     </div>
 
                                                     <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2">
-                                                        <Button variant="outline" onClick={() => setEditMember(null)} className="flex-1 max-w-[140px] border-2 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
+                                                        <Button variant="ghost" onClick={() => setEditMember(null)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
                                                             Cancel
                                                         </Button>
                                                         <Button
@@ -727,8 +727,8 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                     </div>
                                                     <div className="flex flex-row gap-3">
                                                         <Button
-                                                            variant="outline"
-                                                            className="flex-1 border-2 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-12 transition-all duration-300 font-display uppercase tracking-widest text-xs"
+                                                            variant="ghost"
+                                                            className="flex-1 border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-12 transition-all duration-300 font-display uppercase tracking-widest text-xs"
                                                             onClick={() => setDeletingMember(null)}
                                                         >
                                                             Cancel
@@ -950,7 +950,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className="grid grid-cols-2 gap-4">
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                                             <div className="space-y-2">
                                                                 <Label>Start Date</Label>
                                                                 <div className="relative">
@@ -993,13 +993,18 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                             </div>
                                                         </div>
 
-                                                        <div className="grid grid-cols-2 gap-4">
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                                             <div className="space-y-2">
                                                                 <Label>Max Participants</Label>
                                                                 <Input
                                                                     type="number"
+                                                                    min="1"
+                                                                    max="10000"
                                                                     value={newEvent.max_participants}
-                                                                    onChange={(e) => setNewEvent({ ...newEvent, max_participants: e.target.value })}
+                                                                    onChange={(e) => {
+                                                                        const val = parseInt(e.target.value);
+                                                                        setNewEvent({ ...newEvent, max_participants: isNaN(val) ? "" : String(Math.min(val, 10000)) });
+                                                                    }}
                                                                     className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                                                 />
                                                             </div>
@@ -1014,10 +1019,10 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                             </div>
                                                         </div>
 
-                                                        <div className="grid grid-cols-2 gap-4">
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                                             <div className="space-y-2">
                                                                 <Label>Start Time</Label>
-                                                                <div className="flex gap-2">
+                                                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2 overflow-hidden">
                                                                     <Select
                                                                         value={(() => {
                                                                             if (!newEvent.event_date) return "12";
@@ -1038,7 +1043,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             setNewEvent({ ...newEvent, event_date: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
                                                                         }}
                                                                     >
-                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                                                             <SelectValue placeholder="HH" />
                                                                         </SelectTrigger>
                                                                         <SelectContent>
@@ -1059,7 +1064,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             setNewEvent({ ...newEvent, event_date: `${datePart}T${hours}:${val}` });
                                                                         }}
                                                                     >
-                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                                                             <SelectValue placeholder="MM" />
                                                                         </SelectTrigger>
                                                                         <SelectContent>
@@ -1088,7 +1093,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             setNewEvent({ ...newEvent, event_date: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
                                                                         }}
                                                                     >
-                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                                                             <SelectValue />
                                                                         </SelectTrigger>
                                                                         <SelectContent>
@@ -1101,7 +1106,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
                                                             <div className="space-y-2">
                                                                 <Label>End Time</Label>
-                                                                <div className="flex gap-2">
+                                                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2 overflow-hidden">
                                                                     <Select
                                                                         value={(() => {
                                                                             if (!newEvent.end_time) return undefined;
@@ -1123,7 +1128,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             setNewEvent({ ...newEvent, end_time: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
                                                                         }}
                                                                     >
-                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                                                             <SelectValue placeholder="HH" />
                                                                         </SelectTrigger>
                                                                         <SelectContent>
@@ -1144,7 +1149,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             setNewEvent({ ...newEvent, end_time: `${datePart}T${hours}:${val}` });
                                                                         }}
                                                                     >
-                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                                                             <SelectValue placeholder="MM" />
                                                                         </SelectTrigger>
                                                                         <SelectContent>
@@ -1173,7 +1178,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             setNewEvent({ ...newEvent, end_time: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
                                                                         }}
                                                                     >
-                                                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                                                             <SelectValue />
                                                                         </SelectTrigger>
                                                                         <SelectContent>
@@ -1216,9 +1221,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         <div className="flex justify-between items-center mt-8 pt-4 border-t border-border/50">
                                                             <Button
                                                                 type="button"
-                                                                variant="outline"
-                                                                onClick={() => setEventDialogOpen(false)}
-                                                                className="border-[#FF0000] hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] transition-all"
+                                                                className="border border-[#FF0000] bg-transparent hover:bg-[#FF0000] hover:text-white text-white transition-all"
                                                             >
                                                                 Cancel
                                                             </Button>
@@ -1237,7 +1240,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                     >
                                         {filteredEvents?.map((event) => (
                                             <div key={event.id || event._id} className="glass-dark rounded-xl overflow-hidden flame-card-style transition-all group flex flex-col h-full relative w-[90%] sm:w-full sm:max-w-[280px] mx-auto sm:mx-0">
-                                                <div className="aspect-[4/5] w-full bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden flex items-center justify-center border-b border-border/50">
+                                                <div className="aspect-[3/4] w-full relative overflow-hidden flex items-center justify-center border-b border-white/5">
                                                     {event.image_url ? (
                                                         <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
                                                     ) : (
@@ -1259,7 +1262,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                 </div>
 
                                                 {/* Slots Progress Section */}
-                                                <div className="p-4 bg-black/30 space-y-2">
+                                                <div className="pt-1 pb-2 px-3 bg-black/30 space-y-1.5">
                                                     {(() => {
                                                         const filled = event.registrationCount || 0;
                                                         const total = event.max_participants ? parseInt(event.max_participants.toString()) : 1;
@@ -1279,7 +1282,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                         {isCompleted ? "COMPLETED" : (isClosedManually ? "CLOSED" : (isFull ? "FULL" : `${filled}/${total} slots filled`))}
                                                                     </span>
                                                                     {!isCompleted && !isClosedManually && !isFull && (
-                                                                        <span className="text-white">{total - filled} left</span>
+                                                                        <span className="text-white font-bold">{total - filled} left</span>
                                                                     )}
                                                                 </div>
                                                                 <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
@@ -1559,7 +1562,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter className="flex flex-row items-center gap-3 w-full sm:justify-end">
-                            <AlertDialogCancel className="mt-0 flex-1 sm:flex-none bg-transparent border-white/20 hover:bg-white/10 text-white">Cancel</AlertDialogCancel>
+                            <AlertDialogCancel className="mt-0 flex-1 sm:flex-none bg-transparent border border-red-600 text-white hover:bg-red-600 hover:text-white transition-all duration-300">Cancel</AlertDialogCancel>
                             <AlertDialogAction
                                 className="flex-1 sm:flex-none bg-red-600 hover:bg-red-700 text-white"
                                 onClick={() => eventToDelete && deleteEventMutation.mutate(eventToDelete.id || eventToDelete._id)}

@@ -96,7 +96,7 @@ interface EventCardProps {
 const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }: EventCardProps) => (
   <Dialog>
     <div
-      className="glass-dark rounded-xl overflow-hidden flame-card-style transition-all group flex flex-col h-full relative w-[90%] sm:w-full mx-auto sm:mx-0"
+      className="glass-dark rounded-xl overflow-hidden flame-card-style transition-all group flex flex-col h-full relative w-[90%] sm:w-full sm:max-w-[280px] mx-auto sm:mx-0"
       style={{ animationDelay: `${index * 0.1}s` }}
     >
       {/* Image section - not clickable */}
@@ -126,7 +126,7 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
       </div>
 
       {/* Slots Progress Bar & View Details Button */}
-      <div className="pt-1.5 pb-3 px-3 bg-black/30 space-y-2">
+      <div className="pt-1 pb-2 px-3 bg-black/30 space-y-1.5">
         {/* Slots Progress Section */}
         {(() => {
           const filled = event.registrationCount || 0;
@@ -138,7 +138,7 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
 
           return (
             <div className="space-y-1">
-              <div className="flex items-center justify-between text-xs sm:text-sm font-display uppercase tracking-wider">
+              <div className="flex items-center justify-between text-[10px] font-display uppercase tracking-wider">
                 <span className="text-white font-bold">
                   {`${filled}/${total} slots filled`}
                 </span>

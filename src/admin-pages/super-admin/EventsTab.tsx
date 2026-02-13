@@ -437,7 +437,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 </div>
 
                                 {/* Slots Progress Section */}
-                                <div className="pt-1.5 pb-3 px-3 bg-black/30 space-y-2">
+                                <div className="pt-1 pb-2 px-3 bg-black/30 space-y-1.5">
                                     {(() => {
                                         const isCompleted = event.end_time && new Date(event.end_time) < new Date();
                                         const filled = event.registrationCount || 0;
@@ -458,7 +458,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                         {isCompleted ? "COMPLETED" : (isClosedManually ? "CLOSED" : (isFull ? "FULL" : `${filled}/${total} slots filled`))}
                                                     </span>
                                                     {!isCompleted && !isClosedManually && !isFull && (
-                                                        <span className="text-white">{total - filled} left</span>
+                                                        <span className="text-white font-bold">{total - filled} left</span>
                                                     )}
                                                 </div>
                                                 <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
@@ -694,7 +694,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Start Date</Label>
                                 <div className="relative">
@@ -734,14 +734,19 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Max Participants</Label>
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
                                     <input
                                         type="number"
+                                        min="1"
+                                        max="10000"
                                         value={formData.max_participants || ""}
-                                        onChange={(e) => setFormData({ ...formData, max_participants: parseInt(e.target.value) })}
+                                        onChange={(e) => {
+                                            const val = parseInt(e.target.value);
+                                            setFormData({ ...formData, max_participants: isNaN(val) ? 0 : Math.min(val, 10000) });
+                                        }}
                                         className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
                                     />
                                 </div>
@@ -759,7 +764,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Start Time</Label>
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2">
@@ -845,7 +850,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">End Time</Label>
-                                <div className="flex gap-2">
+                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2 overflow-hidden">
                                     <Select
                                         value={(() => {
                                             if (!formData.end_time) return undefined;
@@ -866,7 +871,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             setFormData({ ...formData, end_time: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
                                         }}
                                     >
-                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="HH" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
@@ -887,7 +892,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             setFormData({ ...formData, end_time: `${datePart}T${hours}:${val}` });
                                         }}
                                     >
-                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="MM" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
@@ -916,7 +921,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             setFormData({ ...formData, end_time: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
                                         }}
                                     >
-                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
@@ -976,9 +981,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="flex justify-between items-center mt-8 pt-4 border-t border-border/50">
                             <Button
                                 type="button"
-                                variant="outline"
-                                onClick={() => setIsAddingEvent(false)}
-                                className="border-[#FF0000] hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] transition-all"
+                                className="border border-[#FF0000] bg-transparent hover:bg-[#FF0000] hover:text-white text-white transition-all"
                             >
                                 Cancel
                             </Button>
@@ -1134,7 +1137,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Start Date</Label>
                                 <div className="relative">
@@ -1174,14 +1177,19 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Max Participants</Label>
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
                                     <input
                                         type="number"
+                                        min="1"
+                                        max="10000"
                                         value={formData.max_participants || ""}
-                                        onChange={(e) => setFormData({ ...formData, max_participants: parseInt(e.target.value) })}
+                                        onChange={(e) => {
+                                            const val = parseInt(e.target.value);
+                                            setFormData({ ...formData, max_participants: isNaN(val) ? 0 : Math.min(val, 10000) });
+                                        }}
                                         className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
                                     />
                                 </div>
@@ -1199,7 +1207,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Start Time</Label>
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2">
@@ -1285,7 +1293,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">End Time</Label>
-                                <div className="flex gap-2">
+                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2 overflow-hidden">
                                     <Select
                                         value={(() => {
                                             if (!formData.end_time) return undefined;
@@ -1306,7 +1314,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             setFormData({ ...formData, end_time: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
                                         }}
                                     >
-                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="HH" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
@@ -1327,7 +1335,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             setFormData({ ...formData, end_time: `${datePart}T${hours}:${val}` });
                                         }}
                                     >
-                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="MM" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
@@ -1356,7 +1364,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             setFormData({ ...formData, end_time: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
                                         }}
                                     >
-                                        <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-0 focus:ring-offset-0">
+                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
@@ -1418,9 +1426,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="flex flex-row justify-between w-full gap-2 mt-8 pt-4 border-t border-white/10">
                             <Button
                                 type="button"
-                                variant="outline"
+                                variant="ghost"
                                 onClick={() => setEditingEvent(null)}
-                                className="flex-1 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-10 transition-all duration-300"
+                                className="flex-1 border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-10 transition-all duration-300"
                             >
                                 Cancel
                             </Button>
@@ -1448,7 +1456,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex flex-row items-center gap-3 w-full sm:justify-end">
-                        <AlertDialogCancel className="mt-0 flex-1 sm:flex-none bg-transparent border-2 border-red-600 text-white hover:bg-red-600 hover:text-white transition-all duration-300">Cancel</AlertDialogCancel>
+                        <AlertDialogCancel className="mt-0 flex-1 sm:flex-none bg-transparent border border-red-600 text-white hover:bg-red-600 hover:text-white transition-all duration-300">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
                             className="flex-1 sm:flex-none bg-red-600 hover:bg-red-700 text-white"

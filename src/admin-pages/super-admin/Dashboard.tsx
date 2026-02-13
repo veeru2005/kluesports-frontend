@@ -499,7 +499,7 @@ const SuperAdminDashboard = () => {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
-                        <AlertDialogCancel className="border-red-600 text-white hover:bg-red-600/10 mt-0">Cancel</AlertDialogCancel>
+                        <AlertDialogCancel className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDeleteMessage}
                             className="bg-red-600 text-white hover:bg-red-700"
