@@ -205,6 +205,16 @@ const EventRegistration = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        if (file.size > 10 * 1024 * 1024) {
+            toast({
+                title: "Image too large",
+                description: "Image size should be 10MB only Max",
+                variant: "destructive",
+            });
+            e.target.value = '';
+            return;
+        }
+
         try {
             setIsUploading(true);
             toast({

@@ -240,7 +240,7 @@ const SuperAdminDashboard = () => {
                                         {/* Total Members Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                                <Users className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <Users className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.6)]" />
                                                 <div className="text-center">
                                                     <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
                                                         {filteredMembers?.length || 0}
@@ -255,7 +255,7 @@ const SuperAdminDashboard = () => {
                                         {/* Total Events Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                                <Calendar className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <Calendar className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.6)]" />
                                                 <div className="text-center">
                                                     <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
                                                         {filteredEvents?.length || 0}
@@ -270,7 +270,7 @@ const SuperAdminDashboard = () => {
                                         {/* Total Admins Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                                <Shield className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <Shield className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.6)]" />
                                                 <div className="text-center">
                                                     <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
                                                         {admins?.length || 0}
@@ -285,7 +285,7 @@ const SuperAdminDashboard = () => {
                                         {/* Total Messages Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                                <Mail className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <Mail className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.6)]" />
                                                 <div className="text-center">
                                                     <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
                                                         {messages?.length || 0}

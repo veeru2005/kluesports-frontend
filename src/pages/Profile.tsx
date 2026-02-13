@@ -92,7 +92,7 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
             <h1 className="font-display font-black text-5xl text-transparent bg-clip-text bg-gradient-to-b from-orange-400 via-red-600 to-red-900 tracking-tighter drop-shadow-[0_0_30px_rgba(239,68,68,0.6)]">
               KLU
             </h1>
-            <span className="font-display text-white/50 text-[12.5px] tracking-[0.3em] uppercase -mt-2 font-black leading-none text-center -mr-[0.5em]">
+            <span className="font-display text-white/50 text-[13px] tracking-[0.85em] uppercase mt-1.5 font-black leading-none text-center -mr-[0.85em]">
               ESPORTS
             </span>
           </div>
@@ -190,21 +190,21 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
         </div>
       </div>
 
-      <DialogContent className="glass-dark border-2 border-[#FF0000] w-[90vw] max-w-lg text-white p-0 overflow-hidden rounded-2xl shadow-[0_0_40px_rgba(255,0,0,0.2)] [&>button]:hidden">
-        <DialogHeader className="p-6 pb-2 bg-black/40 border-b border-white/5">
+      <DialogContent className="glass-dark border-2 border-[#FF0000] w-[90vw] max-w-2xl text-white p-0 overflow-hidden rounded-2xl shadow-[0_0_40px_rgba(255,0,0,0.2)] [&>button]:hidden">
+        <DialogHeader className="p-4 pb-2 bg-black/40 border-b border-white/5">
           <DialogTitle className="font-display text-xl uppercase tracking-wider text-white">Event Registration Details</DialogTitle>
           <DialogDescription className="text-gray-400 font-display text-[10px] uppercase tracking-widest mt-1">
             {reg.eventTitle} • {reg.registeredAt ? format(new Date(reg.registeredAt), 'dd/MM/yyyy') : 'N/A'}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="p-6 pt-2 pb-0 max-h-[70vh] overflow-y-auto custom-scrollbar space-y-6">
+        <div className="p-4 pt-2 pb-0 max-h-[70vh] overflow-y-auto custom-scrollbar space-y-4">
           {isLoading ? (
             <div className="flex justify-center py-8"><Loader /></div>
           ) : details ? (
             <>
               {/* Team Header with Logo */}
-              <div className="bg-red-600/10 border border-red-600/30 rounded-lg p-5 flex items-center gap-5">
+              <div className="bg-red-600/10 border border-red-600/30 rounded-lg p-3 flex items-center gap-3">
                 <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shrink-0 overflow-hidden border-2 border-white/10 shadow-lg">
                   {details.teamLogo ? (
                     <img src={details.teamLogo} alt="Team" className="w-full h-full object-cover" />
@@ -220,10 +220,10 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
 
               {/* Team Lead Section */}
               <div>
-                <h4 className="font-display text-xs font-black uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]" /> Team Captain
+                <h4 className="font-display text-xs font-black uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]" /> TEAM LEAD
                 </h4>
-                <div className="bg-black/40 rounded-xl p-4 border border-white/10 space-y-3">
+                <div className="bg-black/40 rounded-xl p-3 border border-white/10 space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-white/40 text-[11px] uppercase font-black font-display tracking-wider">Name</span>
                     <span className="font-display font-black text-white uppercase text-sm">{details.teamLead?.name}</span>
@@ -249,33 +249,33 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
 
               {/* Team Members Section */}
               <div>
-                <h4 className="font-display text-xs font-black uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-gray-600" /> Squad Roster
+                <h4 className="font-display text-xs font-black uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-gray-600" /> SQUAD MEMBERS
                 </h4>
-                <div className="space-y-2.5">
+                <div className="space-y-1.5">
                   {['player2', 'player3', 'player4', 'player5'].map((key, idx) => {
                     const player = details[key];
                     if (!player) return null;
                     return (
-                      <div key={key} className="bg-black/40 rounded-xl p-3.5 px-4 border border-white/10 flex items-center justify-between group hover:bg-black/50 transition-all">
-                        <div className="flex items-center gap-4">
-                          <span className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-black text-white/30 border border-white/5 font-display">
+                      <div key={key} className="bg-black/40 rounded-xl p-2 sm:p-2.5 px-3 sm:px-4 border border-white/10 grid grid-cols-12 gap-2 sm:gap-x-2 items-center group hover:bg-black/50 transition-all">
+                        <div className="col-span-12 sm:col-span-6 flex items-center gap-3 sm:gap-4 min-w-0">
+                          <span className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-black text-white/30 border border-white/5 font-display shrink-0">
                             {idx + 2}
                           </span>
-                          <div className="flex flex-col">
-                            <span className="font-display font-black text-white text-[13px] uppercase tracking-tight mb-0.5">{player.name || 'Unknown'}</span>
+                          <div className="flex flex-col min-w-0">
+                            <span className="font-display font-black text-white text-[13px] uppercase tracking-tight mb-0.5 break-words block w-full">{player.name || 'Unknown'}</span>
                             <div className="flex flex-col">
-                              <span className="font-display text-red-500 text-[10px] font-black uppercase tracking-tight leading-none">{player.inGameName || player.inGameId || player.riotId || 'N/A'}</span>
+                              <span className="font-display text-red-500 text-[10px] font-black uppercase tracking-tight leading-none break-words">{player.inGameName || player.inGameId || player.riotId || 'N/A'}</span>
                               <span className="text-[8px] text-white/20 uppercase font-black tracking-widest font-display leading-tight">In-Game Name</span>
                             </div>
                           </div>
                         </div>
-                        <div className="text-right flex flex-col items-end">
-                          <span className="font-display text-white/60 text-[10px] tracking-widest font-black uppercase">{player.collegeId}</span>
+                        <div className="col-span-6 sm:col-span-3 text-left sm:text-right flex flex-col items-start sm:items-end min-w-0 pl-9 sm:pl-0">
+                          <span className="font-display text-white/60 text-[10px] tracking-widest font-black uppercase break-words w-full">{player.collegeId}</span>
                           <span className="text-[9px] text-white/20 uppercase font-black tracking-widest font-display">College ID</span>
                         </div>
-                        <div className="text-right flex flex-col items-end pl-4 border-l border-white/5">
-                          <span className="font-display text-white/60 text-[10px] tracking-widest font-black uppercase">{player.mobileNumber}</span>
+                        <div className="col-span-6 sm:col-span-3 text-right flex flex-col items-end pl-2 border-l border-white/5 min-w-0">
+                          <span className="font-display text-white/60 text-[10px] tracking-widest font-black uppercase break-words w-full">{player.mobileNumber}</span>
                           <span className="text-[9px] text-white/20 uppercase font-black tracking-widest font-display">Mobile</span>
                         </div>
                       </div>
@@ -289,11 +289,11 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
           )}
         </div>
 
-        <DialogFooter className="p-4 px-6 bg-black/40">
+        <DialogFooter className="p-3 px-4 bg-black/40">
           <DialogClose asChild>
             <Button
               variant="ghost"
-              className="w-full border-2 border-[#FF0000] text-white hover:bg-red-600 hover:text-white transition-all font-display uppercase tracking-[0.2em] font-black h-12 rounded-xl ring-0 ring-offset-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none shadow-none"
+              className="w-full border-2 border-[#FF0000] text-white hover:bg-red-600 hover:text-white transition-all font-display uppercase tracking-[0.2em] font-black h-10 rounded-lg ring-0 ring-offset-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none shadow-none"
             >
               Close
             </Button>

@@ -309,8 +309,8 @@ export const MembersTab = ({ members }: MembersTabProps) => {
             <Dialog open={!!editingMember} onOpenChange={(o) => o ? null : setEditingMember(null)}>
                 <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
                     <DialogHeader>
-                        <DialogTitle>Edit Member</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle className="text-white font-display text-xl uppercase tracking-wider">Edit Member</DialogTitle>
+                        <DialogDescription className="text-gray-400 text-xs">
                             Update member information
                         </DialogDescription>
                     </DialogHeader>
@@ -397,10 +397,10 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         </div>
                     </div>
                     <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2 px-0">
-                        <Button variant="ghost" onClick={() => setEditingMember(null)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
+                        <Button variant="ghost" onClick={() => setEditingMember(null)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">Save Changes</Button>
+                        <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold">Save Changes</Button>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -415,14 +415,20 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                             <strong className="text-red-500">{deletingMember?.username}</strong>? This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
-                        <AlertDialogCancel className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleDelete}
-                            className="bg-red-600 hover:bg-red-700 text-white"
-                        >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Delete
+                    <AlertDialogFooter className="!flex !flex-row !justify-between sm:!justify-between gap-3 pt-4 border-t border-white/10 mt-2 px-0">
+                        <AlertDialogCancel asChild>
+                            <Button variant="ghost" className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold mt-0">
+                                Cancel
+                            </Button>
+                        </AlertDialogCancel>
+                        <AlertDialogAction asChild>
+                            <Button
+                                onClick={handleDelete}
+                                className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold"
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete
+                            </Button>
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

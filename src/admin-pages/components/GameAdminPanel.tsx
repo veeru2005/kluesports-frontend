@@ -87,6 +87,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
     const [eventToDelete, setEventToDelete] = useState<any>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [togglingEvents, setTogglingEvents] = useState<Set<string>>(new Set());
+    const [errors, setErrors] = useState<Record<string, boolean>>({});
     const { toast } = useToast();
     const queryClient = useQueryClient();
 
@@ -188,6 +189,17 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                 throw new Error(errData.message || "Failed to fetch events");
             }
             return response.json();
+        },
+    });
+
+    const { data: registrationSummaries } = useQuery({
+        queryKey: ["registrations-summary", game],
+        queryFn: async () => {
+            const token = localStorage.getItem("inferno_token");
+            const url = `${import.meta.env.VITE_API_BASE_URL}/api/registrations/events/summary?game=${encodeURIComponent(game)}`;
+            const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+            if (!response.ok) return [];
+            return response.json() as Promise<{ _id: string; count: number }[]>;
         },
     });
 
@@ -324,14 +336,23 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!newEvent.title || !newEvent.event_date || !newEvent.end_time) {
+        const newErrors: Record<string, boolean> = {};
+        if (!newEvent.title) newErrors.title = true;
+        if (!newEvent.description) newErrors.description = true;
+        if (!newEvent.event_date) newErrors.event_date = true;
+        if (!newEvent.end_time) newErrors.end_time = true;
+        if (!newEvent.location) newErrors.location = true;
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             toast({
                 title: "Missing Fields",
-                description: "Please fill in all required fields, including start and end dates.",
+                description: "Please fill in all required fields.",
                 variant: "destructive",
             });
             return;
         }
+        setErrors({});
 
         const start = new Date(newEvent.event_date);
         const end = new Date(newEvent.end_time);
@@ -417,7 +438,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                         {/* Total Members Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                                <Users className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <Users className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.6)]" />
                                                 <div className="text-center">
                                                     <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
                                                         {filteredMembers?.length || 0}
@@ -432,7 +453,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                         {/* Total Events Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                                <Calendar className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <Calendar className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.6)]" />
                                                 <div className="text-center">
                                                     <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
                                                         {filteredEvents?.length || 0}
@@ -447,7 +468,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                         {/* Total Messages Box */}
                                         <div className="bg-transparent border-2 border-red-600 rounded-xl hover:border-red-500 transition-all overflow-hidden">
                                             <div className="bg-black p-4 md:p-6 flex flex-col items-center justify-center gap-2 md:gap-3">
-                                                <Mail className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+                                                <Mail className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.6)]" />
                                                 <div className="text-center">
                                                     <div className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-primary">
                                                         {messages?.length || 0}
@@ -553,197 +574,197 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                 </div>
                                             </div>
                                         ))}
+                                    </div>
 
-                                        {/* View Member Dialog */}
-                                        <Dialog open={!!viewMember} onOpenChange={(o) => !o && setViewMember(null)}>
-                                            <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl overflow-y-auto max-h-[90vh]">
-                                                <DialogHeader>
-                                                    <DialogTitle className="font-display text-2xl">Member Details</DialogTitle>
-                                                </DialogHeader>
-                                                <div className="space-y-4">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
-                                                            <span className="font-display font-bold text-2xl text-primary">
-                                                                {(viewMember?.full_name || viewMember?.name || viewMember?.username || "U").charAt(0).toUpperCase()}
-                                                            </span>
-                                                        </div>
-                                                        <div>
-                                                            <h3 className="text-xl font-bold">{viewMember?.full_name || viewMember?.name}</h3>
-                                                            <p className="text-muted-foreground">@{viewMember?.username}</p>
-                                                            <p className="text-primary text-sm">{viewMember?.email || "No email"}</p>
-                                                        </div>
+                                    {/* View Member Dialog */}
+                                    <Dialog open={!!viewMember} onOpenChange={(o) => !o && setViewMember(null)}>
+                                        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl overflow-y-auto max-h-[90vh]">
+                                            <DialogHeader>
+                                                <DialogTitle className="font-display text-2xl">Member Details</DialogTitle>
+                                            </DialogHeader>
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+                                                        <span className="font-display font-bold text-2xl text-primary">
+                                                            {(viewMember?.full_name || viewMember?.name || viewMember?.username || "U").charAt(0).toUpperCase()}
+                                                        </span>
                                                     </div>
-                                                    <div className="grid grid-cols-2 gap-4 py-4 border-t border-border/50">
-                                                        <div>
-                                                            <Label className="text-xs text-muted-foreground">Mobile</Label>
-                                                            <p>{viewMember?.mobile || "Not set"}</p>
-                                                        </div>
-                                                        <div>
-                                                            <Label className="text-xs text-muted-foreground">College ID</Label>
-                                                            <p>{viewMember?.collegeId || "Not set"}</p>
-                                                        </div>
-                                                        <div>
-                                                            <Label className="text-xs text-muted-foreground">Game</Label>
-                                                            <p>{viewMember?.game}</p>
-                                                        </div>
-                                                        <div>
-                                                            <Label className="text-xs text-muted-foreground">Joined</Label>
-                                                            <p>{viewMember?.created_at ? format(new Date(viewMember.created_at), "PPP") : "Unknown"}</p>
-                                                        </div>
+                                                    <div>
+                                                        <h3 className="text-xl font-bold">{viewMember?.full_name || viewMember?.name}</h3>
+                                                        <p className="text-muted-foreground">@{viewMember?.username}</p>
+                                                        <p className="text-primary text-sm">{viewMember?.email || "No email"}</p>
                                                     </div>
                                                 </div>
-                                            </DialogContent>
-                                        </Dialog>
-
-                                        {/* Edit Member Dialog */}
-                                        <Dialog open={!!editMember} onOpenChange={(o) => !o && setEditMember(null)}>
-                                            <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-w-[95vw] sm:max-w-[600px] bg-black border-2 border-red-600 rounded-2xl overflow-hidden p-0 gap-0">
-                                                <DialogHeader className="p-6 pb-2">
-                                                    <DialogTitle className="font-display text-2xl uppercase tracking-tighter text-white">
-                                                        Edit Member: <span className="text-red-500">{editMember?.username}</span>
-                                                    </DialogTitle>
-                                                </DialogHeader>
-                                                <div className="p-6 pt-2">
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-3">
-                                                        <div className="grid gap-1.5 text-left">
-                                                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Name</Label>
-                                                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
-                                                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.name || "N/A"}</p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="grid gap-1.5 text-left">
-                                                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">College ID</Label>
-                                                            <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
-                                                                <input
-                                                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
-                                                                    id="collegeId"
-                                                                    value={editMember?.collegeId || ""}
-                                                                    onChange={(e) => setEditMember({ ...editMember, collegeId: e.target.value })}
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
-                                                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">In-Game Name</Label>
-                                                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
-                                                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.inGameName || "N/A"}</p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4">
-                                                            <div className="grid gap-1.5 text-left md:flex-[1.6] overflow-hidden">
-                                                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Email</Label>
-                                                                <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
-                                                                    <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.email || "N/A"}</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="grid gap-1.5 text-left md:flex-1">
-                                                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Mobile Number</Label>
-                                                                <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
-                                                                    <input
-                                                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
-                                                                        id="mobile"
-                                                                        value={editMember?.mobile || ""}
-                                                                        onChange={(e) => setEditMember({ ...editMember, mobile: e.target.value })}
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
-                                                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Game Assignment</Label>
-                                                            <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
-                                                                <Select
-                                                                    value={editMember?.gameYouPlay || editMember?.game || 'Free Fire'}
-                                                                    onValueChange={(val) => setEditMember({ ...editMember, gameYouPlay: val })}
-                                                                >
-                                                                    <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                                                        <SelectValue placeholder="Select game" />
-                                                                    </SelectTrigger>
-                                                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                                                        <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
-                                                                        <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
-                                                                        <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
-                                                                        <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
-                                                                    </SelectContent>
-                                                                </Select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
-                                                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Bio</Label>
-                                                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
-                                                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.bio || "No bio set"}</p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
-                                                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Member Since</Label>
-                                                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center cursor-not-allowed">
-                                                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center">{editMember?.createdAt ? format(new Date(editMember.createdAt), "PPP") : "N/A"}</p>
-                                                            </div>
-                                                        </div>
+                                                <div className="grid grid-cols-2 gap-4 py-4 border-t border-border/50">
+                                                    <div>
+                                                        <Label className="text-xs text-muted-foreground">Mobile</Label>
+                                                        <p>{viewMember?.mobile || "Not set"}</p>
                                                     </div>
-
-                                                    <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2">
-                                                        <Button variant="ghost" onClick={() => setEditMember(null)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
-                                                            Cancel
-                                                        </Button>
-                                                        <Button
-                                                            className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]"
-                                                            onClick={async () => {
-                                                                try {
-                                                                    const res = await api.put(`/users/${editMember._id || editMember.id}`, editMember);
-                                                                    toast({ title: "Success", description: res.message || "Member updated successfully", variant: "success" });
-                                                                    queryClient.invalidateQueries({ queryKey: ["admin-members"] });
-                                                                    setEditMember(null);
-                                                                } catch (error: any) {
-                                                                    toast({ title: "Error", description: error?.message || "Failed to update member", variant: "destructive" });
-                                                                }
-                                                            }}
-                                                        >
-                                                            Save Changes
-                                                        </Button>
+                                                    <div>
+                                                        <Label className="text-xs text-muted-foreground">College ID</Label>
+                                                        <p>{viewMember?.collegeId || "Not set"}</p>
                                                     </div>
-                                                </div>
-                                            </DialogContent>
-                                        </Dialog>
-
-                                        {/* Delete Confirmation Alert */}
-                                        {deletingMember && (
-                                            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                                                <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setDeletingMember(null)} />
-                                                <div className="relative bg-black border-2 border-red-600 rounded-2xl p-6 max-w-md w-full shadow-[0_0_30px_rgba(220,38,38,0.2)] overflow-hidden">
-                                                    <div className="flex flex-col items-center text-center gap-3 mb-6">
-                                                        <div className="p-4 bg-red-600/10 rounded-full border border-red-600/20 mb-2">
-                                                            <Trash2 className="w-8 h-8 text-red-500" />
-                                                        </div>
-                                                        <h3 className="text-2xl font-display font-bold uppercase tracking-tighter text-white">Delete Member?</h3>
-                                                        <p className="text-muted-foreground leading-relaxed">
-                                                            Are you sure you want to remove <span className="text-red-500 font-bold">{deletingMember.name || deletingMember.username}</span>? This action is permanent and cannot be undone.
-                                                        </p>
+                                                    <div>
+                                                        <Label className="text-xs text-muted-foreground">Game</Label>
+                                                        <p>{viewMember?.game}</p>
                                                     </div>
-                                                    <div className="flex flex-row gap-3">
-                                                        <Button
-                                                            variant="ghost"
-                                                            className="flex-1 border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-12 transition-all duration-300 font-display uppercase tracking-widest text-xs"
-                                                            onClick={() => setDeletingMember(null)}
-                                                        >
-                                                            Cancel
-                                                        </Button>
-                                                        <Button
-                                                            className="flex-1 bg-red-600 hover:bg-red-700 text-white h-12 transition-all duration-300 font-display uppercase tracking-widest text-xs"
-                                                            onClick={handleDeleteMember}
-                                                        >
-                                                            Delete
-                                                        </Button>
+                                                    <div>
+                                                        <Label className="text-xs text-muted-foreground">Joined</Label>
+                                                        <p>{viewMember?.created_at ? format(new Date(viewMember.created_at), "PPP") : "Unknown"}</p>
                                                     </div>
                                                 </div>
                                             </div>
-                                        )}
-                                    </div>
+                                        </DialogContent>
+                                    </Dialog>
+
+                                    {/* Edit Member Dialog */}
+                                    <Dialog open={!!editMember} onOpenChange={(o) => !o && setEditMember(null)}>
+                                        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-w-[95vw] sm:max-w-[600px] bg-black border-2 border-red-600 rounded-2xl overflow-hidden p-0 gap-0">
+                                            <DialogHeader className="p-6 pb-2">
+                                                <DialogTitle className="font-display text-2xl uppercase tracking-tighter text-white">
+                                                    Edit Member: <span className="text-red-500">{editMember?.username}</span>
+                                                </DialogTitle>
+                                            </DialogHeader>
+                                            <div className="p-6 pt-2">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-3">
+                                                    <div className="grid gap-1.5 text-left">
+                                                        <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Name</Label>
+                                                        <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                                            <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.name || "N/A"}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid gap-1.5 text-left">
+                                                        <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">College ID</Label>
+                                                        <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                                            <input
+                                                                className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                                                id="collegeId"
+                                                                value={editMember?.collegeId || ""}
+                                                                onChange={(e) => setEditMember({ ...editMember, collegeId: e.target.value })}
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                                                        <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">In-Game Name</Label>
+                                                        <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                                            <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.inGameName || "N/A"}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-span-1 md:col-span-2 flex flex-col md:flex-row gap-4">
+                                                        <div className="grid gap-1.5 text-left md:flex-[1.6] overflow-hidden">
+                                                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Email</Label>
+                                                            <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                                                <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.email || "N/A"}</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="grid gap-1.5 text-left md:flex-1">
+                                                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Mobile Number</Label>
+                                                            <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                                                <input
+                                                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                                                    id="mobile"
+                                                                    value={editMember?.mobile || ""}
+                                                                    onChange={(e) => setEditMember({ ...editMember, mobile: e.target.value })}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                                                        <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Game Assignment</Label>
+                                                        <div className="bg-black/90 p-1 px-3 rounded-lg border-2 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.2)] focus-within:border-red-500 transition-all min-h-[38px] flex items-center focus-within:shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                                            <Select
+                                                                value={editMember?.gameYouPlay || editMember?.game || 'Free Fire'}
+                                                                onValueChange={(val) => setEditMember({ ...editMember, gameYouPlay: val })}
+                                                            >
+                                                                <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                    <SelectValue placeholder="Select game" />
+                                                                </SelectTrigger>
+                                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                                    <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
+                                                                    <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
+                                                                    <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
+                                                                    <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                                                        <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Bio</Label>
+                                                        <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                                            <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.bio || "No bio set"}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                                                        <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Member Since</Label>
+                                                        <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center cursor-not-allowed">
+                                                            <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center">{editMember?.createdAt ? format(new Date(editMember.createdAt), "PPP") : "N/A"}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2">
+                                                    <Button variant="ghost" onClick={() => setEditMember(null)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
+                                                        Cancel
+                                                    </Button>
+                                                    <Button
+                                                        className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]"
+                                                        onClick={async () => {
+                                                            try {
+                                                                const res = await api.put(`/users/${editMember._id || editMember.id}`, editMember);
+                                                                toast({ title: "Success", description: res.message || "Member updated successfully", variant: "success" });
+                                                                queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+                                                                setEditMember(null);
+                                                            } catch (error: any) {
+                                                                toast({ title: "Error", description: error?.message || "Failed to update member", variant: "destructive" });
+                                                            }
+                                                        }}
+                                                    >
+                                                        Save Changes
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
+
+                                    {/* Delete Confirmation Alert */}
+                                    {deletingMember && (
+                                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                                            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setDeletingMember(null)} />
+                                            <div className="relative bg-black border-2 border-red-600 rounded-2xl p-6 max-w-md w-full shadow-[0_0_30px_rgba(220,38,38,0.2)] overflow-hidden">
+                                                <div className="flex flex-col items-center text-center gap-3 mb-6">
+                                                    <div className="p-4 bg-red-600/10 rounded-full border border-red-600/20 mb-2">
+                                                        <Trash2 className="w-8 h-8 text-red-500" />
+                                                    </div>
+                                                    <h3 className="text-2xl font-display font-bold uppercase tracking-tighter text-white">Delete Member?</h3>
+                                                    <p className="text-muted-foreground leading-relaxed">
+                                                        Are you sure you want to remove <span className="text-red-500 font-bold">{deletingMember.name || deletingMember.username}</span>? This action is permanent and cannot be undone.
+                                                    </p>
+                                                </div>
+                                                <div className="flex flex-row gap-3">
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="flex-1 border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-12 transition-all duration-300 font-display uppercase tracking-widest text-xs"
+                                                        onClick={() => setDeletingMember(null)}
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                    <Button
+                                                        className="flex-1 bg-red-600 hover:bg-red-700 text-white h-12 transition-all duration-300 font-display uppercase tracking-widest text-xs"
+                                                        onClick={handleDeleteMember}
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     {!filteredMembers?.length && (
                                         <div className="col-span-full flex flex-col items-center justify-center py-16 text-center border-2 border-red-600 rounded-2xl bg-black/40 w-full relative overflow-hidden group mt-10 shadow-[0_0_30px_rgba(220,38,38,0.2)]">
@@ -809,7 +830,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                     });
                                                 }
                                             }}>
-                                                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="w-[95vw] sm:max-w-[600px] bg-black border-2 border-red-600 rounded-xl max-h-[90vh] overflow-y-auto [&>button]:hidden">
+                                                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()} className="w-[95vw] sm:max-w-[600px] bg-black border-2 border-red-600 rounded-xl max-h-[90vh] overflow-y-auto">
                                                     <DialogHeader>
                                                         <DialogTitle className="font-display text-2xl">
                                                             {newEvent.id ? "Edit" : "Create New"} {game} Event
@@ -823,9 +844,11 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                     value={newEvent.game || game}
                                                                     onValueChange={(val: any) => setNewEvent({ ...newEvent, game: val })}
                                                                 >
-                                                                    <SelectTrigger className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0">
-                                                                        <SelectValue placeholder="Select Game" />
-                                                                    </SelectTrigger>
+                                                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                            <SelectValue placeholder="Select Game" />
+                                                                        </SelectTrigger>
+                                                                    </div>
                                                                     <SelectContent className="bg-black border-2 border-red-600 text-white">
                                                                         <SelectItem value="Free Fire">Free Fire</SelectItem>
                                                                         <SelectItem value="BGMI">BGMI</SelectItem>
@@ -835,399 +858,426 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                 </Select>
                                                             </div>
                                                         )}
-                                                        <div className="space-y-2">
-                                                            <Label>Title</Label>
-                                                            <Input
-                                                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                                                value={newEvent.title}
-                                                                onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-                                                                required
-                                                            />
+                                                        <div className="grid gap-2">
+                                                            <Label className="text-red-600 font-bold uppercase text-[11px] tracking-wider">Event Title</Label>
+                                                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.title ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
+                                                                <Input
+                                                                    value={newEvent.title}
+                                                                    onChange={(e) => {
+                                                                        setNewEvent({ ...newEvent, title: e.target.value });
+                                                                        if (e.target.value) setErrors(prev => ({ ...prev, title: false }));
+                                                                    }}
+                                                                    placeholder="Enter Event Title"
+                                                                    required
+                                                                    className="w-full bg-transparent border-0 p-0 text-white h-5 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none"
+                                                                />
+                                                            </div>
                                                         </div>
-                                                        <div className="space-y-2">
-                                                            <Label>Description</Label>
-                                                            <Textarea
-                                                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 min-h-[100px] resize-none"
-                                                                value={newEvent.description}
-                                                                onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
-                                                                rows={4}
-                                                            />
+                                                        <div className="grid gap-2">
+                                                            <Label className="text-red-600 font-bold uppercase text-[11px] tracking-wider">Description</Label>
+                                                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.description ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[100px] flex items-start py-2`}>
+                                                                <Textarea
+                                                                    value={newEvent.description}
+                                                                    onChange={(e) => {
+                                                                        setNewEvent({ ...newEvent, description: e.target.value });
+                                                                        if (e.target.value) setErrors(prev => ({ ...prev, description: false }));
+                                                                    }}
+                                                                    placeholder="Describe the event..."
+                                                                    required
+                                                                    className="w-full bg-transparent border-0 p-0 text-white min-h-[80px] focus-visible:ring-0 focus-visible:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none resize-none"
+                                                                />
+                                                            </div>
                                                         </div>
-                                                        <div className="space-y-2">
-                                                            <Label>Event Image (Optional)</Label>
-                                                            <div className="flex items-start gap-4">
-                                                                <div className="flex-1">
-                                                                    <div className="relative">
-                                                                        <Input
-                                                                            className="hidden"
-                                                                            id="event-image-upload"
-                                                                            type="file"
-                                                                            accept="image/*"
-                                                                            onChange={async (e) => {
-                                                                                const file = e.target.files?.[0];
-                                                                                if (file) {
-                                                                                    try {
-                                                                                        setIsUploading(true);
-                                                                                        toast({
-                                                                                            title: "Uploading...",
-                                                                                            description: "Please wait while we upload your image.",
-                                                                                            variant: "warning"
-                                                                                        });
+                                                        <div className="space-y-4">
+                                                            <div className="space-y-2">
+                                                                <Label className="text-red-600 font-bold uppercase text-[11px] tracking-wider">Event Image (Optional)</Label>
+                                                                <div className="flex items-start gap-4">
+                                                                    <div className="flex-1">
+                                                                        <div className="relative">
+                                                                            <Input
+                                                                                className="hidden"
+                                                                                id="event-image-upload"
+                                                                                type="file"
+                                                                                accept="image/*"
+                                                                                onChange={async (e) => {
+                                                                                    const file = e.target.files?.[0];
+                                                                                    if (file) {
+                                                                                        try {
+                                                                                            setIsUploading(true);
+                                                                                            toast({
+                                                                                                title: "Uploading...",
+                                                                                                description: "Please wait while we upload your image.",
+                                                                                                variant: "warning"
+                                                                                            });
 
-                                                                                        const formData = new FormData();
-                                                                                        formData.append('image', file);
+                                                                                            const formData = new FormData();
+                                                                                            formData.append('image', file);
 
-                                                                                        const token = localStorage.getItem("inferno_token");
-                                                                                        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/upload/event-image`, {
-                                                                                            method: 'POST',
-                                                                                            headers: {
-                                                                                                'Authorization': `Bearer ${token}`
-                                                                                            },
-                                                                                            body: formData,
-                                                                                        });
+                                                                                            const token = localStorage.getItem("inferno_token");
+                                                                                            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/upload/event-image`, {
+                                                                                                method: 'POST',
+                                                                                                headers: {
+                                                                                                    'Authorization': `Bearer ${token}`
+                                                                                                },
+                                                                                                body: formData,
+                                                                                            });
 
-                                                                                        if (!response.ok) {
-                                                                                            const errorData = await response.json().catch(() => ({}));
-                                                                                            throw new Error(errorData.message || 'Failed to upload image');
+                                                                                            if (!response.ok) {
+                                                                                                const errorData = await response.json().catch(() => ({}));
+                                                                                                throw new Error(errorData.message || 'Failed to upload image');
+                                                                                            }
+
+                                                                                            const data = await response.json();
+                                                                                            setNewEvent({ ...newEvent, image_url: data.url });
+
+                                                                                            toast({
+                                                                                                title: "Success",
+                                                                                                description: "Image uploaded successfully!",
+                                                                                                variant: "success"
+                                                                                            });
+                                                                                        } catch (error: any) {
+                                                                                            console.error('Upload error:', error);
+                                                                                            toast({
+                                                                                                title: "Upload Failed",
+                                                                                                description: error.message || "Failed to upload image. Please try again.",
+                                                                                                variant: "destructive",
+                                                                                            });
+                                                                                            e.target.value = '';
+                                                                                        } finally {
+                                                                                            setIsUploading(false);
                                                                                         }
-
-                                                                                        const data = await response.json();
-                                                                                        setNewEvent({ ...newEvent, image_url: data.url });
-
-                                                                                        toast({
-                                                                                            title: "Success",
-                                                                                            description: "Image uploaded successfully!",
-                                                                                            variant: "success"
-                                                                                        });
-                                                                                    } catch (error: any) {
-                                                                                        console.error('Upload error:', error);
-                                                                                        toast({
-                                                                                            title: "Upload Failed",
-                                                                                            description: error.message || "Failed to upload image. Please try again.",
-                                                                                            variant: "destructive",
-                                                                                        });
-                                                                                        e.target.value = '';
-                                                                                    } finally {
-                                                                                        setIsUploading(false);
                                                                                     }
-                                                                                }
-                                                                            }}
-                                                                        />
-                                                                        <Button
-                                                                            type="button"
-                                                                            variant="default"
-                                                                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                                                                            onClick={() => document.getElementById('event-image-upload')?.click()}
-                                                                            disabled={isUploading}
-                                                                        >
-                                                                            {isUploading ? (
-                                                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                                                            ) : (
-                                                                                <Upload className="w-4 h-4 mr-2" />
-                                                                            )}
-                                                                            {isUploading ? "Uploading..." : "Choose File"}
-                                                                        </Button>
-                                                                    </div>
+                                                                                }}
+                                                                            />
+                                                                            <Button
+                                                                                type="button"
+                                                                                variant="default"
+                                                                                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                                                                                onClick={() => document.getElementById('event-image-upload')?.click()}
+                                                                                disabled={isUploading}
+                                                                            >
+                                                                                {isUploading ? (
+                                                                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                                                ) : (
+                                                                                    <Upload className="w-4 h-4 mr-2" />
+                                                                                )}
+                                                                                {isUploading ? "Uploading..." : "Choose File"}
+                                                                            </Button>
+                                                                        </div>
 
+                                                                    </div>
+                                                                    {newEvent.image_url && (
+                                                                        <div className="flex-shrink-0 relative group">
+                                                                            <img src={newEvent.image_url} alt="Preview" className="w-24 h-24 object-cover rounded-md border-2 border-[#FF0000]/50" />
+                                                                            <Button
+                                                                                type="button"
+                                                                                variant="destructive"
+                                                                                size="icon"
+                                                                                className="absolute -top-2 -right-2 w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                                onClick={() => {
+                                                                                    setNewEvent({ ...newEvent, image_url: '' });
+                                                                                    const fileInput = document.getElementById('event-image-upload') as HTMLInputElement;
+                                                                                    if (fileInput) fileInput.value = '';
+                                                                                }}
+                                                                            >
+                                                                                <X className="w-4 h-4" />
+                                                                            </Button>
+                                                                        </div>
+                                                                    )}
                                                                 </div>
-                                                                {newEvent.image_url && (
-                                                                    <div className="flex-shrink-0 relative group">
-                                                                        <img src={newEvent.image_url} alt="Preview" className="w-24 h-24 object-cover rounded-md border-2 border-[#FF0000]/50" />
-                                                                        <Button
-                                                                            type="button"
-                                                                            variant="destructive"
-                                                                            size="icon"
-                                                                            className="absolute -top-2 -right-2 w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                                                            onClick={() => {
-                                                                                setNewEvent({ ...newEvent, image_url: '' });
-                                                                                const fileInput = document.getElementById('event-image-upload') as HTMLInputElement;
-                                                                                if (fileInput) fileInput.value = '';
+                                                            </div>
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                                                <div className="grid gap-2">
+                                                                    <Label className="text-red-600 font-bold uppercase text-[11px] tracking-wider">Event Date</Label>
+                                                                    <div className="relative">
+                                                                        <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.event_date ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
+                                                                            <Input
+                                                                                type="date"
+                                                                                value={newEvent.event_date ? newEvent.event_date.split('T')[0] : ''}
+                                                                                onChange={(e) => {
+                                                                                    const date = e.target.value;
+                                                                                    const time = newEvent.event_date ? newEvent.event_date.split('T')[1] : "12:00";
+                                                                                    setNewEvent({ ...newEvent, event_date: `${date}T${time}` });
+                                                                                    if (date) setErrors(prev => ({ ...prev, event_date: false }));
+                                                                                }}
+                                                                                required
+                                                                                style={{ color: (newEvent.event_date && newEvent.event_date.split('T')[0]) ? 'white' : 'transparent' }}
+                                                                                className="w-full bg-transparent border-0 p-0 text-white h-5 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer z-10 relative"
+                                                                            />
+                                                                            {!newEvent.event_date && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 text-sm pointer-events-none">dd/mm/yyyy</span>}
+                                                                            <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] pointer-events-none z-20" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="grid gap-2">
+                                                                    <Label className="text-red-600 font-bold uppercase text-[11px] tracking-wider">End Date</Label>
+                                                                    <div className="relative">
+                                                                        <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.end_time ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
+                                                                            <Input
+                                                                                type="date"
+                                                                                value={newEvent.end_time ? newEvent.end_time.split('T')[0] : ''}
+                                                                                onChange={(e) => {
+                                                                                    const date = e.target.value;
+                                                                                    const time = newEvent.end_time ? newEvent.end_time.split('T')[1] : "12:00";
+                                                                                    setNewEvent({ ...newEvent, end_time: `${date}T${time}` });
+                                                                                    if (date) setErrors(prev => ({ ...prev, end_time: false }));
+                                                                                }}
+                                                                                style={{ color: (newEvent.end_time && newEvent.end_time.split('T')[0]) ? 'white' : 'transparent' }}
+                                                                                className="w-full bg-transparent border-0 p-0 text-white h-5 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer z-10 relative"
+                                                                            />
+                                                                            {!newEvent.end_time && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 text-sm pointer-events-none">dd/mm/yyyy</span>}
+                                                                            <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] pointer-events-none z-20" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                                                <div className="grid gap-2">
+                                                                    <Label className="text-red-600 font-bold uppercase text-[11px] tracking-wider">Max Participants</Label>
+                                                                    <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.max_participants ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
+                                                                        <Input
+                                                                            type="number"
+                                                                            min="1"
+                                                                            max="10000"
+                                                                            value={newEvent.max_participants}
+                                                                            onChange={(e) => {
+                                                                                const val = parseInt(e.target.value);
+                                                                                setNewEvent({ ...newEvent, max_participants: isNaN(val) ? "" : String(Math.min(val, 10000)) });
+                                                                            }}
+                                                                            className="w-full bg-transparent border-0 p-0 text-white h-5 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="grid gap-2">
+                                                                    <Label className="text-red-600 font-bold uppercase text-[11px] tracking-wider">Venue</Label>
+                                                                    <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.location ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
+                                                                        <Input
+                                                                            value={newEvent.location}
+                                                                            onChange={(e) => {
+                                                                                setNewEvent({ ...newEvent, location: e.target.value });
+                                                                                if (e.target.value) setErrors(prev => ({ ...prev, location: false }));
+                                                                            }}
+                                                                            placeholder="Enter event venue"
+                                                                            className="w-full bg-transparent border-0 p-0 text-white h-5 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                                                <div className="space-y-2">
+                                                                    <Label>Start Time</Label>
+                                                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2 overflow-hidden">
+                                                                        <Select
+                                                                            value={(() => {
+                                                                                if (!newEvent.event_date) return undefined;
+                                                                                const hours = parseInt(newEvent.event_date.split('T')[1]?.split(':')[0] || "12");
+                                                                                const h12 = hours % 12 || 12;
+                                                                                return h12.toString();
+                                                                            })()}
+                                                                            onValueChange={(val) => {
+                                                                                const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                                const currentHours = parseInt(newEvent.event_date?.split('T')[1]?.split(':')[0] || "12");
+                                                                                const currentMins = newEvent.event_date?.split('T')[1]?.split(':')[1] || "00";
+                                                                                const isPM = currentHours >= 12;
+
+                                                                                let newHours = parseInt(val);
+                                                                                if (isPM && newHours < 12) newHours += 12;
+                                                                                if (!isPM && newHours === 12) newHours = 0;
+
+                                                                                setNewEvent({ ...newEvent, event_date: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
                                                                             }}
                                                                         >
-                                                                            <X className="w-4 h-4" />
-                                                                        </Button>
+                                                                            <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                                <SelectValue placeholder="HH" />
+                                                                            </SelectTrigger>
+                                                                            <SelectContent>
+                                                                                {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
+                                                                                    <SelectItem key={h} value={h.toString()}>
+                                                                                        {h}
+                                                                                    </SelectItem>
+                                                                                ))}
+                                                                            </SelectContent>
+                                                                        </Select>
+
+                                                                        <Select
+                                                                            value={newEvent.event_date?.split('T')[1]?.split(':')[1] || undefined}
+                                                                            onValueChange={(val) => {
+                                                                                const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                                const timePart = newEvent.event_date?.split('T')[1] || "12:00";
+                                                                                const hours = timePart.split(':')[0];
+                                                                                setNewEvent({ ...newEvent, event_date: `${datePart}T${hours}:${val}` });
+                                                                            }}
+                                                                        >
+                                                                            <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                                <SelectValue placeholder="MM" />
+                                                                            </SelectTrigger>
+                                                                            <SelectContent>
+                                                                                {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
+                                                                                    <SelectItem key={m} value={m}>
+                                                                                        {m}
+                                                                                    </SelectItem>
+                                                                                ))}
+                                                                            </SelectContent>
+                                                                        </Select>
+
+                                                                        <Select
+                                                                            value={(() => {
+                                                                                if (!newEvent.event_date) return undefined;
+                                                                                const hours = parseInt(newEvent.event_date.split('T')[1]?.split(':')[0] || "0");
+                                                                                return hours >= 12 ? "PM" : "AM";
+                                                                            })()}
+                                                                            onValueChange={(val) => {
+                                                                                const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                                const currentMins = newEvent.event_date?.split('T')[1]?.split(':')[1] || "00";
+                                                                                let hours = parseInt(newEvent.event_date?.split('T')[1]?.split(':')[0] || "12");
+
+                                                                                if (val === "PM" && hours < 12) hours += 12;
+                                                                                if (val === "AM" && hours >= 12) hours -= 12;
+
+                                                                                setNewEvent({ ...newEvent, event_date: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
+                                                                            }}
+                                                                        >
+                                                                            <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                                <SelectValue placeholder="AM" />
+                                                                            </SelectTrigger>
+                                                                            <SelectContent>
+                                                                                <SelectItem value="AM">AM</SelectItem>
+                                                                                <SelectItem value="PM">PM</SelectItem>
+                                                                            </SelectContent>
+                                                                        </Select>
                                                                     </div>
+                                                                </div>
+
+                                                                <div className="space-y-2">
+                                                                    <Label>End Time</Label>
+                                                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2 overflow-hidden">
+                                                                        <Select
+                                                                            value={(() => {
+                                                                                if (!newEvent.end_time) return undefined;
+                                                                                const hours = parseInt(newEvent.end_time.split('T')[1]?.split(':')[0] || "12");
+                                                                                const h12 = hours % 12 || 12;
+                                                                                return h12.toString();
+                                                                            })()}
+                                                                            onValueChange={(val) => {
+                                                                                const datePart = newEvent.end_time ? newEvent.end_time.split('T')[0] : (newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
+                                                                                // Use end_time parts if available, else default to 12:00
+                                                                                const currentHours = parseInt(newEvent.end_time?.split('T')[1]?.split(':')[0] || "12");
+                                                                                const currentMins = newEvent.end_time?.split('T')[1]?.split(':')[1] || "00";
+                                                                                const isPM = currentHours >= 12;
+
+                                                                                let newHours = parseInt(val);
+                                                                                if (isPM && newHours < 12) newHours += 12;
+                                                                                if (!isPM && newHours === 12) newHours = 0;
+
+                                                                                setNewEvent({ ...newEvent, end_time: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
+                                                                            }}
+                                                                        >
+                                                                            <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                                <SelectValue placeholder="HH" />
+                                                                            </SelectTrigger>
+                                                                            <SelectContent>
+                                                                                {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
+                                                                                    <SelectItem key={h} value={h.toString()}>
+                                                                                        {h}
+                                                                                    </SelectItem>
+                                                                                ))}
+                                                                            </SelectContent>
+                                                                        </Select>
+
+                                                                        <Select
+                                                                            value={newEvent.end_time?.split('T')[1]?.split(':')[1] || undefined}
+                                                                            onValueChange={(val) => {
+                                                                                const datePart = newEvent.end_time ? newEvent.end_time.split('T')[0] : (newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
+                                                                                const timePart = newEvent.end_time?.split('T')[1] || "12:00";
+                                                                                const hours = timePart.split(':')[0];
+                                                                                setNewEvent({ ...newEvent, end_time: `${datePart}T${hours}:${val}` });
+                                                                            }}
+                                                                        >
+                                                                            <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                                <SelectValue placeholder="MM" />
+                                                                            </SelectTrigger>
+                                                                            <SelectContent>
+                                                                                {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
+                                                                                    <SelectItem key={m} value={m}>
+                                                                                        {m}
+                                                                                    </SelectItem>
+                                                                                ))}
+                                                                            </SelectContent>
+                                                                        </Select>
+
+                                                                        <Select
+                                                                            value={(() => {
+                                                                                if (!newEvent.end_time) return undefined;
+                                                                                const hours = parseInt(newEvent.end_time.split('T')[1]?.split(':')[0] || "0");
+                                                                                return hours >= 12 ? "PM" : "AM";
+                                                                            })()}
+                                                                            onValueChange={(val) => {
+                                                                                const datePart = newEvent.end_time ? newEvent.end_time.split('T')[0] : (newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
+                                                                                const currentMins = newEvent.end_time?.split('T')[1]?.split(':')[1] || "00";
+                                                                                let hours = parseInt(newEvent.end_time?.split('T')[1]?.split(':')[0] || "12");
+
+                                                                                if (val === "PM" && hours < 12) hours += 12;
+                                                                                if (val === "AM" && hours >= 12) hours -= 12;
+
+                                                                                setNewEvent({ ...newEvent, end_time: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
+                                                                            }}
+                                                                        >
+                                                                            <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                                <SelectValue placeholder="AM" />
+                                                                            </SelectTrigger>
+                                                                            <SelectContent>
+                                                                                <SelectItem value="AM">AM</SelectItem>
+                                                                                <SelectItem value="PM">PM</SelectItem>
+                                                                            </SelectContent>
+                                                                        </Select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div className="space-y-2">
+                                                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Registration Status</Label>
+                                                                <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center ${newEvent.end_time && new Date(newEvent.end_time) < new Date() ? "opacity-50 cursor-not-allowed" : ""}`}>
+                                                                    <Select
+                                                                        disabled={!!(newEvent.end_time && new Date(newEvent.end_time) < new Date())}
+                                                                        value={newEvent.end_time && new Date(newEvent.end_time) < new Date() ? "false" : (newEvent.is_registration_open !== false ? "true" : "false")}
+                                                                        onValueChange={(val) => setNewEvent({ ...newEvent, is_registration_open: val === "true" })}
+                                                                    >
+                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                            <SelectValue />
+                                                                        </SelectTrigger>
+                                                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                                            <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
+                                                                            <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
+                                                                        </SelectContent>
+                                                                    </Select>
+                                                                </div>
+                                                                {newEvent.end_time && new Date(newEvent.end_time) < new Date() && (
+                                                                    <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider mt-1">Event Completed - Registration Closed</p>
                                                                 )}
                                                             </div>
-                                                        </div>
-                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+
                                                             <div className="space-y-2">
-                                                                <Label>Start Date</Label>
-                                                                <div className="relative">
-                                                                    <Input
-                                                                        type="date"
-                                                                        value={newEvent.event_date ? newEvent.event_date.split('T')[0] : ''}
-                                                                        onChange={(e) => {
-                                                                            const date = e.target.value;
-                                                                            const time = newEvent.event_date ? newEvent.event_date.split('T')[1] : '12:00';
-                                                                            const newEventDate = `${date}T${time}`;
-
-                                                                            const updates: any = { event_date: newEventDate };
-                                                                            if (newEvent.end_time) {
-                                                                                const endTimePart = newEvent.end_time.split('T')[1] || "00:00";
-                                                                                updates.end_time = `${date}T${endTimePart}`;
-                                                                            }
-                                                                            setNewEvent({ ...newEvent, ...updates });
-                                                                        }}
-                                                                        required
-                                                                        className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                                                                    />
-                                                                    <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
-                                                                </div>
-                                                            </div>
-                                                            <div className="space-y-2">
-                                                                <Label>End Date</Label>
-                                                                <div className="relative">
-                                                                    <Input
-                                                                        type="date"
-                                                                        value={newEvent.end_time ? newEvent.end_time.split('T')[0] : ''}
-                                                                        onChange={(e) => {
-                                                                            const date = e.target.value;
-                                                                            const time = newEvent.end_time ? newEvent.end_time.split('T')[1] : '12:00';
-                                                                            setNewEvent({ ...newEvent, end_time: `${date}T${time}` });
-                                                                        }}
-                                                                        className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                                                                    />
-                                                                    <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                                                            <div className="space-y-2">
-                                                                <Label>Max Participants</Label>
-                                                                <Input
-                                                                    type="number"
-                                                                    min="1"
-                                                                    max="10000"
-                                                                    value={newEvent.max_participants}
-                                                                    onChange={(e) => {
-                                                                        const val = parseInt(e.target.value);
-                                                                        setNewEvent({ ...newEvent, max_participants: isNaN(val) ? "" : String(Math.min(val, 10000)) });
-                                                                    }}
-                                                                    className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                                                />
-                                                            </div>
-                                                            <div className="space-y-2">
-                                                                <Label>Venue</Label>
-                                                                <Input
-                                                                    value={newEvent.location}
-                                                                    onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
-                                                                    placeholder="Enter event venue"
-                                                                    className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                                                            <div className="space-y-2">
-                                                                <Label>Start Time</Label>
-                                                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2 overflow-hidden">
-                                                                    <Select
-                                                                        value={(() => {
-                                                                            if (!newEvent.event_date) return "12";
-                                                                            const hours = parseInt(newEvent.event_date.split('T')[1]?.split(':')[0] || "12");
-                                                                            const h12 = hours % 12 || 12;
-                                                                            return h12.toString();
-                                                                        })()}
-                                                                        onValueChange={(val) => {
-                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
-                                                                            const currentHours = parseInt(newEvent.event_date?.split('T')[1]?.split(':')[0] || "12");
-                                                                            const currentMins = newEvent.event_date?.split('T')[1]?.split(':')[1] || "00";
-                                                                            const isPM = currentHours >= 12;
-
-                                                                            let newHours = parseInt(val);
-                                                                            if (isPM && newHours < 12) newHours += 12;
-                                                                            if (!isPM && newHours === 12) newHours = 0;
-
-                                                                            setNewEvent({ ...newEvent, event_date: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
-                                                                        }}
-                                                                    >
-                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                                                            <SelectValue placeholder="HH" />
-                                                                        </SelectTrigger>
-                                                                        <SelectContent>
-                                                                            {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                                                                                <SelectItem key={h} value={h.toString()}>
-                                                                                    {h}
-                                                                                </SelectItem>
-                                                                            ))}
-                                                                        </SelectContent>
-                                                                    </Select>
-
-                                                                    <Select
-                                                                        value={newEvent.event_date?.split('T')[1]?.split(':')[1] || "00"}
-                                                                        onValueChange={(val) => {
-                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
-                                                                            const timePart = newEvent.event_date?.split('T')[1] || "12:00";
-                                                                            const hours = timePart.split(':')[0];
-                                                                            setNewEvent({ ...newEvent, event_date: `${datePart}T${hours}:${val}` });
-                                                                        }}
-                                                                    >
-                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                                                            <SelectValue placeholder="MM" />
-                                                                        </SelectTrigger>
-                                                                        <SelectContent>
-                                                                            {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
-                                                                                <SelectItem key={m} value={m}>
-                                                                                    {m}
-                                                                                </SelectItem>
-                                                                            ))}
-                                                                        </SelectContent>
-                                                                    </Select>
-
-                                                                    <Select
-                                                                        value={(() => {
-                                                                            if (!newEvent.event_date) return "AM";
-                                                                            const hours = parseInt(newEvent.event_date.split('T')[1]?.split(':')[0] || "0");
-                                                                            return hours >= 12 ? "PM" : "AM";
-                                                                        })()}
-                                                                        onValueChange={(val) => {
-                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
-                                                                            const currentMins = newEvent.event_date?.split('T')[1]?.split(':')[1] || "00";
-                                                                            let hours = parseInt(newEvent.event_date?.split('T')[1]?.split(':')[0] || "12");
-
-                                                                            if (val === "PM" && hours < 12) hours += 12;
-                                                                            if (val === "AM" && hours >= 12) hours -= 12;
-
-                                                                            setNewEvent({ ...newEvent, event_date: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
-                                                                        }}
-                                                                    >
-                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                                                            <SelectValue />
-                                                                        </SelectTrigger>
-                                                                        <SelectContent>
-                                                                            <SelectItem value="AM">AM</SelectItem>
-                                                                            <SelectItem value="PM">PM</SelectItem>
-                                                                        </SelectContent>
-                                                                    </Select>
+                                                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Game (Locked)</Label>
+                                                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center opacity-70">
+                                                                    <Input value={game} disabled className="w-full bg-transparent border-0 p-0 text-white h-5 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none" />
                                                                 </div>
                                                             </div>
 
-                                                            <div className="space-y-2">
-                                                                <Label>End Time</Label>
-                                                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2 overflow-hidden">
-                                                                    <Select
-                                                                        value={(() => {
-                                                                            if (!newEvent.end_time) return undefined;
-                                                                            const hours = parseInt(newEvent.end_time.split('T')[1]?.split(':')[0] || "12");
-                                                                            const h12 = hours % 12 || 12;
-                                                                            return h12.toString();
-                                                                        })()}
-                                                                        onValueChange={(val) => {
-                                                                            const datePart = newEvent.end_time ? newEvent.end_time.split('T')[0] : (newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
-                                                                            // Use end_time parts if available, else default to 12:00
-                                                                            const currentHours = parseInt(newEvent.end_time?.split('T')[1]?.split(':')[0] || "12");
-                                                                            const currentMins = newEvent.end_time?.split('T')[1]?.split(':')[1] || "00";
-                                                                            const isPM = currentHours >= 12;
-
-                                                                            let newHours = parseInt(val);
-                                                                            if (isPM && newHours < 12) newHours += 12;
-                                                                            if (!isPM && newHours === 12) newHours = 0;
-
-                                                                            setNewEvent({ ...newEvent, end_time: `${datePart}T${newHours.toString().padStart(2, '0')}:${currentMins}` });
-                                                                        }}
-                                                                    >
-                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                                                            <SelectValue placeholder="HH" />
-                                                                        </SelectTrigger>
-                                                                        <SelectContent>
-                                                                            {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                                                                                <SelectItem key={h} value={h.toString()}>
-                                                                                    {h}
-                                                                                </SelectItem>
-                                                                            ))}
-                                                                        </SelectContent>
-                                                                    </Select>
-
-                                                                    <Select
-                                                                        value={newEvent.end_time?.split('T')[1]?.split(':')[1] || undefined}
-                                                                        onValueChange={(val) => {
-                                                                            const datePart = newEvent.end_time ? newEvent.end_time.split('T')[0] : (newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
-                                                                            const timePart = newEvent.end_time?.split('T')[1] || "12:00";
-                                                                            const hours = timePart.split(':')[0];
-                                                                            setNewEvent({ ...newEvent, end_time: `${datePart}T${hours}:${val}` });
-                                                                        }}
-                                                                    >
-                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                                                            <SelectValue placeholder="MM" />
-                                                                        </SelectTrigger>
-                                                                        <SelectContent>
-                                                                            {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
-                                                                                <SelectItem key={m} value={m}>
-                                                                                    {m}
-                                                                                </SelectItem>
-                                                                            ))}
-                                                                        </SelectContent>
-                                                                    </Select>
-
-                                                                    <Select
-                                                                        value={(() => {
-                                                                            if (!newEvent.end_time) return undefined;
-                                                                            const hours = parseInt(newEvent.end_time.split('T')[1]?.split(':')[0] || "0");
-                                                                            return hours >= 12 ? "PM" : "AM";
-                                                                        })()}
-                                                                        onValueChange={(val) => {
-                                                                            const datePart = newEvent.end_time ? newEvent.end_time.split('T')[0] : (newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
-                                                                            const currentMins = newEvent.end_time?.split('T')[1]?.split(':')[1] || "00";
-                                                                            let hours = parseInt(newEvent.end_time?.split('T')[1]?.split(':')[0] || "12");
-
-                                                                            if (val === "PM" && hours < 12) hours += 12;
-                                                                            if (val === "AM" && hours >= 12) hours -= 12;
-
-                                                                            setNewEvent({ ...newEvent, end_time: `${datePart}T${hours.toString().padStart(2, '0')}:${currentMins}` });
-                                                                        }}
-                                                                    >
-                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                                                            <SelectValue />
-                                                                        </SelectTrigger>
-                                                                        <SelectContent>
-                                                                            <SelectItem value="AM">AM</SelectItem>
-                                                                            <SelectItem value="PM">PM</SelectItem>
-                                                                        </SelectContent>
-                                                                    </Select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div className="space-y-2">
-                                                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Registration Status</Label>
-                                                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center ${newEvent.end_time && new Date(newEvent.end_time) < new Date() ? "opacity-50 cursor-not-allowed" : ""}`}>
-                                                                <Select
-                                                                    disabled={!!(newEvent.end_time && new Date(newEvent.end_time) < new Date())}
-                                                                    value={newEvent.end_time && new Date(newEvent.end_time) < new Date() ? "false" : (newEvent.is_registration_open !== false ? "true" : "false")}
-                                                                    onValueChange={(val) => setNewEvent({ ...newEvent, is_registration_open: val === "true" })}
+                                                            <div className="flex justify-between items-center mt-8 pt-4 border-t border-border/50">
+                                                                <Button
+                                                                    type="button"
+                                                                    className="border border-[#FF0000] bg-transparent hover:bg-[#FF0000] hover:text-white text-white transition-all"
+                                                                    onClick={() => setEventDialogOpen(false)}
                                                                 >
-                                                                    <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                                                        <SelectValue />
-                                                                    </SelectTrigger>
-                                                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                                                        <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
-                                                                        <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
-                                                                    </SelectContent>
-                                                                </Select>
+                                                                    Cancel
+                                                                </Button>
+                                                                <Button type="submit" variant="flame">
+                                                                    {newEvent.id ? "Update Event" : "Create Event"}
+                                                                </Button>
                                                             </div>
-                                                            {newEvent.end_time && new Date(newEvent.end_time) < new Date() && (
-                                                                <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider mt-1">Event Completed - Registration Closed</p>
-                                                            )}
-                                                        </div>
-
-                                                        <div className="space-y-2">
-                                                            <Label>Game (Locked)</Label>
-                                                            <Input value={game} disabled className="bg-black border-red-600 text-white/50 focus-visible:ring-0 focus-visible:ring-offset-0" />
-                                                        </div>
-
-                                                        <div className="flex justify-between items-center mt-8 pt-4 border-t border-border/50">
-                                                            <Button
-                                                                type="button"
-                                                                className="border border-[#FF0000] bg-transparent hover:bg-[#FF0000] hover:text-white text-white transition-all"
-                                                            >
-                                                                Cancel
-                                                            </Button>
-                                                            <Button type="submit" variant="flame">
-                                                                {newEvent.id ? "Update Event" : "Create Event"}
-                                                            </Button>
                                                         </div>
                                                     </form>
                                                 </DialogContent>
@@ -1264,7 +1314,8 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                 {/* Slots Progress Section */}
                                                 <div className="pt-1 pb-2 px-3 bg-black/30 space-y-1.5">
                                                     {(() => {
-                                                        const filled = event.registrationCount || 0;
+                                                        const summary = registrationSummaries?.find((s: any) => s._id === (event._id || event.id));
+                                                        const filled = summary?.count || event.registrationCount || 0;
                                                         const total = event.max_participants ? parseInt(event.max_participants.toString()) : 1;
                                                         const percentFilled = (filled / total) * 100;
                                                         const isFull = filled >= total;
@@ -1303,7 +1354,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         </DialogTrigger>
                                                         <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="glass-dark border-2 border-[#FF0000] w-[85vw] max-w-[500px] text-white px-8 pb-8 pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_rgba(255,0,0,0.3)] [&>button]:hidden">
                                                             <div className="overflow-y-auto custom-scrollbar flex flex-col gap-5">
-                                                                <div className="flex items-center justify-end w-full">
+                                                                <div className="flex items-center justify-center w-full">
                                                                     <span className="bg-[#FF0000]/90 border border-[#FF0000] text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg">
                                                                         {game}
                                                                     </span>

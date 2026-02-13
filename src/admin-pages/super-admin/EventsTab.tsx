@@ -35,7 +35,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 
 interface Event {
     id?: string;
@@ -67,8 +67,20 @@ export const EventsTab = ({ events }: EventsTabProps) => {
         game: "Free Fire",
     });
     const [togglingEvents, setTogglingEvents] = useState<Set<string>>(new Set());
+    const [errors, setErrors] = useState<Record<string, boolean>>({});
     const { toast } = useToast();
     const queryClient = useQueryClient();
+
+    const { data: registrationSummaries } = useQuery({
+        queryKey: ["registrations-all-summary"],
+        queryFn: async () => {
+            const token = localStorage.getItem("inferno_token");
+            const url = `${import.meta.env.VITE_API_BASE_URL}/api/registrations/all-summary`;
+            const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+            if (!response.ok) return [];
+            return response.json() as Promise<{ _id: string; count: number }[]>;
+        },
+    });
 
 
     const filteredEvents = (events?.filter((event) => {
@@ -130,7 +142,16 @@ export const EventsTab = ({ events }: EventsTabProps) => {
     };
 
     const handleCreate = async () => {
-        if (!formData.title || !formData.event_date || !formData.end_time) {
+        const newErrors: Record<string, boolean> = {};
+        if (!formData.title) newErrors.title = true;
+        if (!formData.description) newErrors.description = true;
+        if (!formData.event_date) newErrors.event_date = true;
+        if (!formData.end_time) newErrors.end_time = true;
+        if (!formData.game) newErrors.game = true;
+        if (!formData.location) newErrors.location = true;
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             toast({
                 title: "Missing Fields",
                 description: "Please fill in all required fields, including start and end dates.",
@@ -138,6 +159,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
             });
             return;
         }
+        setErrors({});
 
         const startDate = new Date(formData.event_date);
         const endDate = new Date(formData.end_time);
@@ -187,7 +209,16 @@ export const EventsTab = ({ events }: EventsTabProps) => {
     const handleUpdate = async () => {
         if (!editingEvent) return;
 
-        if (!formData.title || !formData.event_date || !formData.end_time) {
+        const newErrors: Record<string, boolean> = {};
+        if (!formData.title) newErrors.title = true;
+        if (!formData.description) newErrors.description = true;
+        if (!formData.event_date) newErrors.event_date = true;
+        if (!formData.end_time) newErrors.end_time = true;
+        if (!formData.game) newErrors.game = true;
+        if (!formData.location) newErrors.location = true;
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             toast({
                 title: "Missing Fields",
                 description: "Please fill in all required fields, including start and end dates.",
@@ -195,6 +226,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
             });
             return;
         }
+        setErrors({});
 
         const startDate = new Date(formData.event_date);
         const endDate = new Date(formData.end_time);
@@ -336,7 +368,8 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                     <Button
                         onClick={handleAdd}
                         size="sm"
-                        className="h-10 px-4 whitespace-nowrap bg-red-600 hover:bg-red-700 text-white border-0 gap-2"
+                        variant="flame"
+                        className="h-9 px-4 whitespace-nowrap gap-2 font-display uppercase tracking-widest text-[10px] font-bold shadow-[0_0_15px_rgba(220,38,38,0.2)]"
                     >
                         <Plus className="h-4 w-4" />
                         Add Event
@@ -365,7 +398,8 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <Button
                             onClick={handleAdd}
                             size="sm"
-                            className="h-10 md:h-11 px-4 whitespace-nowrap bg-red-600 hover:bg-red-700 text-white border-0 gap-2"
+                            variant="flame"
+                            className="h-9 px-4 whitespace-nowrap gap-2 font-display uppercase tracking-widest text-[10px] font-bold shadow-[0_0_15px_rgba(220,38,38,0.2)]"
                         >
                             <Plus className="h-4 w-4" />
                             Add Event
@@ -440,7 +474,8 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 <div className="pt-1 pb-2 px-3 bg-black/30 space-y-1.5">
                                     {(() => {
                                         const isCompleted = event.end_time && new Date(event.end_time) < new Date();
-                                        const filled = event.registrationCount || 0;
+                                        const summary = registrationSummaries?.find((s: any) => s._id === (event.id || event._id));
+                                        const filled = summary?.count || event.registrationCount || 0;
                                         const total = event.max_participants || 1;
                                         const percentFilled = (filled / total) * 100;
                                         const isFull = filled >= total;
@@ -479,7 +514,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         </DialogTrigger>
                                         <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="glass-dark border-2 border-[#FF0000] w-[85vw] max-w-[500px] text-white px-4 sm:px-8 pb-4 sm:pb-8 pt-4 sm:pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_rgba(255,0,0,0.3)] [&>button]:hidden">
                                             <div className="overflow-y-auto custom-scrollbar flex flex-col gap-5">
-                                                <div className="flex items-center justify-end w-full">
+                                                <div className="flex items-center justify-center w-full">
                                                     <span className="bg-[#FF0000]/90 border border-[#FF0000] text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg">
                                                         {event.game}
                                                     </span>
@@ -496,11 +531,11 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                                                 <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
                                                     <div className="flex items-center gap-4">
-                                                        <Calendar className="w-5 h-5 text-primary shrink-0" />
+                                                        <Calendar className="w-5 h-5 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] shrink-0" />
                                                         <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
                                                     </div>
                                                     <div className="flex items-center gap-4">
-                                                        <Clock className="w-5 h-5 text-primary shrink-0" />
+                                                        <Clock className="w-5 h-5 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] shrink-0" />
                                                         <span className="font-display tracking-wide uppercase text-sm">
                                                             {format(new Date(event.event_date), "h:mm a")}
                                                             {event.end_time && ` - ${format(new Date(event.end_time), "h:mm a")}`}
@@ -557,19 +592,19 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
             {/* Add Event Dialog */}
             <Dialog open={isAddingEvent} onOpenChange={setIsAddingEvent}>
-                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
+                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
                     <DialogHeader>
-                        <DialogTitle>Create Event</DialogTitle>
-                        <DialogDescription>
-                            Add a new gaming event
+                        <DialogTitle className="text-white font-display text-xl uppercase tracking-wider">Create Event</DialogTitle>
+                        <DialogDescription className="text-gray-400 text-xs">
+                            Add a new gaming event to the community
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
                         <div className="grid gap-2 text-left">
                             <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Title</Label>
-                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                <input
-                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.title ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
+                                <Input
+                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none !border-0 !shadow-none ring-0"
                                     value={formData.title || ""}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     required
@@ -579,12 +614,12 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                         <div className="grid gap-2 text-left">
                             <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Description</Label>
-                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                <textarea
-                                    className="w-full bg-transparent border-none p-0 min-h-[44px] py-1.5 text-white focus:outline-none text-sm outline-none ring-0 resize-none"
+                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.description ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[120px] p-2`}>
+                                <Textarea
+                                    className="w-full bg-transparent border-none p-0 min-h-[100px] text-white focus:outline-none text-sm outline-none ring-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
                                     value={formData.description || ""}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    rows={1}
+                                    rows={4}
                                 />
                             </div>
                         </div>
@@ -698,7 +733,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Start Date</Label>
                                 <div className="relative">
-                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                    <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.event_date ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[40px] md:min-h-[44px] flex items-center`}>
                                         <input
                                             type="date"
                                             value={formData.event_date ? formData.event_date.split('T')[0] : ''}
@@ -706,18 +741,21 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 const date = e.target.value;
                                                 const time = formData.event_date ? formData.event_date.split('T')[1] : '12:00';
                                                 setFormData({ ...formData, event_date: `${date}T${time}` });
+                                                if (date) setErrors(prev => ({ ...prev, event_date: false }));
                                             }}
                                             required
-                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                            style={{ color: (formData.event_date && formData.event_date.split('T')[0]) ? 'white' : 'transparent' }}
+                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer z-10 relative"
                                         />
-                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+                                        {!formData.event_date && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 text-sm pointer-events-none">dd/mm/yyyy</span>}
+                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] pointer-events-none z-20" />
                                     </div>
                                 </div>
                             </div>
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">End Date</Label>
                                 <div className="relative">
-                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[40px] md:min-h-[44px] flex items-center">
                                         <input
                                             type="date"
                                             value={formData.end_time ? formData.end_time.split('T')[0] : ''}
@@ -725,10 +763,13 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 const date = e.target.value;
                                                 const time = formData.end_time ? formData.end_time.split('T')[1] : '12:00';
                                                 setFormData({ ...formData, end_time: `${date}T${time}` });
+                                                if (date) setErrors(prev => ({ ...prev, end_time: false }));
                                             }}
-                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                            style={{ color: (formData.end_time && formData.end_time.split('T')[0]) ? 'white' : 'transparent' }}
+                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer z-10 relative"
                                         />
-                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+                                        {!formData.end_time && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 text-sm pointer-events-none">dd/mm/yyyy</span>}
+                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] pointer-events-none z-20" />
                                     </div>
                                 </div>
                             </div>
@@ -738,7 +779,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Max Participants</Label>
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                    <input
+                                    <Input
                                         type="number"
                                         min="1"
                                         max="10000"
@@ -747,15 +788,15 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             const val = parseInt(e.target.value);
                                             setFormData({ ...formData, max_participants: isNaN(val) ? 0 : Math.min(val, 10000) });
                                         }}
-                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                                     />
                                 </div>
                             </div>
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Venue</Label>
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                    <input
-                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                    <Input
+                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                                         value={formData.location || ""}
                                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                                         placeholder="Enter event venue"
@@ -770,7 +811,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2">
                                     <Select
                                         value={(() => {
-                                            if (!formData.event_date) return "12";
+                                            if (!formData.event_date) return undefined;
                                             const hours = parseInt(formData.event_date.split('T')[1]?.split(':')[0] || "12");
                                             const h12 = hours % 12 || 12;
                                             return h12.toString();
@@ -801,7 +842,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                     </Select>
 
                                     <Select
-                                        value={formData.event_date?.split('T')[1]?.split(':')[1] || "00"}
+                                        value={formData.event_date?.split('T')[1]?.split(':')[1] || undefined}
                                         onValueChange={(val) => {
                                             const datePart = formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
                                             const hours = formData.event_date?.split('T')[1]?.split(':')[0] || "12";
@@ -822,7 +863,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                                     <Select
                                         value={(() => {
-                                            if (!formData.event_date) return "AM";
+                                            if (!formData.event_date) return undefined;
                                             const hours = parseInt(formData.event_date.split('T')[1]?.split(':')[0] || "0");
                                             return hours >= 12 ? "PM" : "AM";
                                         })()}
@@ -838,7 +879,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         }}
                                     >
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                            <SelectValue />
+                                            <SelectValue placeholder="AM" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
                                             <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">AM</SelectItem>
@@ -922,7 +963,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         }}
                                     >
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                            <SelectValue />
+                                            <SelectValue placeholder="AM" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
                                             <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">AM</SelectItem>
@@ -982,6 +1023,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             <Button
                                 type="button"
                                 className="border border-[#FF0000] bg-transparent hover:bg-[#FF0000] hover:text-white text-white transition-all"
+                                onClick={() => setIsAddingEvent(false)}
                             >
                                 Cancel
                             </Button>
@@ -1000,7 +1042,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
             {/* Edit Event Dialog */}
             <Dialog open={!!editingEvent} onOpenChange={() => setEditingEvent(null)}>
-                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
+                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
                     <DialogHeader>
                         <DialogTitle>Edit Event</DialogTitle>
                         <DialogDescription>
@@ -1010,9 +1052,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                     <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
                         <div className="grid gap-2 text-left">
                             <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Title</Label>
-                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                <input
-                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.title ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
+                                <Input
+                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none !border-0 !shadow-none ring-0"
                                     value={formData.title || ""}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     required
@@ -1022,12 +1064,12 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                         <div className="grid gap-2 text-left">
                             <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Description</Label>
-                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                <textarea
-                                    className="w-full bg-transparent border-none p-0 min-h-[44px] py-1.5 text-white focus:outline-none text-sm outline-none ring-0 resize-none"
+                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.description ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[120px] p-2`}>
+                                <Textarea
+                                    className="w-full bg-transparent border-none p-0 min-h-[100px] text-white focus:outline-none text-sm outline-none ring-0 resize-none focus-visible:ring-0 focus-visible:ring-offset-0"
                                     value={formData.description || ""}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    rows={1}
+                                    rows={4}
                                 />
                             </div>
                         </div>
@@ -1141,7 +1183,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Start Date</Label>
                                 <div className="relative">
-                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                    <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.event_date ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[40px] md:min-h-[44px] flex items-center`}>
                                         <input
                                             type="date"
                                             value={formData.event_date ? formData.event_date.split('T')[0] : ''}
@@ -1149,18 +1191,21 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 const date = e.target.value;
                                                 const time = formData.event_date ? formData.event_date.split('T')[1] : '12:00';
                                                 setFormData({ ...formData, event_date: `${date}T${time}` });
+                                                if (date) setErrors(prev => ({ ...prev, event_date: false }));
                                             }}
                                             required
-                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                            style={{ color: (formData.event_date && formData.event_date.split('T')[0]) ? 'white' : 'transparent' }}
+                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer z-10 relative"
                                         />
-                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+                                        {!formData.event_date && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 text-sm pointer-events-none">dd/mm/yyyy</span>}
+                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] pointer-events-none" />
                                     </div>
                                 </div>
                             </div>
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">End Date</Label>
                                 <div className="relative">
-                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                    <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.end_time ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[40px] md:min-h-[44px] flex items-center`}>
                                         <input
                                             type="date"
                                             value={formData.end_time ? formData.end_time.split('T')[0] : ''}
@@ -1168,10 +1213,13 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 const date = e.target.value;
                                                 const time = formData.end_time ? formData.end_time.split('T')[1] : '12:00';
                                                 setFormData({ ...formData, end_time: `${date}T${time}` });
+                                                if (date) setErrors(prev => ({ ...prev, end_time: false }));
                                             }}
-                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                            style={{ color: (formData.end_time && formData.end_time.split('T')[0]) ? 'white' : 'transparent' }}
+                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer z-10 relative"
                                         />
-                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+                                        {!formData.end_time && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 text-sm pointer-events-none">dd/mm/yyyy</span>}
+                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] pointer-events-none" />
                                     </div>
                                 </div>
                             </div>
@@ -1180,8 +1228,8 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Max Participants</Label>
-                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                    <input
+                                <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.max_participants ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
+                                    <Input
                                         type="number"
                                         min="1"
                                         max="10000"
@@ -1190,17 +1238,20 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             const val = parseInt(e.target.value);
                                             setFormData({ ...formData, max_participants: isNaN(val) ? 0 : Math.min(val, 10000) });
                                         }}
-                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none !border-0 !shadow-none"
                                     />
                                 </div>
                             </div>
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Venue</Label>
-                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                    <input
-                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.location ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
+                                    <Input
+                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none !border-0 !shadow-none"
                                         value={formData.location || ""}
-                                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, location: e.target.value });
+                                            if (e.target.value) setErrors(prev => ({ ...prev, location: false }));
+                                        }}
                                         placeholder="Enter event venue"
                                     />
                                 </div>
@@ -1213,7 +1264,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center gap-2">
                                     <Select
                                         value={(() => {
-                                            if (!formData.event_date) return "12";
+                                            if (!formData.event_date) return undefined;
                                             const hours = parseInt(formData.event_date.split('T')[1]?.split(':')[0] || "12");
                                             const h12 = hours % 12 || 12;
                                             return h12.toString();
@@ -1244,7 +1295,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                     </Select>
 
                                     <Select
-                                        value={formData.event_date?.split('T')[1]?.split(':')[1] || "00"}
+                                        value={formData.event_date?.split('T')[1]?.split(':')[1] || undefined}
                                         onValueChange={(val) => {
                                             const datePart = formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
                                             const hours = formData.event_date?.split('T')[1]?.split(':')[0] || "12";
@@ -1265,7 +1316,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                                     <Select
                                         value={(() => {
-                                            if (!formData.event_date) return "AM";
+                                            if (!formData.event_date) return undefined;
                                             const hours = parseInt(formData.event_date.split('T')[1]?.split(':')[0] || "0");
                                             return hours >= 12 ? "PM" : "AM";
                                         })()}
@@ -1281,7 +1332,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         }}
                                     >
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                            <SelectValue />
+                                            <SelectValue placeholder="AM" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
                                             <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">AM</SelectItem>
@@ -1365,7 +1416,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         }}
                                     >
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                            <SelectValue />
+                                            <SelectValue placeholder="AM" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
                                             <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">AM</SelectItem>
@@ -1402,7 +1453,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                         <div className="grid gap-2 text-left">
                             <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Game</Label>
-                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 ${errors.game ? 'border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]' : 'border-red-600'} transition-all min-h-[44px] flex items-center`}>
                                 <Select
                                     value={formData.game || ""}
                                     onValueChange={(value) =>
@@ -1423,12 +1474,12 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             </div>
                         </div>
 
-                        <div className="flex flex-row justify-between w-full gap-2 mt-8 pt-4 border-t border-white/10">
+                        <div className="flex flex-row justify-between w-full gap-3 mt-8 pt-4 border-t border-white/10">
                             <Button
                                 type="button"
                                 variant="ghost"
                                 onClick={() => setEditingEvent(null)}
-                                className="flex-1 border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-10 transition-all duration-300"
+                                className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold"
                             >
                                 Cancel
                             </Button>
@@ -1436,7 +1487,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 type="button"
                                 variant="flame"
                                 onClick={handleUpdate}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-white h-10 transition-all duration-300"
+                                className="flex-1 max-w-[140px] h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold"
                             >
                                 Save Changes
                             </Button>

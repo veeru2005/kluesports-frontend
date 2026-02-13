@@ -266,7 +266,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                 <Button
                     onClick={handleAdd}
                     size="sm"
-                    className="h-10 md:h-11 px-4 whitespace-nowrap bg-red-600 hover:bg-red-700 text-white border-0 gap-2 order-2 md:order-3"
+                    className="h-9 px-4 whitespace-nowrap bg-red-600 hover:bg-red-700 text-white border-0 gap-2 order-2 md:order-3 font-display uppercase tracking-widest text-[10px] font-bold shadow-[0_0_15px_rgba(220,38,38,0.2)] transition-all duration-300"
                 >
                     <Plus className="h-4 w-4" />
                     <span className="hidden sm:inline">Add Admin</span>
@@ -382,11 +382,11 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
 
             {/* Add Admin Dialog */}
             <Dialog open={isAddingAdmin} onOpenChange={setIsAddingAdmin}>
-                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
+                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} onPointerDownOutside={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
                     <DialogHeader>
-                        <DialogTitle>Add New Admin</DialogTitle>
-                        <DialogDescription>
-                            Create a new admin account
+                        <DialogTitle className="text-white font-display text-xl uppercase tracking-wider">Add New Admin</DialogTitle>
+                        <DialogDescription className="text-gray-400 text-xs">
+                            Create a new administrative account
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5 py-3 sm:py-4">
@@ -510,18 +510,18 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                             </div>
                         </div>
                     </div>
-                    <DialogFooter className="!flex !flex-row !justify-between sm:!justify-between gap-2">
-                        <Button variant="ghost" onClick={() => setIsAddingAdmin(false)} className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300">
+                    <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2 px-0">
+                        <Button type="button" variant="ghost" onClick={() => setIsAddingAdmin(false)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold">
                             Cancel
                         </Button>
-                        <Button onClick={handleCreate} className="flex-1 bg-red-600 hover:bg-red-700 text-white transition-all duration-300">Create Admin</Button>
-                    </DialogFooter>
+                        <Button onClick={handleCreate} className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold">Create Admin</Button>
+                    </div>
                 </DialogContent>
             </Dialog>
 
             {/* Edit Admin Dialog */}
             <Dialog open={!!editingAdmin} onOpenChange={(o) => o ? null : setEditingAdmin(null)}>
-                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
+                <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} onPointerDownOutside={(e) => e.preventDefault()} className="max-h-[90vh] overflow-y-auto w-[95vw] sm:max-w-[500px] bg-black border-2 border-red-600 rounded-xl p-4 sm:p-6">
                     <DialogHeader>
                         <DialogTitle>Edit Admin</DialogTitle>
                         <DialogDescription>
@@ -614,10 +614,10 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         </div>
                     </div>
                     <div className="flex flex-row justify-between w-full gap-3 pt-4 border-t border-white/10 mt-2 px-0">
-                        <Button variant="ghost" onClick={() => setEditingAdmin(null)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
+                        <Button type="button" variant="ghost" onClick={() => setEditingAdmin(null)} className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-[#FF0000] hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">Save Changes</Button>
+                        <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-[#FF0000] hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold">Save Changes</Button>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -632,14 +632,17 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                             <strong className="text-red-500">{deletingAdmin?.name}</strong>? This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <AlertDialogFooter className="flex flex-row gap-2 justify-between sm:justify-between">
-                        <AlertDialogCancel className="border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleDelete}
-                            className="bg-[#FF0000] hover:bg-red-700 text-white"
-                        >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Delete
+                    <AlertDialogFooter className="!flex !flex-row !justify-between sm:!justify-between gap-3 pt-4 border-t border-white/10 mt-2 px-0">
+                        <AlertDialogCancel asChild>
+                            <Button variant="ghost" className="flex-1 max-w-[140px] border border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold mt-0">
+                                Cancel
+                            </Button>
+                        </AlertDialogCancel>
+                        <AlertDialogAction asChild>
+                            <Button onClick={handleDelete} className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px] font-bold">
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete
+                            </Button>
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
