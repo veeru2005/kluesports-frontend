@@ -109,7 +109,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
             game: "",
             image_url: "",
             end_time: "",
-            is_registration_open: true,
+            is_registration_open: false,
         });
         setIsAddingEvent(true);
     };
@@ -130,6 +130,27 @@ export const EventsTab = ({ events }: EventsTabProps) => {
     };
 
     const handleCreate = async () => {
+        if (!formData.title || !formData.event_date || !formData.end_time) {
+            toast({
+                title: "Missing Fields",
+                description: "Please fill in all required fields, including start and end dates.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        const startDate = new Date(formData.event_date);
+        const endDate = new Date(formData.end_time);
+
+        if (endDate <= startDate) {
+            toast({
+                title: "Invalid Dates",
+                description: "End date/time must be after start date/time.",
+                variant: "destructive",
+            });
+            return;
+        }
+
         try {
             const token = localStorage.getItem("inferno_token");
             const response = await fetch(
@@ -165,6 +186,27 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
     const handleUpdate = async () => {
         if (!editingEvent) return;
+
+        if (!formData.title || !formData.event_date || !formData.end_time) {
+            toast({
+                title: "Missing Fields",
+                description: "Please fill in all required fields, including start and end dates.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        const startDate = new Date(formData.event_date);
+        const endDate = new Date(formData.end_time);
+
+        if (endDate <= startDate) {
+            toast({
+                title: "Invalid Dates",
+                description: "End date/time must be after start date/time.",
+                variant: "destructive",
+            });
+            return;
+        }
 
         try {
             const token = localStorage.getItem("inferno_token");
@@ -643,7 +685,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2 text-left">
-                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Date</Label>
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Start Date</Label>
                                 <div className="relative">
                                     <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
                                         <input
@@ -652,24 +694,36 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             onChange={(e) => {
                                                 const date = e.target.value;
                                                 const time = formData.event_date ? formData.event_date.split('T')[1] : '12:00';
-                                                const newEventDate = `${date}T${time}`;
-
-                                                const updates: any = { event_date: newEventDate };
-                                                if (formData.end_time) {
-                                                    const endTimePart = formData.end_time.split('T')[1] || "00:00";
-                                                    updates.end_time = `${date}T${endTimePart}`;
-                                                }
-
-                                                setFormData({ ...formData, ...updates });
+                                                setFormData({ ...formData, event_date: `${date}T${time}` });
                                             }}
                                             required
                                             className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                                         />
                                         <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
                                     </div>
-                                    <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
                                 </div>
                             </div>
+                            <div className="grid gap-2 text-left">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">End Date</Label>
+                                <div className="relative">
+                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                        <input
+                                            type="date"
+                                            value={formData.end_time ? formData.end_time.split('T')[0] : ''}
+                                            onChange={(e) => {
+                                                const date = e.target.value;
+                                                const time = formData.end_time ? formData.end_time.split('T')[1] : '12:00';
+                                                setFormData({ ...formData, end_time: `${date}T${time}` });
+                                            }}
+                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                        />
+                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Max Participants</Label>
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
@@ -678,6 +732,17 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         value={formData.max_participants || ""}
                                         onChange={(e) => setFormData({ ...formData, max_participants: parseInt(e.target.value) })}
                                         className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid gap-2 text-left">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Venue</Label>
+                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                    <input
+                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                        value={formData.location || ""}
+                                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                        placeholder="Enter event venue"
                                     />
                                 </div>
                             </div>
@@ -778,7 +843,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             return h12.toString();
                                         })()}
                                         onValueChange={(val) => {
-                                            const datePart = formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                            const datePart = formData.end_time ? formData.end_time.split('T')[0] : (formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
                                             const currentMins = formData.end_time?.split('T')[1]?.split(':')[1] || "00";
                                             let hours = parseInt(formData.end_time?.split('T')[1]?.split(':')[0] || "12");
                                             const isPM = hours >= 12;
@@ -805,7 +870,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                     <Select
                                         value={formData.end_time?.split('T')[1]?.split(':')[1] || undefined}
                                         onValueChange={(val) => {
-                                            const datePart = formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                            const datePart = formData.end_time ? formData.end_time.split('T')[0] : (formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
                                             const timePart = formData.end_time?.split('T')[1] || "12:00";
                                             const hours = timePart.split(':')[0];
                                             setFormData({ ...formData, end_time: `${datePart}T${hours}:${val}` });
@@ -830,7 +895,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             return hours >= 12 ? "PM" : "AM";
                                         })()}
                                         onValueChange={(val) => {
-                                            const datePart = formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                            const datePart = formData.end_time ? formData.end_time.split('T')[0] : (formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
                                             const currentMins = formData.end_time?.split('T')[1]?.split(':')[1] || "00";
                                             let hours = parseInt(formData.end_time?.split('T')[1]?.split(':')[0] || "12");
 
@@ -849,18 +914,6 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="grid gap-2 text-left">
-                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Venue</Label>
-                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                <input
-                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
-                                    value={formData.location || ""}
-                                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                    placeholder="Enter event venue"
-                                />
                             </div>
                         </div>
 
@@ -1062,7 +1115,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2 text-left">
-                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Date</Label>
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Start Date</Label>
                                 <div className="relative">
                                     <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
                                         <input
@@ -1071,24 +1124,36 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             onChange={(e) => {
                                                 const date = e.target.value;
                                                 const time = formData.event_date ? formData.event_date.split('T')[1] : '12:00';
-                                                const newEventDate = `${date}T${time}`;
-
-                                                const updates: any = { event_date: newEventDate };
-                                                if (formData.end_time) {
-                                                    const endTimePart = formData.end_time.split('T')[1] || "00:00";
-                                                    updates.end_time = `${date}T${endTimePart}`;
-                                                }
-
-                                                setFormData({ ...formData, ...updates });
+                                                setFormData({ ...formData, event_date: `${date}T${time}` });
                                             }}
                                             required
                                             className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                                         />
                                         <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
                                     </div>
-                                    <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
                                 </div>
                             </div>
+                            <div className="grid gap-2 text-left">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">End Date</Label>
+                                <div className="relative">
+                                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                        <input
+                                            type="date"
+                                            value={formData.end_time ? formData.end_time.split('T')[0] : ''}
+                                            onChange={(e) => {
+                                                const date = e.target.value;
+                                                const time = formData.end_time ? formData.end_time.split('T')[1] : '12:00';
+                                                setFormData({ ...formData, end_time: `${date}T${time}` });
+                                            }}
+                                            className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                        />
+                                        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2 text-left">
                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Max Participants</Label>
                                 <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
@@ -1097,6 +1162,17 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         value={formData.max_participants || ""}
                                         onChange={(e) => setFormData({ ...formData, max_participants: parseInt(e.target.value) })}
                                         className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid gap-2 text-left">
+                                <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Venue</Label>
+                                <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
+                                    <input
+                                        className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                                        value={formData.location || ""}
+                                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                        placeholder="Enter event venue"
                                     />
                                 </div>
                             </div>
@@ -1197,7 +1273,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             return h12.toString();
                                         })()}
                                         onValueChange={(val) => {
-                                            const datePart = formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                            const datePart = formData.end_time ? formData.end_time.split('T')[0] : (formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
                                             const currentMins = formData.end_time?.split('T')[1]?.split(':')[1] || "00";
                                             let hours = parseInt(formData.end_time?.split('T')[1]?.split(':')[0] || "12");
                                             const isPM = hours >= 12;
@@ -1224,7 +1300,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                     <Select
                                         value={formData.end_time?.split('T')[1]?.split(':')[1] || undefined}
                                         onValueChange={(val) => {
-                                            const datePart = formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                            const datePart = formData.end_time ? formData.end_time.split('T')[0] : (formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
                                             const timePart = formData.end_time?.split('T')[1] || "12:00";
                                             const hours = timePart.split(':')[0];
                                             setFormData({ ...formData, end_time: `${datePart}T${hours}:${val}` });
@@ -1249,7 +1325,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             return hours >= 12 ? "PM" : "AM";
                                         })()}
                                         onValueChange={(val) => {
-                                            const datePart = formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                            const datePart = formData.end_time ? formData.end_time.split('T')[0] : (formData.event_date ? formData.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
                                             const currentMins = formData.end_time?.split('T')[1]?.split(':')[1] || "00";
                                             let hours = parseInt(formData.end_time?.split('T')[1]?.split(':')[0] || "12");
 
@@ -1271,17 +1347,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             </div>
                         </div>
 
-                        <div className="grid gap-2 text-left">
-                            <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Venue</Label>
-                            <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center">
-                                <input
-                                    className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
-                                    value={formData.location || ""}
-                                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                    placeholder="Enter event venue"
-                                />
-                            </div>
-                        </div>
+
 
                         <div className="grid gap-2 text-left">
                             <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Registration Status</Label>

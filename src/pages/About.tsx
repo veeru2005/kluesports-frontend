@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Target, Users, Trophy, Flame, Swords, Crown } from "lucide-react";
+import { Target, Users, Flame, Swords, Crown, Briefcase, Award, Building2 } from "lucide-react";
 import { FlameParticles } from "@/components/ui/FlameParticles";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
@@ -28,22 +28,23 @@ const values = [
 ];
 
 const stats = [
-  { value: "2019", label: "Founded" },
-  { value: "10K+", label: "Members" },
-  { value: "500+", label: "Events Hosted" },
-  { value: "50+", label: "Championships Won" },
+  { value: "2020", label: "Founded" },
+  { value: "300+", label: "Members" },
+  { value: "40+", label: "Events Hosted" },
+  { value: "10+", label: "Championships Won" },
 ];
 
 const About = () => {
   const titleAnim = useScrollAnimation();
-  const storyAnim = useScrollAnimation();
-  const statsAnim = useScrollAnimation();
+  const originAnim = useScrollAnimation();
+  const directorAnim = useScrollAnimation();
   const valuesAnim = useScrollAnimation();
   const missionAnim = useScrollAnimation();
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
       <main className="pt-20">
+
         {/* Hero Section */}
         <section className="py-6 relative overflow-hidden">
           <FlameParticles />
@@ -60,57 +61,255 @@ const About = () => {
                 ABOUT <span className="flame-text">KLU ESPORTS</span>
               </h1>
               <p className="text-base sm:text-lg text-muted-foreground font-body max-w-2xl mx-auto leading-relaxed px-4 md:px-0">
-                Our journey from passionate gamers to an elite community.
+                The premier gaming wing of KL University Student Activity Center.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Story Section */}
-        <section className="py-12">
-          <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div
-                ref={storyAnim.elementRef}
-                className={`scroll-fade-left ${storyAnim.isVisible ? 'scroll-visible' : ''}`}
-              >
-                <h2 className="font-display font-bold text-3xl mb-6 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
-                  THE <span className="flame-text">ORIGIN</span>
-                </h2>
-                <div className="space-y-4 text-muted-foreground font-body text-lg leading-relaxed">
-                  <p>
-                    KLU ESPORTS was born in 2019 from a simple belief: gaming communities
-                    should be more than just casual gatherings. They should be forges
-                    where champions are made.
+        {/* Origin Section */}
+        <section className="py-16 relative overflow-hidden">
+          <div className="container mx-auto px-4 z-10 relative">
+            <div
+              ref={originAnim.elementRef}
+              className={`grid lg:grid-cols-2 gap-16 items-center mb-8 scroll-fade-up ${originAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
+
+              {/* Left Side: Text Content */}
+              <div>
+                <div className="mb-8">
+                  <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
+                    Our Beginning
+                  </span>
+                  <h2 className="font-display font-bold text-3xl md:text-4xl mb-8 leading-tight relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+                    THE <span className="flame-text">ORIGIN</span>
+                  </h2>
+                </div>
+
+                {/* Updated: Border wraps all paragraphs now */}
+                <div className="space-y-6 font-body text-lg leading-relaxed border-l-4 border-primary/80 pl-6 py-4 bg-gradient-to-r from-primary/5 to-transparent rounded-r-lg">
+                  <p className="text-xl text-white font-medium">
+                    The <span className="text-primary font-bold">KLU ESPORTS CLUB</span> operates proudly under the dynamic banner of the <span className="text-white">KL University Student Activity Center (KL SAC), at KL University</span>.
                   </p>
-                  <p>
-                    What started as five friends competing in local tournaments has
-                    grown into a global movement of over 10,000 dedicated players,
-                    content creators, and esports professionals.
+                  <p className="text-muted-foreground/90">
+                    Under the visionary guidance of our Director of SAC, <a href="https://www.linkedin.com/in/psaivijay/" target="_blank" rel="noopener noreferrer" className="text-primary font-bold hover:underline">Pisini Sai Vijay Sir</a>, the club has evolved from a small gathering into a powerhouse. He staunchly encourages all forms of competitive gaming, bridging the gap between <span className="text-white">Mobile Esports</span> and <span className="text-white">PC Gaming</span> to ensure every gamer finds their stage.
                   </p>
-                  <p>
-                    Today, we host weekly tournaments, live streaming events, and
-                    championship series that attract competitors from around the world.
-                    Our members have gone on to compete professionally and represent
-                    some of the biggest names in esports.
+                  <p className="text-muted-foreground/90">
+                    What started in 2019 has grown into a movement where champions are forged. With the support of KL SAC, we host major tournaments, live streams, and championship series that attract competitors from across the nation.
                   </p>
                 </div>
               </div>
-              <div
-                ref={statsAnim.elementRef}
-                className={`grid grid-cols-2 gap-4 scroll-fade-right ${statsAnim.isVisible ? 'scroll-visible' : ''}`}
-              >
-                {stats.map((stat, index) => (
+
+              {/* Right Side: Logo & Stats */}
+              <div className="flex flex-col gap-8">
+                <div className="relative flex justify-center items-center">
+                  <div className="relative group w-48 h-48 md:w-56 md:h-56 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-primary/20 rounded-full blur-[50px] opacity-40 group-hover:opacity-60 transition-opacity duration-700" />
+                    <div className="absolute inset-0 border border-primary/20 rounded-full scale-90 group-hover:scale-95 transition-transform duration-700" />
+                    <div className="absolute inset-0 border border-dashed border-primary/30 rounded-full animate-[spin_60s_linear_infinite] scale-110" />
+
+                    <div className="relative z-10 p-6 bg-black/40 backdrop-blur-xl rounded-full border border-white/10 shadow-2xl group-hover:border-primary/30 transition-colors duration-500 w-full h-full flex items-center justify-center">
+                      <img
+                        src="https://res.cloudinary.com/dus3luhur/image/upload/v1770969671/486415839_1833976170708272_11642_v8y9cr.jpg"
+                        alt="KLU Esports Origin Logo"
+                        className="w-[90%] h-[90%] object-cover rounded-full drop-shadow-[0_0_20px_rgba(220,38,38,0.5)] group-hover:drop-shadow-[0_0_30px_rgba(220,38,38,0.8)] transition-all duration-500 transform group-hover:scale-105"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {stats.map((stat, index) => (
+                    <div
+                      key={index}
+                      className="glass-dark rounded-xl p-4 text-center border border-red-600 hover:border-red-500 transition-all duration-300 hover:ember-glow group relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div className="font-display font-bold text-2xl md:text-3xl text-white mb-1 relative z-10 group-hover:scale-110 transition-transform duration-300">
+                        {stat.value}
+                      </div>
+                      <div className="text-muted-foreground font-body text-xs md:text-sm font-medium uppercase tracking-wider relative z-10">
+                        {stat.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Director Section */}
+        <section className="py-16 bg-black/40 border-y border-white/5 relative">
+          <div className="container mx-auto px-4 relative z-10">
+            <div
+              ref={directorAnim.elementRef}
+              className={`scroll-fade-up ${directorAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
+              {/* Centered Header */}
+              <div className="text-center mb-16">
+                <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
+                  Visionary Leader
+                </span>
+                <h2 className="font-display font-bold text-3xl md:text-4xl relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+                  KL SAC <span className="flame-text">DIRECTOR</span>
+                </h2>
+              </div>
+
+              {/* Content Grid */}
+              <div className="grid lg:grid-cols-2 gap-12 items-start">
+
+                {/* Left Side: Director Image */}
+                <div className="relative">
+                  <div className="max-h-[514px] rounded-2xl overflow-hidden border-2 border-red-600 relative group shadow-2xl shadow-primary/10 max-w-sm mx-auto">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60" />
+                    <img
+                      src="https://res.cloudinary.com/dus3luhur/image/upload/v1770965211/Sai-Vijay-Sir_jqhnxu.jpg"
+                      alt="Sai Vijay Pisini - Director SAC"
+                      className="w-full h-full object-cover object-center"
+                    />
+
+                    {/* Updated: Badge Text */}
+                    <div className="absolute bottom-4 left-4 z-20">
+                      <div className="bg-primary px-4 py-1 rounded text-black font-bold font-display text-sm inline-block mb-2 shadow-[0_0_15px_rgba(220,38,38,0.5)]">
+                        DIRECTOR OF KL SAC
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
+                  <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
+                </div>
+
+                {/* Right Side: Director Info */}
+                <div className="flex flex-col gap-4 h-full">
+                  <div className="mb-4">
+                    <div className="flex items-center gap-3 mb-1">
+                      <h3 className="text-2xl text-white font-semibold">SAI VIJAY PISINI</h3>
+                      <a
+                        href="https://www.linkedin.com/in/psaivijay/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600 hover:border-red-500 hover:shadow-[0_0_15px_rgba(220,38,38,0.3)] group/link"
+                        title="Connect on LinkedIn"
+                      >
+                        <img src="/Linkedin.svg" alt="LinkedIn" className="w-5 h-5 transition-transform group-hover/link:scale-110" />
+                      </a>
+                    </div>
+                    <p className="text-primary/90 font-medium text-sm leading-tight">
+                      Director-SAC @ KL University | CEO - Smart Village Revolution | Founder Leadership Foundation
+                    </p>
+                  </div>
+
+                  <div className="space-y-3 font-body text-muted-foreground">
+                    <p className="leading-relaxed text-sm">
+                      With a passion for student development and a vision for innovation, Sai Vijay Pisini Sir has been the driving force behind the Student Activity Center. Since taking charge in 2018, he has transformed SAC into a vibrant hub for talent, including the rapid expansion of KLU Esports.
+                    </p>
+
+                    <div className="grid gap-3 mt-4">
+                      {/* KL University */}
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-red-600 hover:border-red-500 hover:ember-glow transition-all duration-300">
+                        <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 flex items-center justify-center p-1">
+                          <img
+                            src="/PSVS/kluniversity_logo.jpeg"
+                            alt="KL University"
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div>
+                          <h4 className="text-white font-semibold text-sm">Director-SAC, CEO-Smart Village Revolution</h4>
+                          <p className="text-xs text-primary font-medium">KL University</p>
+                          <p className="text-xs text-muted-foreground">Feb 2018 - Present • Guntur, Andhra Pradesh</p>
+                        </div>
+                      </div>
+
+                      {/* Leadership Foundation */}
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-red-600 hover:border-red-500 hover:ember-glow transition-all duration-300">
+                        <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 flex items-center justify-center p-1">
+                          <img
+                            src="/PSVS/leadershipfoundation_logo.jpeg"
+                            alt="Leadership Foundation"
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div>
+                          <h4 className="text-white font-semibold text-sm">Founder & CEO</h4>
+                          <p className="text-xs text-primary font-medium">Leadership Foundation</p>
+                          <p className="text-xs text-muted-foreground">Jun 2013 - Jun 2022 • Andhra Pradesh</p>
+                        </div>
+                      </div>
+
+                      {/* Aditya Institute */}
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-red-600 hover:border-red-500 hover:ember-glow transition-all duration-300">
+                        <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 flex items-center justify-center p-1">
+                          <img
+                            src="/PSVS/aitamofficial_logo.jpeg"
+                            alt="Aditya Institute of Technology and Management"
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div>
+                          <h4 className="text-white font-semibold text-sm">Head - Student Activity Center</h4>
+                          <p className="text-xs text-primary font-medium">Aditya Institute of Technology and Management</p>
+                          <p className="text-xs text-muted-foreground">Feb 2011 - Feb 2018 • Tekkali, Andhra Pradesh</p>
+                        </div>
+                      </div>
+
+                      {/* KIET */}
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-red-600 hover:border-red-500 hover:ember-glow transition-all duration-300">
+                        <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 flex items-center justify-center p-1">
+                          <img
+                            src="/PSVS/KIET.jpeg"
+                            alt="KIET"
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div>
+                          <h4 className="text-white font-semibold text-sm">Incharge - Student Activities</h4>
+                          <p className="text-xs text-primary font-medium">Kakinada Institute of Engineering and Technology</p>
+                          <p className="text-xs text-muted-foreground">Aug 2008 - Jan 2011 • Kakinada, Andhra Pradesh</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Values Section */}
+        <section className="py-16 bg-card/50">
+          <div className="container mx-auto px-4">
+            <div
+              ref={valuesAnim.elementRef}
+              className={`scroll-fade-up ${valuesAnim.isVisible ? 'scroll-visible' : ''}`}
+            >
+              <div className="text-center mb-12">
+                <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
+                  What We Stand For
+                </span>
+                <h2 className="font-display font-bold text-3xl md:text-4xl relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+                  OUR <span className="flame-text">VALUES</span>
+                </h2>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {values.map((value, index) => (
                   <div
                     key={index}
-                    className="glass-dark rounded-xl p-8 text-center border border-red-600 hover:border-red-500 transition-all hover:ember-glow"
+                    className="glass-dark rounded-xl p-8 text-center border border-red-600 hover:border-red-500 transition-all group hover:ember-glow"
                   >
-                    <div className="font-display font-bold text-3xl text-primary mb-2">
-                      {stat.value}
+                    <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors">
+                      <value.icon className="w-8 h-8 text-primary" />
                     </div>
-                    <div className="text-muted-foreground font-body text-lg">
-                      {stat.label}
-                    </div>
+                    <h3 className="font-display font-semibold text-xl text-foreground mb-3">
+                      {value.title}
+                    </h3>
+                    <p className="text-muted-foreground font-body">
+                      {value.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -118,49 +317,13 @@ const About = () => {
           </div>
         </section>
 
-        {/* Values Section */}
-        <section className="py-24 bg-card/50">
-          <div className="container mx-auto px-4">
-            <div
-              ref={valuesAnim.elementRef}
-              className={`text-center mb-16 scroll-fade-up ${valuesAnim.isVisible ? 'scroll-visible' : ''}`}
-            >
-              <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
-                What We Stand For
-              </span>
-              <h2 className="font-display font-bold text-3xl md:text-4xl relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
-                OUR <span className="flame-text">VALUES</span>
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {values.map((value, index) => (
-                <div
-                  key={index}
-                  className="glass-dark rounded-xl p-8 text-center border border-red-600 hover:border-red-500 transition-all group hover:ember-glow"
-                >
-                  <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors">
-                    <value.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="font-display font-semibold text-xl text-foreground mb-3">
-                    {value.title}
-                  </h3>
-                  <p className="text-muted-foreground font-body">
-                    {value.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Mission Section */}
-        <section className="py-24 relative overflow-hidden">
+        <section className="py-20 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent" />
           <div className="container mx-auto px-4 relative z-10">
             <div
               ref={missionAnim.elementRef}
-              className={`max-w-3xl mx-auto text-center scroll-scale ${missionAnim.isVisible ? 'scroll-visible' : ''}`}
+              className={`max-w-3xl mx-auto text-center scroll-fade-up ${missionAnim.isVisible ? 'scroll-visible' : ''}`}
             >
               <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-8 ember-pulse">
                 <Target className="w-10 h-10 text-primary" />

@@ -81,7 +81,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
         location: "",
         max_participants: "",
         image_url: "",
-        is_registration_open: true,
+        is_registration_open: false,
     });
     const [eventToDelete, setEventToDelete] = useState<any>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -262,7 +262,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                 location: "",
                 max_participants: "",
                 image_url: "",
-                is_registration_open: true,
+                is_registration_open: false,
             });
         },
     });
@@ -322,17 +322,24 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (newEvent.end_time) {
-            const start = new Date(newEvent.event_date);
-            const end = new Date(newEvent.end_time);
-            if (end <= start) {
-                toast({
-                    title: "Invalid Time",
-                    description: "End time must be after start time.",
-                    variant: "destructive"
-                });
-                return;
-            }
+        if (!newEvent.title || !newEvent.event_date || !newEvent.end_time) {
+            toast({
+                title: "Missing Fields",
+                description: "Please fill in all required fields, including start and end dates.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        const start = new Date(newEvent.event_date);
+        const end = new Date(newEvent.end_time);
+        if (end <= start) {
+            toast({
+                title: "Invalid Time",
+                description: "End time must be after start time.",
+                variant: "destructive"
+            });
+            return;
         }
 
         createEventMutation.mutate({ ...newEvent, game });
@@ -774,7 +781,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         location: "",
                                                         max_participants: "",
                                                         image_url: "",
-                                                        is_registration_open: true
+                                                        is_registration_open: false
                                                     });
                                                     setEventDialogOpen(true);
                                                 }}
@@ -794,7 +801,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         location: "",
                                                         max_participants: "",
                                                         image_url: "",
-                                                        is_registration_open: true
+                                                        is_registration_open: false
                                                     });
                                                 }
                                             }}>
@@ -922,7 +929,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         </div>
                                                         <div className="grid grid-cols-2 gap-4">
                                                             <div className="space-y-2">
-                                                                <Label>Date</Label>
+                                                                <Label>Start Date</Label>
                                                                 <div className="relative">
                                                                     <Input
                                                                         type="date"
@@ -930,7 +937,14 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                         onChange={(e) => {
                                                                             const date = e.target.value;
                                                                             const time = newEvent.event_date ? newEvent.event_date.split('T')[1] : '12:00';
-                                                                            setNewEvent({ ...newEvent, event_date: `${date}T${time}` });
+                                                                            const newEventDate = `${date}T${time}`;
+
+                                                                            const updates: any = { event_date: newEventDate };
+                                                                            if (newEvent.end_time) {
+                                                                                const endTimePart = newEvent.end_time.split('T')[1] || "00:00";
+                                                                                updates.end_time = `${date}T${endTimePart}`;
+                                                                            }
+                                                                            setNewEvent({ ...newEvent, ...updates });
                                                                         }}
                                                                         required
                                                                         className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
@@ -939,11 +953,39 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                 </div>
                                                             </div>
                                                             <div className="space-y-2">
+                                                                <Label>End Date</Label>
+                                                                <div className="relative">
+                                                                    <Input
+                                                                        type="date"
+                                                                        value={newEvent.end_time ? newEvent.end_time.split('T')[0] : ''}
+                                                                        onChange={(e) => {
+                                                                            const date = e.target.value;
+                                                                            const time = newEvent.end_time ? newEvent.end_time.split('T')[1] : '12:00';
+                                                                            setNewEvent({ ...newEvent, end_time: `${date}T${time}` });
+                                                                        }}
+                                                                        className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0 pr-10 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-0 [&::-webkit-calendar-picker-indicator]:top-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                                                                    />
+                                                                    <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            <div className="space-y-2">
                                                                 <Label>Max Participants</Label>
                                                                 <Input
                                                                     type="number"
                                                                     value={newEvent.max_participants}
                                                                     onChange={(e) => setNewEvent({ ...newEvent, max_participants: e.target.value })}
+                                                                    className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                                                />
+                                                            </div>
+                                                            <div className="space-y-2">
+                                                                <Label>Venue</Label>
+                                                                <Input
+                                                                    value={newEvent.location}
+                                                                    onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+                                                                    placeholder="Enter event venue"
                                                                     className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
                                                                 />
                                                             </div>
@@ -1045,7 +1087,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             return h12.toString();
                                                                         })()}
                                                                         onValueChange={(val) => {
-                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                            const datePart = newEvent.end_time ? newEvent.end_time.split('T')[0] : (newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
                                                                             // Use end_time parts if available, else default to 12:00
                                                                             const currentHours = parseInt(newEvent.end_time?.split('T')[1]?.split(':')[0] || "12");
                                                                             const currentMins = newEvent.end_time?.split('T')[1]?.split(':')[1] || "00";
@@ -1073,7 +1115,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                     <Select
                                                                         value={newEvent.end_time?.split('T')[1]?.split(':')[1] || undefined}
                                                                         onValueChange={(val) => {
-                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                            const datePart = newEvent.end_time ? newEvent.end_time.split('T')[0] : (newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
                                                                             const timePart = newEvent.end_time?.split('T')[1] || "12:00";
                                                                             const hours = timePart.split(':')[0];
                                                                             setNewEvent({ ...newEvent, end_time: `${datePart}T${hours}:${val}` });
@@ -1098,7 +1140,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                             return hours >= 12 ? "PM" : "AM";
                                                                         })()}
                                                                         onValueChange={(val) => {
-                                                                            const datePart = newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0];
+                                                                            const datePart = newEvent.end_time ? newEvent.end_time.split('T')[0] : (newEvent.event_date ? newEvent.event_date.split('T')[0] : new Date().toISOString().split('T')[0]);
                                                                             const currentMins = newEvent.end_time?.split('T')[1]?.split(':')[1] || "00";
                                                                             let hours = parseInt(newEvent.end_time?.split('T')[1]?.split(':')[0] || "12");
 
@@ -1119,15 +1161,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="space-y-2">
-                                                            <Label>Venue</Label>
-                                                            <Input
-                                                                value={newEvent.location}
-                                                                onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
-                                                                placeholder="Enter event venue"
-                                                                className="bg-black border-red-600 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                                            />
-                                                        </div>
+
 
                                                         <div className="space-y-2">
                                                             <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Registration Status</Label>
