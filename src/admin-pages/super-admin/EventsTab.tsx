@@ -600,6 +600,15 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             onChange={async (e) => {
                                                 const file = e.target.files?.[0];
                                                 if (file) {
+                                                    if (file.size > 15 * 1024 * 1024) {
+                                                        toast({
+                                                            title: "Image too large",
+                                                            description: "Image size should be 15MB only Max",
+                                                            variant: "destructive",
+                                                        });
+                                                        e.target.value = '';
+                                                        return;
+                                                    }
                                                     try {
                                                         setIsUploadingAdd(true);
                                                         toast({
@@ -1030,6 +1039,15 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                             onChange={async (e) => {
                                                 const file = e.target.files?.[0];
                                                 if (file) {
+                                                    if (file.size > 15 * 1024 * 1024) {
+                                                        toast({
+                                                            title: "Image too large",
+                                                            description: "Image size should be 15MB only Max",
+                                                            variant: "destructive",
+                                                        });
+                                                        e.target.value = '';
+                                                        return;
+                                                    }
                                                     try {
                                                         setIsUploadingEdit(true);
                                                         toast({
