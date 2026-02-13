@@ -416,8 +416,8 @@ const Events = () => {
     queryKey: ["events"],
     queryFn: async () => {
       const [eventsRes, summaryRes] = await Promise.all([
-        fetch(`${import.meta.env.VITE_API_BASE_URL}/events`),
-        fetch(`${import.meta.env.VITE_API_BASE_URL}/registrations/all-summary`)
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`),
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/all-summary`)
       ]);
 
       if (!eventsRes.ok) throw new Error('Failed to fetch events');
@@ -448,7 +448,7 @@ const Events = () => {
       if (!token) return [];
 
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/registrations/my`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/my`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!response.ok) return [];

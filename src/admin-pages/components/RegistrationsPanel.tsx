@@ -61,9 +61,9 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
         queryKey: ["registrations-summary", selectedGame],
         queryFn: async () => {
             const token = localStorage.getItem("inferno_token");
-            let url = `${import.meta.env.VITE_API_BASE_URL}/registrations/all-summary`;
+            let url = `${import.meta.env.VITE_API_BASE_URL}/api/registrations/all-summary`;
             if (selectedGame !== 'All') {
-                url = `${import.meta.env.VITE_API_BASE_URL}/registrations/events/summary?game=${encodeURIComponent(selectedGame)}`;
+                url = `${import.meta.env.VITE_API_BASE_URL}/api/registrations/events/summary?game=${encodeURIComponent(selectedGame)}`;
             }
             const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
             if (!response.ok) throw new Error("Failed to fetch summaries");
@@ -75,7 +75,7 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
         mutationFn: async ({ eventId, game }: { eventId: string; game: string }) => {
             const token = localStorage.getItem("inferno_token");
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/registrations/event/${eventId}?game=${encodeURIComponent(game)}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/registrations/event/${eventId}?game=${encodeURIComponent(game)}`,
                 {
                     method: "DELETE",
                     headers: { Authorization: `Bearer ${token}` }
@@ -101,7 +101,7 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
     const { data: events, isLoading: isEventsLoading } = useQuery({
         queryKey: ["events", selectedGame],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events`);
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`);
             if (!response.ok) throw new Error("Failed to fetch events");
             return await response.json();
         }
@@ -129,7 +129,7 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
             const gameForApi = targetEvent?.game || selectedGame;
 
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/registrations/game/${encodeURIComponent(gameForApi)}?eventId=${eventId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/registrations/game/${encodeURIComponent(gameForApi)}?eventId=${eventId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 

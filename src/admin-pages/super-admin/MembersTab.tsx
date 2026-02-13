@@ -146,7 +146,7 @@ export const MembersTab = ({ members }: MembersTabProps) => {
         try {
             const token = localStorage.getItem("inferno_token");
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/users/${deletingMember.id}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/users/${deletingMember.id}`,
                 {
                     method: "DELETE",
                     headers: {

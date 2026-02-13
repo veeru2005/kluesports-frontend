@@ -142,7 +142,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
         try {
             const token = localStorage.getItem("inferno_token");
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/users/admins`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/users/admins`,
                 {
                     method: "POST",
                     headers: {
@@ -183,7 +183,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
             const token = localStorage.getItem("inferno_token");
             const adminId = editingAdmin.id || editingAdmin._id;
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/users/admins/${adminId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/users/admins/${adminId}`,
                 {
                     method: "PUT",
                     headers: {
@@ -220,7 +220,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
             const token = localStorage.getItem("inferno_token");
             const adminId = deletingAdmin.id || deletingAdmin._id;
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/users/admins/${adminId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/users/admins/${adminId}`,
                 {
                     method: "DELETE",
                     headers: {

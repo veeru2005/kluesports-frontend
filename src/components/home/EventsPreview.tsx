@@ -15,7 +15,7 @@ export const EventsPreview = () => {
     queryKey: ["home-upcoming-events"],
     queryFn: async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events`);
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`);
         if (!response.ok) throw new Error("Failed to fetch events");
         const data = await response.json();
 

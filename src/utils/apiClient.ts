@@ -7,7 +7,7 @@
  * - Redirecting to login on session expiry
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5005';
 
 interface ApiResponse<T = any> {
     success: boolean;
@@ -36,7 +36,7 @@ export async function apiClient<T = any>(
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        const response = await fetch(`${API_BASE_URL}/api${endpoint}`, {
             ...options,
             headers,
         });

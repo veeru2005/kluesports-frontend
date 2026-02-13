@@ -158,7 +158,7 @@ const EventRegistration = () => {
 
         try {
             const token = localStorage.getItem("inferno_token");
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/check-email/${encodeURIComponent(email)}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/check-email/${encodeURIComponent(email)}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -216,7 +216,7 @@ const EventRegistration = () => {
             formData.append('image', file);
 
             const token = localStorage.getItem("inferno_token");
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/upload/team-logo`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/upload/team-logo`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formData,
@@ -347,7 +347,7 @@ const EventRegistration = () => {
                 };
             }
 
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/registrations`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/registrations`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

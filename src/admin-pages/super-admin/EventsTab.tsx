@@ -154,7 +154,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
         try {
             const token = localStorage.getItem("inferno_token");
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/events`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/events`,
                 {
                     method: "POST",
                     headers: {
@@ -212,7 +212,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
             const token = localStorage.getItem("inferno_token");
             const eventId = editingEvent.id || editingEvent._id;
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/events/${eventId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/events/${eventId}`,
                 {
                     method: "PUT",
                     headers: {
@@ -249,7 +249,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
             const token = localStorage.getItem("inferno_token");
             const eventId = deletingEvent.id || deletingEvent._id;
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/events/${eventId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/events/${eventId}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -291,7 +291,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
             const newStatus = event.is_registration_open === false ? true : false;
 
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/events/${eventId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/events/${eventId}`,
                 {
                     method: "PUT",
                     headers: {
@@ -623,7 +623,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                         uploadData.append('image', file);
 
                                                         const token = localStorage.getItem("inferno_token");
-                                                        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/upload/event-image`, {
+                                                        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/upload/event-image`, {
                                                             method: 'POST',
                                                             headers: {
                                                                 'Authorization': `Bearer ${token}`
@@ -1063,7 +1063,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                         uploadData.append('image', file);
 
                                                         const token = localStorage.getItem("inferno_token");
-                                                        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/upload/event-image`, {
+                                                        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/upload/event-image`, {
                                                             method: 'POST',
                                                             headers: {
                                                                 'Authorization': `Bearer ${token}`

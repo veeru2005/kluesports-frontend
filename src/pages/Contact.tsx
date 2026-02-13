@@ -135,7 +135,7 @@ const Contact = () => {
 
     try {
       // Real API call
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/messages`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -58,7 +58,7 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
     queryFn: async () => {
       // Always fetch fresh data to ensure event details (like date/time) are up to date
       const token = localStorage.getItem("inferno_token");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/registrations/${reg.registrationId}?game=${encodeURIComponent(reg.game)}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/${reg.registrationId}?game=${encodeURIComponent(reg.game)}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('Failed');
@@ -315,7 +315,7 @@ const MyEventsSection = ({ isEventsView, navigate }: MyEventsSectionProps) => {
     queryKey: ["my-registrations"],
     queryFn: async () => {
       const token = localStorage.getItem("inferno_token");
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/registrations/my`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/my`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!response.ok) throw new Error('Failed to fetch registrations');
@@ -462,7 +462,7 @@ const Profile = () => {
     setIsSecurityLoading(true);
     try {
       const token = localStorage.getItem("inferno_token");
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/otp/send-current-email-otp`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/otp/send-current-email-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
       });
@@ -479,7 +479,7 @@ const Profile = () => {
     setIsSecurityLoading(true);
     try {
       const token = localStorage.getItem("inferno_token");
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/otp/verify-current-email-otp`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/otp/verify-current-email-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ otp: securityData.otp })
@@ -499,7 +499,7 @@ const Profile = () => {
     setIsSecurityLoading(true);
     try {
       const token = localStorage.getItem("inferno_token");
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/otp/send-new-email-otp`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/otp/send-new-email-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ newEmail: securityData.newEmail })
@@ -517,7 +517,7 @@ const Profile = () => {
     setIsSecurityLoading(true);
     try {
       const token = localStorage.getItem("inferno_token");
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/otp/verify-new-email-otp`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/otp/verify-new-email-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ otp: securityData.otp })
@@ -538,7 +538,7 @@ const Profile = () => {
     setIsSecurityLoading(true);
     try {
       const token = localStorage.getItem("inferno_token");
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/otp/send-reset-password`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/otp/send-reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
       });
@@ -556,7 +556,7 @@ const Profile = () => {
     setIsSecurityLoading(true);
     try {
       const token = localStorage.getItem("inferno_token");
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/otp/verify-reset-password`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/otp/verify-reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ otp: securityData.otp, newPassword: "temp_verification_only" })
@@ -578,7 +578,7 @@ const Profile = () => {
     setIsSecurityLoading(true);
     try {
       const token = localStorage.getItem("inferno_token");
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/otp/verify-reset-password`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/otp/verify-reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ otp: securityData.otp, newPassword: securityData.newPassword })

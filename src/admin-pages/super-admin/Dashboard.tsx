@@ -55,7 +55,7 @@ const SuperAdminDashboard = () => {
 
         setDeletingMessageId(messageToDelete);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/messages/${messageToDelete}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/messages/${messageToDelete}`, {
                 method: 'DELETE',
                 headers: getHeaders()
             });
@@ -104,7 +104,7 @@ const SuperAdminDashboard = () => {
     const { data: members } = useQuery({
         queryKey: ["admin-members"],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users`, {
                 headers: getHeaders()
             });
             if (!response.ok) throw new Error("Failed to fetch members");
@@ -116,10 +116,10 @@ const SuperAdminDashboard = () => {
         queryKey: ["admin-events"],
         queryFn: async () => {
             const [eventsRes, summaryRes] = await Promise.all([
-                fetch(`${import.meta.env.VITE_API_BASE_URL}/events`, {
+                fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`, {
                     headers: getHeaders()
                 }),
-                fetch(`${import.meta.env.VITE_API_BASE_URL}/registrations/all-summary`)
+                fetch(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/all-summary`)
             ]);
 
             if (!eventsRes.ok) throw new Error("Failed to fetch events");
@@ -146,7 +146,7 @@ const SuperAdminDashboard = () => {
     const { data: messages } = useQuery({
         queryKey: ["admin-messages"],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/messages`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/messages`, {
                 headers: getHeaders()
             });
             if (!response.ok) throw new Error("Failed to fetch messages");
@@ -157,7 +157,7 @@ const SuperAdminDashboard = () => {
     const { data: admins } = useQuery({
         queryKey: ["admin-admins"],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/admins`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/admins`, {
                 headers: getHeaders()
             });
             if (!response.ok) throw new Error("Failed to fetch admins");

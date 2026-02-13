@@ -111,7 +111,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
             // Using direct fetch to avoid triggering createEventMutation's onSuccess (which closes dialogs/shows generic toast)
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/events/${eventId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/events/${eventId}`,
                 {
                     method: "PUT",
                     headers: {
@@ -166,7 +166,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
     const { data: members, error: membersError } = useQuery({
         queryKey: ["admin-members"],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users`, {
                 headers: getHeaders()
             });
             if (!response.ok) {
@@ -180,7 +180,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
     const { data: events, error: eventsError } = useQuery({
         queryKey: ["admin-events"],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`, {
                 headers: getHeaders()
             });
             if (!response.ok) {
@@ -194,7 +194,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
     const { data: messages, error: messagesError } = useQuery({
         queryKey: ["admin-messages"],
         queryFn: async () => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/messages`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/messages`, {
                 headers: getHeaders()
             });
             if (!response.ok) {
@@ -238,8 +238,8 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
         mutationFn: async (eventData: typeof newEvent & { game: string }) => {
             const payload = { ...eventData, end_time: eventData.end_time || null };
             const url = eventData.id
-                ? `${import.meta.env.VITE_API_BASE_URL}/events/${eventData.id}`
-                : `${import.meta.env.VITE_API_BASE_URL}/events`;
+                ? `${import.meta.env.VITE_API_BASE_URL}/api/events/${eventData.id}`
+                : `${import.meta.env.VITE_API_BASE_URL}/api/events`;
             const method = eventData.id ? 'PUT' : 'POST';
 
             const response = await fetch(url, {
@@ -271,7 +271,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
     const deleteEventMutation = useMutation({
         mutationFn: async (id: string) => {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events/${id}`, {
                 method: 'DELETE',
                 headers: getHeaders(),
             });
@@ -293,7 +293,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
         try {
             const token = localStorage.getItem("inferno_token");
             const response = await fetch(
-                `${import.meta.env.VITE_API_BASE_URL}/users/${deletingMember.id || deletingMember._id}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/users/${deletingMember.id || deletingMember._id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -878,7 +878,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                                                         formData.append('image', file);
 
                                                                                         const token = localStorage.getItem("inferno_token");
-                                                                                        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/upload/event-image`, {
+                                                                                        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/upload/event-image`, {
                                                                                             method: 'POST',
                                                                                             headers: {
                                                                                                 'Authorization': `Bearer ${token}`
