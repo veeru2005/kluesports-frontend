@@ -298,7 +298,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                     return (
                         <div
                             key={adminId}
-                            className="bg-transparent rounded-xl border-2 border-red-600 hover:border-red-500 transition-all overflow-hidden"
+                            className="bg-transparent rounded-xl border-2 border-[#FF0000] hover:border-[#FF0000] transition-all overflow-hidden"
                         >
                             <div className="flex flex-col md:grid md:grid-cols-12 items-center p-3 md:p-4 bg-black gap-5 md:gap-4">
                                 <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto md:col-span-5">
@@ -352,7 +352,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                                             <Button
                                                 size="sm"
                                                 onClick={() => setDeletingAdmin(admin)}
-                                                className="text-xs px-3 py-1 h-8 bg-red-600 hover:bg-red-700 text-white border-0"
+                                                className="text-xs px-3 py-1 h-8 bg-[#FF0000] hover:bg-red-700 text-white border-0"
                                             >
                                                 <Trash2 className="h-3 w-3 mr-1" />
                                                 <span>Delete</span>
@@ -365,7 +365,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                     );
                 })}
                 {(!sortedAdmins || sortedAdmins.length === 0) && (
-                    <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-red-600 rounded-2xl bg-black/40 w-full relative overflow-hidden group mt-10 shadow-[0_0_30px_rgba(220,38,38,0.2)]">
+                    <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-[#FF0000] rounded-2xl bg-black/40 w-full relative overflow-hidden group mt-10 shadow-[0_0_30px_rgba(255,0,0,0.3)]">
                         <div className="absolute inset-0 bg-gradient-to-b from-red-600/[0.05] to-transparent pointer-events-none" />
                         <div className="relative">
                             <ShieldCheck className="w-16 h-16 text-red-500 mb-4" style={{ filter: 'drop-shadow(0 0 18px rgba(220, 38, 38, 0.5))' }} />
@@ -617,14 +617,14 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <Button variant="outline" onClick={() => setEditingAdmin(null)} className="flex-1 max-w-[140px] border-2 border-red-600 text-white hover:bg-red-600 hover:text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">
                             Cancel
                         </Button>
-                        <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-red-600 hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">Save Changes</Button>
+                        <Button onClick={handleUpdate} className="flex-1 max-w-[140px] bg-[#FF0000] hover:bg-red-700 text-white h-9 transition-all duration-300 font-display uppercase tracking-widest text-[10px]">Save Changes</Button>
                     </div>
                 </DialogContent>
             </Dialog>
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={!!deletingAdmin} onOpenChange={() => setDeletingAdmin(null)}>
-                <AlertDialogContent className="bg-black border-2 border-red-600 w-[90%] max-w-md mx-auto rounded-xl">
+                <AlertDialogContent className="bg-black border-2 border-[#FF0000] w-[90%] max-w-md mx-auto rounded-xl">
                     <AlertDialogHeader>
                         <AlertDialogTitle className="text-white font-display text-xl">Delete Admin</AlertDialogTitle>
                         <AlertDialogDescription className="text-muted-foreground">
@@ -636,7 +636,7 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <AlertDialogCancel className="border-2 border-red-600 bg-transparent text-white hover:bg-red-600 hover:text-white transition-all duration-300 mt-0">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleDelete}
-                            className="bg-red-600 hover:bg-red-700 text-white"
+                            className="bg-[#FF0000] hover:bg-red-700 text-white"
                         >
                             <Trash2 className="w-4 h-4 mr-2" />
                             Delete

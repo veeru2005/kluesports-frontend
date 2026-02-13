@@ -477,10 +477,10 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 View Details
                                             </Button>
                                         </DialogTrigger>
-                                        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="glass-dark border-2 border-primary w-[85vw] max-w-[500px] text-white px-4 sm:px-8 pb-4 sm:pb-8 pt-4 sm:pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)] [&>button]:hidden">
+                                        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="glass-dark border-2 border-[#FF0000] w-[85vw] max-w-[500px] text-white px-4 sm:px-8 pb-4 sm:pb-8 pt-4 sm:pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_rgba(255,0,0,0.3)] [&>button]:hidden">
                                             <div className="overflow-y-auto custom-scrollbar flex flex-col gap-5">
                                                 <div className="flex items-center justify-end w-full">
-                                                    <span className="bg-primary/90 border border-primary text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg">
+                                                    <span className="bg-[#FF0000]/90 border border-[#FF0000] text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg">
                                                         {event.game}
                                                     </span>
                                                 </div>
@@ -494,7 +494,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                     </p>
                                                 </div>
 
-                                                <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border border-primary/50 shadow-[0_0_15px_-5px_hsl(var(--primary)/0.2)]">
+                                                <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
                                                     <div className="flex items-center gap-4">
                                                         <Calendar className="w-5 h-5 text-primary shrink-0" />
                                                         <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
@@ -520,7 +520,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                                                     <button
                                                         type="button"
-                                                        className="flex-1 h-12 rounded-full border-2 border-primary bg-black/50 hover:bg-primary hover:border-primary text-white font-display text-sm uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
+                                                        className="flex-1 h-12 rounded-full border-2 border-[#FF0000] bg-black/50 hover:bg-[#FF0000] hover:border-[#FF0000] text-white font-display text-sm uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             handleEdit(event);
@@ -530,7 +530,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        className="flex-1 h-12 rounded-full border-2 border-red-600 bg-black/50 hover:bg-red-600 hover:border-red-600 text-white font-display text-sm uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
+                                                        className="flex-1 h-12 rounded-full border-2 border-[#FF0000] bg-black/50 hover:bg-[#FF0000] hover:border-[#FF0000] text-white font-display text-sm uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             setDeletingEvent(event);
@@ -541,7 +541,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 </div>
 
                                                 <DialogClose asChild>
-                                                    <button className="w-full h-12 rounded-full border-2 border-red-600 bg-black/50 hover:bg-red-600 text-white font-display text-sm transition-all uppercase tracking-widest shadow-sm hover:shadow-lg flex items-center justify-center outline-none mt-2 duration-300 ring-0 focus:ring-0">
+                                                    <button className="w-full h-12 rounded-full border-2 border-[#FF0000] bg-black/50 hover:bg-[#FF0000] text-white font-display text-sm transition-all uppercase tracking-widest shadow-sm hover:shadow-lg flex items-center justify-center outline-none mt-2 duration-300 ring-0 focus:ring-0">
                                                         Close
                                                     </button>
                                                 </DialogClose>
@@ -675,7 +675,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 </div>
                                 {formData.image_url && (
                                     <div className="flex-shrink-0 relative group">
-                                        <img src={formData.image_url} alt="Preview" className="w-24 h-24 object-cover rounded-md border-2 border-primary/50" />
+                                        <img src={formData.image_url} alt="Preview" className="w-24 h-24 object-cover rounded-md border-2 border-[#FF0000]/50" />
                                         <Button
                                             type="button"
                                             variant="destructive"
@@ -978,7 +978,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 type="button"
                                 variant="outline"
                                 onClick={() => setIsAddingEvent(false)}
-                                className="border-primary/100 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                                className="border-[#FF0000] hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] transition-all"
                             >
                                 Cancel
                             </Button>

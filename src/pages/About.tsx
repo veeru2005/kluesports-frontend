@@ -165,7 +165,7 @@ const About = () => {
                   <div className="max-h-[522px] rounded-2xl overflow-hidden border-2 border-[#FF0000] relative group shadow-2xl shadow-primary/10 max-w-sm mx-auto">
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60" />
                     <img
-                      src="https://res.cloudinary.com/dus3luhur/image/upload/v1770965211/Sai-Vijay-Sir_jqhnxu.jpg"
+                      src="https://res.cloudinary.com/dus3luhur/image/upload/v1770986833/svp_ryxrd0.jpg"
                       alt="Sai Vijay Pisini - Director SAC"
                       className="w-full h-full object-cover object-center"
                     />
@@ -207,7 +207,7 @@ const About = () => {
                       With a passion for student development and a vision for innovation, Sai Vijay Pisini Sir has been the driving force behind the Student Activity Center. Since taking charge in 2018, he has transformed SAC into a vibrant hub for talent, including the rapid expansion of KLU Esports.
                     </p>
 
-                    <div className="grid gap-3 mt-4">
+                    <div className="grid sm:grid-cols-2 gap-3 mt-4">
                       {/* KL University */}
                       <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border-2 border-[#FF0000] hover:border-[#FF0000] hover:ember-glow transition-all duration-300">
                         <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 flex items-center justify-center p-1">

@@ -305,12 +305,12 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                         return (
                             <div
                                 key={event._id}
-                                className="bg-black rounded-xl p-4 border-2 border-red-600 shadow-[0_0_15px_-5px_rgba(220,38,38,0.2)] relative overflow-hidden flex flex-col gap-4"
+                                className="bg-black rounded-xl p-4 border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)] relative overflow-hidden flex flex-col gap-4"
                             >
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/5 rounded-full blur-3xl pointer-events-none" />
 
                                 <div className="flex flex-col gap-2 min-w-0">
-                                    <div className="bg-red-600 border border-red-600 text-white text-[8px] px-2 py-0.5 rounded-full uppercase font-bold tracking-[0.12em] shrink-0 w-fit shadow-[0_0_10px_rgba(220,38,38,0.2)]">
+                                    <div className="bg-[#FF0000] border border-[#FF0000] text-white text-[8px] px-2 py-0.5 rounded-full uppercase font-bold tracking-[0.12em] shrink-0 w-fit shadow-[0_0_10px_rgba(255,0,0,0.2)]">
                                         {event.game || selectedGame}
                                     </div>
                                     <h3 className="font-display font-black text-xl text-white uppercase tracking-wider truncate">
@@ -336,7 +336,7 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                                     </div>
                                 </div>
 
-                                <div className="w-full flex items-center justify-between mt-5 pt-3 border-t border-red-600/60">
+                                <div className="w-full flex items-center justify-between mt-5 pt-3 border-t border-[#FF0000]/60">
                                     <div className="flex items-center gap-2.5 text-gray-300">
                                         <Users className="w-4 h-4 text-red-500 shrink-0" />
                                         <span className="text-sm font-bold tracking-tight">
@@ -347,7 +347,7 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                                         {isSuperAdmin && (
                                             <Button
                                                 size="sm"
-                                                className="h-8 px-3 text-[10px] font-bold bg-red-600 hover:bg-red-700 text-white border-0 shadow-[0_0_10px_rgba(220,38,38,0.3)] transition-all"
+                                                className="h-8 px-3 text-[10px] font-bold bg-[#FF0000] hover:bg-red-700 text-white border-0 shadow-[0_0_10px_rgba(255,0,0,0.3)] transition-all"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     const startDate = new Date(event.event_date);
@@ -388,7 +388,7 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
             )}
 
             <AlertDialog open={!!eventToDelete} onOpenChange={(open) => !open && setEventToDelete(null)}>
-                <AlertDialogContent className="bg-black border-2 border-red-600 rounded-2xl p-6">
+                <AlertDialogContent className="bg-black border-2 border-[#FF0000] rounded-2xl p-6">
                     <AlertDialogHeader>
                         <AlertDialogTitle className="text-white flex items-center gap-2">
                             <Trash2 className="w-5 h-5 text-red-600" /> Clear Data?
@@ -399,10 +399,10 @@ const RegistrationsPanel = ({ game, isSuperAdmin = false }: RegistrationsPanelPr
                     </AlertDialogHeader>
                     <div className="flex gap-3 mt-6">
                         <AlertDialogCancel asChild>
-                            <Button variant="ghost" className="flex-1 border-2 border-red-600 text-white hover:bg-red-600 hover:text-white transition-all h-10 text-[10px] font-bold uppercase tracking-widest">Cancel</Button>
+                            <Button variant="ghost" className="flex-1 border-2 border-[#FF0000] text-white hover:bg-[#FF0000] hover:text-white transition-all h-10 text-[10px] font-bold uppercase tracking-widest">Cancel</Button>
                         </AlertDialogCancel>
                         <AlertDialogAction asChild>
-                            <Button className="flex-1 bg-red-600 hover:bg-red-700 text-white transition-all h-10 text-[10px] font-bold uppercase tracking-widest" onClick={() => { if (eventToDelete) { deleteRegistrationsMutation.mutate({ eventId: eventToDelete.id, game: eventToDelete.game }); setEventToDelete(null); } }}>Delete Data</Button>
+                            <Button className="flex-1 bg-[#FF0000] hover:bg-red-700 text-white transition-all h-10 text-[10px] font-bold uppercase tracking-widest" onClick={() => { if (eventToDelete) { deleteRegistrationsMutation.mutate({ eventId: eventToDelete.id, game: eventToDelete.game }); setEventToDelete(null); } }}>Delete Data</Button>
                         </AlertDialogAction>
                     </div>
                 </AlertDialogContent>
