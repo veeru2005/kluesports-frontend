@@ -61,10 +61,10 @@ export const Navbar = () => {
       )}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled || isOpen
-          ? "bg-background border-b-2 border-red-600 shadow-lg shadow-primary/10"
+          ? "bg-background border-b-2 border-[#FF0000] shadow-lg shadow-primary/10"
           : isHomePage
             ? "bg-transparent"
-            : "bg-background border-b-2 border-red-600"
+            : "bg-background border-b-2 border-[#FF0000]"
           }`}
       >
         <div className="container mx-auto px-4">
@@ -75,7 +75,7 @@ export const Navbar = () => {
                 <img
                   src="/KLU-Esports-Circle-Logo.png"
                   alt="KLU-Esports"
-                  className="w-10 h-10 rounded-full border border-primary/50 drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]"
+                  className="w-10 h-10 rounded-full border border-[#FF0000] drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]"
                 />
               </div>
               <div className="flex flex-col">
@@ -112,13 +112,13 @@ export const Navbar = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="gap-2 text-[15px] px-5 py-2.5 bg-black border-primary text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all h-auto"
+                      className="gap-2 text-[15px] px-5 py-2.5 bg-black border-[#FF0000] text-foreground hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] transition-all h-auto"
                     >
                       <User className="w-4 h-4" />
                       Profile
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56 bg-black/95 border-2 border-red-600 text-white backdrop-blur-md" align="end" forceMount>
+                  <DropdownMenuContent className="w-56 bg-black/95 border-2 border-[#FF0000] text-white backdrop-blur-md" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none text-white font-display uppercase tracking-wider">{user.name || user.username}</p>
@@ -158,7 +158,7 @@ export const Navbar = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => navigate("/login")}
-                    className="gap-2 text-[15px] px-5 py-2 bg-black border-primary/100 text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all h-auto"
+                    className="gap-2 text-[15px] px-5 py-2 bg-black border-[#FF0000] text-foreground hover:bg-[#FF0000] hover:text-white hover:border-[#FF0000] transition-all h-auto"
                   >
                     <LogIn className="w-4 h-4" />
                     Login
@@ -177,7 +177,7 @@ export const Navbar = () => {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden text-foreground p-2 bg-transparent border-2 border-red-600 rounded-lg"
+              className="md:hidden text-foreground p-2 bg-transparent border-2 border-[#FF0000] rounded-lg"
               onClick={() => setIsOpen(!isOpen)}
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -186,9 +186,9 @@ export const Navbar = () => {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="md:hidden absolute top-20 left-0 right-0 bg-background border-b-2 border-red-600 animate-slide-down">
+            <div className="md:hidden absolute top-20 left-0 right-0 bg-background border-b-2 border-[#FF0000] animate-slide-down">
               {/* Red separator line */}
-              <div className="w-full h-[2px] bg-red-600"></div>
+              <div className="w-full h-[2px] bg-[#FF0000]"></div>
               <div className="container px-4 py-3 flex flex-col gap-1">
                 {navLinks.map((link) => (
                   <Link
@@ -196,7 +196,7 @@ export const Navbar = () => {
                     to={link.path}
                     onClick={() => setIsOpen(false)}
                     className={`font-display text-base uppercase tracking-wider py-3 text-center rounded-lg transition-all ${location.pathname === link.path
-                      ? "text-primary border-2 border-red-600 bg-red-600/10"
+                      ? "text-primary border-2 border-[#FF0000] bg-red-600/10"
                       : "text-foreground/80 hover:text-primary"
                       }`}
                   >
@@ -217,7 +217,7 @@ export const Navbar = () => {
                           Admin Panel
                         </button>
                       )}
-                      <div className="w-full h-px bg-red-600 mt-2"></div>
+                      <div className="w-full h-px bg-[#FF0000] mt-2"></div>
                       <div className="flex flex-row gap-3 px-0 py-4 justify-center items-center">
                         <Button
                           variant="outline"
@@ -225,7 +225,7 @@ export const Navbar = () => {
                             navigate("/profile");
                             setIsOpen(false);
                           }}
-                          className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                          className="flex-1 gap-2 border border-[#FF0000] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
                         >
                           <User className="w-4 h-4" />
                           Profile
@@ -236,7 +236,7 @@ export const Navbar = () => {
                             handleLogout();
                             setIsOpen(false);
                           }}
-                          className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                          className="flex-1 gap-2 border border-[#FF0000] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
                         >
                           <LogOut className="w-4 h-4" />
                           Logout
@@ -245,7 +245,7 @@ export const Navbar = () => {
                     </>
                   ) : (
                     <>
-                      <div className="w-full h-px bg-red-600 mt-2"></div>
+                      <div className="w-full h-px bg-[#FF0000] mt-2"></div>
                       <div className="flex flex-row gap-3 px-0 py-4 justify-center items-center">
                         <Button
                           variant="outline"
@@ -253,7 +253,7 @@ export const Navbar = () => {
                             navigate("/login");
                             setIsOpen(false);
                           }}
-                          className="flex-1 gap-2 border border-red-600 text-[15px] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 py-3 h-auto"
+                          className="flex-1 gap-2 border border-[#FF0000] text-[15px] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300 py-3 h-auto"
                         >
                           <LogIn className="w-4 h-4" />
                           Login
@@ -264,7 +264,7 @@ export const Navbar = () => {
                             navigate("/signup");
                             setIsOpen(false);
                           }}
-                          className="flex-1 gap-2 border border-red-600 text-[15px] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300 py-3 h-auto"
+                          className="flex-1 gap-2 border border-[#FF0000] text-[15px] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300 py-3 h-auto"
                         >
                           Join Now
                         </Button>

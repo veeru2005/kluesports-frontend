@@ -72,7 +72,7 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <div
-        className="bg-black rounded-2xl overflow-hidden flex flex-col relative w-full border-2 border-red-600 shadow-[0_0_40px_rgba(0,0,0,0.8)] group/card"
+        className="bg-black rounded-2xl overflow-hidden flex flex-col relative w-full border-2 border-[#FF0000] shadow-[0_0_40px_rgba(0,0,0,0.8)] group/card"
       >
 
 
@@ -190,7 +190,7 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
         </div>
       </div>
 
-      <DialogContent className="glass-dark border-2 border-red-600 w-[90vw] max-w-lg text-white p-0 overflow-hidden rounded-2xl shadow-[0_0_40px_rgba(220,38,38,0.2)] [&>button]:hidden">
+      <DialogContent className="glass-dark border-2 border-[#FF0000] w-[90vw] max-w-lg text-white p-0 overflow-hidden rounded-2xl shadow-[0_0_40px_rgba(255,0,0,0.2)] [&>button]:hidden">
         <DialogHeader className="p-6 pb-2 bg-black/40 border-b border-white/5">
           <DialogTitle className="font-display text-xl uppercase tracking-wider text-white">Event Registration Details</DialogTitle>
           <DialogDescription className="text-gray-400 font-display text-[10px] uppercase tracking-widest mt-1">
@@ -293,7 +293,7 @@ const RegistrationCard = ({ reg }: { reg: Registration }) => {
           <DialogClose asChild>
             <Button
               variant="ghost"
-              className="w-full border-2 border-red-600 text-white hover:bg-red-600 hover:text-white transition-all font-display uppercase tracking-[0.2em] font-black h-12 rounded-xl ring-0 ring-offset-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none shadow-none"
+              className="w-full border-2 border-[#FF0000] text-white hover:bg-red-600 hover:text-white transition-all font-display uppercase tracking-[0.2em] font-black h-12 rounded-xl ring-0 ring-offset-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none shadow-none"
             >
               Close
             </Button>
@@ -372,7 +372,7 @@ const MyEventsSection = ({ isEventsView, navigate }: MyEventsSectionProps) => {
           </p>
           <Button
             variant="flame"
-            className="rounded-lg px-10 py-2.5 font-display uppercase tracking-widest text-xs border-2 border-red-600 shadow-[0_0_25px_rgba(220,38,38,0.3)] bg-red-600 hover:bg-red-700 text-white transition-all transform hover:-translate-y-1"
+            className="rounded-lg px-10 py-2.5 font-display uppercase tracking-widest text-xs border-2 border-[#FF0000] shadow-[0_0_25px_rgba(255,0,0,0.3)] bg-red-600 hover:bg-red-700 text-white transition-all transform hover:-translate-y-1"
             onClick={() => navigate("/events")}
           >
             Browse Events
@@ -635,14 +635,14 @@ const Profile = () => {
               <div className="grid grid-cols-2 gap-4">
                 <Button
                   variant={!isEventsView ? "flame" : "outline"}
-                  className={`rounded-lg h-10 md:h-11 font-display uppercase tracking-widest text-[10px] md:text-xs border-2 transition-all ${!isEventsView ? 'border-red-600 shadow-[0_0_20px_rgba(220,38,38,0.2)]' : 'border-red-600/60 hover:border-red-500 text-white'}`}
+                  className={`rounded-lg h-10 md:h-11 font-display uppercase tracking-widest text-[10px] md:text-xs border-2 transition-all ${!isEventsView ? 'bg-[#FF0000] border-[#FF0000] shadow-[0_0_20px_rgba(255,0,0,0.3)]' : 'border-[#FF0000]/60 hover:border-[#FF0000] text-white'}`}
                   onClick={() => navigate("/profile")}
                 >
                   <User className="w-3.5 h-3.5 mr-2" /> Profile Settings
                 </Button>
                 <Button
                   variant={isEventsView ? "flame" : "outline"}
-                  className={`rounded-lg h-10 md:h-11 font-display uppercase tracking-widest text-[10px] md:text-xs border-2 transition-all ${isEventsView ? 'border-red-600 shadow-[0_0_20px_rgba(220,38,38,0.2)]' : 'border-red-600/60 hover:border-red-500 text-white'}`}
+                  className={`rounded-lg h-10 md:h-11 font-display uppercase tracking-widest text-[10px] md:text-xs border-2 transition-all ${isEventsView ? 'bg-[#FF0000] border-[#FF0000] shadow-[0_0_20px_rgba(255,0,0,0.3)]' : 'border-[#FF0000]/60 hover:border-[#FF0000] text-white'}`}
                   onClick={() => navigate("/profile?view=events")}
                 >
                   <Trophy className="w-3.5 h-3.5 mr-2" /> My Events
@@ -658,7 +658,7 @@ const Profile = () => {
           ) : (
             <div className="max-w-2xl mx-auto space-y-5">
               {/* Header */}
-              <div className="glass-dark rounded-xl p-5 border border-red-600/90 text-center shadow-2xl relative overflow-hidden">
+              <div className="glass-dark rounded-xl p-5 border-2 border-[#FF0000] text-center shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/4 rounded-full blur-3xl" />
                 <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 border-2 border-primary/50">
                   <User className="w-12 h-12 text-primary" />
@@ -670,7 +670,7 @@ const Profile = () => {
               </div>
 
               {/* Form */}
-              <div className="glass-dark rounded-xl p-5 border border-red-600/90 shadow-2xl relative overflow-hidden">
+              <div className="glass-dark rounded-xl p-5 border-2 border-[#FF0000] shadow-2xl relative overflow-hidden">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="font-display font-bold text-2xl uppercase">Profile <span className="flame-text">Details</span></h2>
                   <Button
@@ -678,7 +678,7 @@ const Profile = () => {
                     size="sm"
                     onClick={() => isEditing ? handleSave() : setIsEditing(true)}
                     disabled={isSaving}
-                    className="gap-2 border-red-600/80"
+                    className="gap-2 border-[#FF0000] hover:bg-red-600"
                   >
                     {isEditing ? <Save className="w-4 h-4" /> : <Edit2 className="w-4 h-4" />}
                     {isEditing ? (isSaving ? "Saving..." : "Save") : "Edit"}
@@ -697,7 +697,7 @@ const Profile = () => {
                   ].map((field) => (
                     <div key={field.key} className={`space-y-2 ${field.fullWidth ? "col-span-1 md:col-span-2" : ""}`}>
                       <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">{field.label}</Label>
-                      <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 transition-all min-h-[44px] flex items-center ${isEditing && !field.readOnly && !field.disabled ? 'border-red-600' : 'border-red-600/30 opacity-80'}`}>
+                      <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 transition-all min-h-[44px] flex items-center ${isEditing && !field.readOnly && !field.disabled ? 'border-[#FF0000]' : 'border-[#FF0000]/30 opacity-80'}`}>
                         {isEditing && !field.readOnly && !field.disabled ? (
                           field.type === "select" ? (
                             <Select value={formData.gameYouPlay} onValueChange={(v) => setFormData({ ...formData, gameYouPlay: v })}>
@@ -728,7 +728,7 @@ const Profile = () => {
                   ))}
                   <div className="col-span-1 md:col-span-2 space-y-2">
                     <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Bio</Label>
-                    <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 transition-all h-20 flex items-start ${isEditing ? 'border-red-600' : 'border-red-600/30'}`}>
+                    <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 transition-all h-20 flex items-start ${isEditing ? 'border-[#FF0000]' : 'border-[#FF0000]/30'}`}>
                       {isEditing ? (
                         <input
                           value={formData.bio}
@@ -746,13 +746,13 @@ const Profile = () => {
 
               {/* Security */}
               {!isEditing && (
-                <div className="glass-dark rounded-xl p-8 border border-red-600/90 shadow-2xl relative overflow-hidden">
+                <div className="glass-dark rounded-xl p-8 border-2 border-[#FF0000] shadow-2xl relative overflow-hidden">
                   <h2 className="font-display font-bold text-2xl mb-6 uppercase">Account <span className="flame-text">Security</span></h2>
                   <div className="grid grid-cols-2 gap-4">
-                    <Button variant="outline" className="flex-1 gap-2 border-red-600/80 hover:bg-red-600" onClick={() => { setEmailDialogOpen(true); setOtpStep(1); }}>
+                    <Button variant="outline" className="flex-1 gap-2 border-[#FF0000] hover:bg-red-700" onClick={() => { setEmailDialogOpen(true); setOtpStep(1); }}>
                       <Mail className="w-4 h-4" /> Change Email
                     </Button>
-                    <Button variant="outline" className="flex-1 gap-2 border-red-600/80 hover:bg-red-600" onClick={() => { setPassDialogOpen(true); setOtpStep(1); }}>
+                    <Button variant="outline" className="flex-1 gap-2 border-[#FF0000] hover:bg-red-700" onClick={() => { setPassDialogOpen(true); setOtpStep(1); }}>
                       <Lock className="w-4 h-4" /> Change Password
                     </Button>
                   </div>

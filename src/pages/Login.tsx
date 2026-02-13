@@ -203,7 +203,7 @@ const Login = () => {
           </Link>
 
           {/* Login Card */}
-          <div className="bg-black/80 backdrop-blur-sm rounded-xl p-8 border-2 border-red-600">
+          <div className="bg-black/80 backdrop-blur-sm rounded-xl p-8 border-2 border-[#FF0000]">
             <h1 className="font-display font-bold text-3xl text-center mb-2">
               WELCOME <span className="flame-text">BACK</span>
             </h1>
@@ -227,7 +227,7 @@ const Login = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
                     required
-                    className="bg-muted border-border"
+                    className="bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none"
                   />
                 </div>
 
@@ -243,7 +243,7 @@ const Login = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
                       required
-                      className="bg-muted border-border pr-10"
+                      className="bg-muted border-2 border-[#FF0000] rounded-xl pr-10 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none"
                     />
                     <button
                       type="button"
@@ -270,7 +270,7 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[#FF0000] hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -307,7 +307,7 @@ const Login = () => {
                         placeholder="000000"
                         required
                         maxLength={6}
-                        className="bg-background/80 border-primary/50 text-center text-lg tracking-widest font-body font-semibold focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="bg-background/80 border-2 border-[#FF0000] text-center text-lg tracking-widest font-body font-semibold focus:border-[#FF0000] focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                       />
                       <p className="text-sm text-center font-medium opacity-80">
                         OTP sent to <span className="text-primary font-bold">{maskEmail(email)}</span>
@@ -317,7 +317,7 @@ const Login = () => {
                     <button
                       type="submit"
                       disabled={isLoading || otp.length !== 6}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full bg-[#FF0000] hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isLoading ? (
                         <span className="flex items-center gap-2">

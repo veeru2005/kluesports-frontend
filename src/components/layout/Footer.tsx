@@ -16,7 +16,7 @@ export const Footer = () => {
               <img
                 src="/KLU-Esports-Circle-Logo.png"
                 alt="KLU-Esports"
-                className="w-12 h-12 rounded-full border border-red-600/50 drop-shadow-[0_0_15px_rgba(220,38,38,0.3)]"
+                className="w-12 h-12 rounded-full border border-[#FF0000] drop-shadow-[0_0_15px_rgba(220,38,38,0.3)]"
               />
               <div className="flex flex-col">
                 <span className="font-display font-bold text-xl flame-text leading-none">

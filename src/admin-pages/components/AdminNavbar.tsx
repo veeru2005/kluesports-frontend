@@ -39,7 +39,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                     onClick={() => setIsMobileMenuOpen(false)}
                 />
             )}
-            <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b-2 border-red-600 shadow-lg shadow-primary/10 transition-all duration-300">
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b-2 border-[#FF0000] shadow-lg shadow-primary/10 transition-all duration-300">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between h-20">
                         {/* Left: Logo & Brand */}
@@ -49,7 +49,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                     <img
                                         src="/KLU-Esports-Circle-Logo.png"
                                         alt="KLU-Esports"
-                                        className="w-10 h-10 rounded-full border border-primary/50 drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]"
+                                        className="w-10 h-10 rounded-full border border-[#FF0000] drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]"
                                     />
                                 </div>
                                 <div className="flex flex-col">
@@ -118,7 +118,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                 variant="outline"
                                 size="sm"
                                 onClick={() => navigate("/profile")}
-                                className="gap-2 text-sm px-4 py-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                                className="gap-2 text-sm px-4 py-2 border border-[#FF0000] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
                             >
                                 <User className="w-4 h-4" />
                                 Profile
@@ -127,7 +127,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                 variant="outline"
                                 size="sm"
                                 onClick={handleLogout}
-                                className="gap-2 text-sm px-4 py-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                                className="gap-2 text-sm px-4 py-2 border border-[#FF0000] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
                             >
                                 <LogOut className="w-4 h-4" />
                                 Logout
@@ -153,7 +153,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
 
                     {/* Mobile Menu Content */}
                     {isMobileMenuOpen && (
-                        <div className="md:hidden py-3 border-t-2 border-red-600 bg-background animate-in slide-in-from-top-5 -mx-4 px-4">
+                        <div className="md:hidden py-3 border-t-2 border-[#FF0000] bg-background animate-in slide-in-from-top-5 -mx-4 px-4">
                             <div className="flex flex-col gap-1 text-center">
                                 <button
                                     onClick={() => { onTabChange ? onTabChange("dashboard") : navigate(`${baseUrl}?tab=dashboard`); setIsMobileMenuOpen(false); }}
@@ -195,12 +195,12 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                         Messages
                                     </button>
                                 )}
-                                <div className="w-full h-px bg-red-600 mt-2 -mx-4" style={{ width: 'calc(100% + 2rem)' }}></div>
+                                <div className="w-full h-px bg-[#FF0000] mt-2 -mx-4" style={{ width: 'calc(100% + 2rem)' }}></div>
                                 <div className="flex flex-row gap-3 px-4 py-4 justify-center items-center">
                                     <Button
                                         variant="outline"
                                         onClick={() => { navigate("/profile"); setIsMobileMenuOpen(false); }}
-                                        className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                                        className="flex-1 gap-2 border border-[#FF0000] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
                                     >
                                         <User className="w-4 h-4" />
                                         Profile
@@ -208,7 +208,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                                     <Button
                                         variant="outline"
                                         onClick={handleLogout}
-                                        className="flex-1 gap-2 border border-red-600 text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-300"
+                                        className="flex-1 gap-2 border border-[#FF0000] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
                                     >
                                         <LogOut className="w-4 h-4" />
                                         Logout

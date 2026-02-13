@@ -231,7 +231,7 @@ const Signup = () => {
           </Link>
 
           {/* Signup Card */}
-          <div className="bg-black/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 md:p-8 border-2 border-red-600 overflow-hidden">
+          <div className="bg-black/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 md:p-8 border-2 border-[#FF0000] overflow-hidden">
             <h1 className="font-display font-bold text-2xl sm:text-3xl text-center mb-2">
               JOIN THE <span className="flame-text">KLU ESPORTS</span>
             </h1>
@@ -257,7 +257,7 @@ const Signup = () => {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="Your Full Name"
-                      className={`bg-muted border-border ${errors.name ? "border-destructive" : ""}`}
+                      className={`bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none ${errors.name ? "border-destructive" : ""}`}
                     />
                     {errors.name && (
                       <p className="text-destructive text-sm">{errors.name}</p>
@@ -277,7 +277,7 @@ const Signup = () => {
                       onChange={handleChange}
                       placeholder="Your College ID"
                       maxLength={10}
-                      className={`bg-muted border-border ${errors.collegeId ? "border-destructive" : ""}`}
+                      className={`bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none ${errors.collegeId ? "border-destructive" : ""}`}
                     />
                     {errors.collegeId && (
                       <p className="text-destructive text-sm">{errors.collegeId}</p>
@@ -295,7 +295,7 @@ const Signup = () => {
                       name="gameYouPlay"
                       value={formData.gameYouPlay}
                       onChange={(e) => setFormData(prev => ({ ...prev, gameYouPlay: e.target.value as "Free Fire" | "BGMI" | "Valorant" | "Call Of Duty" }))}
-                      className={`w-full max-w-full bg-muted border border-border rounded-lg px-3 py-2 h-10 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-primary appearance-none ${errors.gameYouPlay ? "border-destructive" : ""}`}
+                      className={`w-full max-w-full bg-muted border-2 border-[#FF0000] rounded-lg px-3 py-2 h-10 text-foreground font-body focus:outline-none focus:ring-0 appearance-none ${errors.gameYouPlay ? "border-destructive" : ""}`}
                       style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
                     >
                       <option value="" disabled>Select your game</option>
@@ -321,7 +321,7 @@ const Signup = () => {
                       value={formData.inGameName}
                       onChange={handleChange}
                       placeholder="Your Game Tag"
-                      className={`bg-muted border-border ${errors.inGameName ? "border-destructive" : ""}`}
+                      className={`bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none ${errors.inGameName ? "border-destructive" : ""}`}
                     />
                     {errors.inGameName && (
                       <p className="text-destructive text-sm">{errors.inGameName}</p>
@@ -340,7 +340,7 @@ const Signup = () => {
                       value={formData.inGameId}
                       onChange={handleChange}
                       placeholder="Your Numeric ID"
-                      className={`bg-muted border-border ${errors.inGameId ? "border-destructive" : ""}`}
+                      className={`bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none ${errors.inGameId ? "border-destructive" : ""}`}
                     />
                     {errors.inGameId && (
                       <p className="text-destructive text-sm">{errors.inGameId}</p>
@@ -365,7 +365,7 @@ const Signup = () => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="yourname@gmail.com"
-                      className={`bg-muted border-border ${errors.email ? "border-destructive" : ""}`}
+                      className={`bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none ${errors.email ? "border-destructive" : ""}`}
                     />
                     {errors.email && (
                       <p className="text-destructive text-sm mt-1">{errors.email}</p>
@@ -386,7 +386,7 @@ const Signup = () => {
                       onChange={handleChange}
                       placeholder="9876543210"
                       maxLength={10}
-                      className={`bg-muted border-border ${errors.mobile ? "border-destructive" : ""}`}
+                      className={`bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none ${errors.mobile ? "border-destructive" : ""}`}
                     />
                     {errors.mobile && (
                       <p className="text-destructive text-sm">{errors.mobile}</p>
@@ -406,7 +406,7 @@ const Signup = () => {
                         value={formData.password}
                         onChange={handleChange}
                         placeholder="Create a strong password"
-                        className={`bg-muted border-border pr-10 ${errors.password ? "border-destructive" : ""}`}
+                        className={`bg-muted border-2 border-[#FF0000] rounded-xl pr-10 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none ${errors.password ? "border-destructive" : ""}`}
                       />
                       <button
                         type="button"
@@ -438,7 +438,7 @@ const Signup = () => {
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         placeholder="Confirm your password"
-                        className={`bg-muted border-border pr-10 ${errors.confirmPassword ? "border-destructive" : ""}`}
+                        className={`bg-muted border-2 border-[#FF0000] rounded-xl pr-10 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none ${errors.confirmPassword ? "border-destructive" : ""}`}
                       />
                       <button
                         type="button"
@@ -462,7 +462,7 @@ const Signup = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-[#FF0000] hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -500,7 +500,7 @@ const Signup = () => {
                         placeholder="000000"
                         required
                         maxLength={6}
-                        className="bg-background/80 border-primary/50 text-center text-lg tracking-widest font-body font-semibold focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="bg-background/80 border-2 border-[#FF0000] text-center text-lg tracking-widest font-body font-semibold focus:border-[#FF0000] focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
                       />
                       <p className="text-sm text-center font-medium opacity-80">
                         OTP sent to <span className="text-primary font-bold">{maskEmail(formData.email)}</span>
@@ -510,7 +510,7 @@ const Signup = () => {
                     <button
                       type="submit"
                       disabled={isLoading || otp.length !== 6}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full bg-[#FF0000] hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isLoading ? (
                         <span className="flex items-center gap-2">

@@ -114,7 +114,7 @@ const ForgotPassword = () => {
                     </Link>
 
                     {/* Card */}
-                    <div className="bg-black/80 backdrop-blur-sm rounded-xl p-8 border-2 border-red-600">
+                    <div className="bg-black/80 backdrop-blur-sm rounded-xl p-8 border-2 border-[#FF0000]">
                         <h1 className="font-display font-bold text-3xl text-center mb-2">
                             FORGOT <span className="flame-text">PASSWORD?</span>
                         </h1>
@@ -138,14 +138,14 @@ const ForgotPassword = () => {
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="your@email.com"
                                         required
-                                        className="bg-muted border-border"
+                                        className="bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none"
                                     />
                                 </div>
 
                                 <Button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                                    className="w-full bg-[#FF0000] hover:bg-red-700 text-white"
                                 >
                                     {isLoading ? "Sending..." : "Send Reset OTP"}
                                 </Button>
@@ -165,7 +165,7 @@ const ForgotPassword = () => {
                                         placeholder="Enter OTP"
                                         required
                                         maxLength={6}
-                                        className="bg-muted border-border text-center tracking-widest text-lg"
+                                        className="bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none text-center tracking-widest text-lg"
                                     />
                                     <p className="text-xs text-muted-foreground text-center">
                                         Sent to {email}
@@ -185,7 +185,7 @@ const ForgotPassword = () => {
                                             onChange={(e) => setNewPassword(e.target.value)}
                                             placeholder="New Password"
                                             required
-                                            className="bg-muted border-border pr-10"
+                                            className="bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none pr-10"
                                         />
                                         <button
                                             type="button"
@@ -209,14 +209,14 @@ const ForgotPassword = () => {
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         placeholder="Confirm New Password"
                                         required
-                                        className="bg-muted border-border"
+                                        className="bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none"
                                     />
                                 </div>
 
                                 <Button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                                    className="w-full bg-[#FF0000] hover:bg-red-700 text-white"
                                 >
                                     {isLoading ? "Resetting..." : "Reset Password"}
                                 </Button>
