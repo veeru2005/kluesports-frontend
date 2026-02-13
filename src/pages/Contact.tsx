@@ -201,7 +201,7 @@ const Contact = () => {
               className={`grid lg:grid-cols-[0.9fr_1.4fr] gap-8 items-stretch scroll-fade-up ${formAnim.isVisible ? 'scroll-visible' : ''}`}
             >
               {/* Contact Form */}
-              <div className="glass-dark rounded-2xl p-8 border border-red-600/50 flex flex-col hover:border-red-600 transition-colors shadow-2xl">
+              <div className="glass-dark rounded-2xl p-8 border-2 border-[#FF0000] flex flex-col hover:border-[#FF0000] transition-colors shadow-2xl shadow-red-900/20">
                 <h2 className="font-display font-bold text-2xl mb-8 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-12 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                   Send Us A Message
                 </h2>
@@ -217,7 +217,7 @@ const Contact = () => {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Your name"
-                        className={`bg-white/5 border border-white/10 rounded-xl px-4 py-3 ring-0 focus-visible:ring-1 focus-visible:ring-primary focus:border-primary transition-all ${errors.name ? "border-destructive" : ""
+                        className={`bg-white/5 border-2 border-[#FF0000] rounded-xl px-4 py-3 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none transition-all ${errors.name ? "border-destructive" : ""
                           }`}
                       />
                       {errors.name && (
@@ -235,7 +235,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="your@email.com"
-                        className={`bg-white/5 border border-white/10 rounded-xl px-4 py-3 ring-0 focus-visible:ring-1 focus-visible:ring-primary focus:border-primary transition-all ${errors.email ? "border-destructive" : ""
+                        className={`bg-white/5 border-2 border-[#FF0000] rounded-xl px-4 py-3 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none transition-all ${errors.email ? "border-destructive" : ""
                           }`}
                       />
                       {errors.email && (
@@ -253,7 +253,7 @@ const Contact = () => {
                       value={formData.subject}
                       onChange={handleChange}
                       placeholder="What's this about?"
-                      className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 ring-0 focus-visible:ring-1 focus-visible:ring-primary focus:border-primary transition-all"
+                      className="bg-white/5 border-2 border-[#FF0000] rounded-xl px-4 py-3 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none transition-all"
                     />
                   </div>
                   <div className="space-y-2">
@@ -267,7 +267,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="Tell us what's on your mind..."
                       rows={7}
-                      className={`bg-white/5 border border-white/10 rounded-xl px-4 py-3 ring-0 focus-visible:ring-1 focus-visible:ring-primary focus:border-primary transition-all resize-none ${errors.message ? "border-destructive" : ""
+                      className={`bg-white/5 border-2 border-[#FF0000] rounded-xl px-4 py-3 focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none transition-all resize-none ${errors.message ? "border-destructive" : ""
                         }`}
                     />
                     {errors.message && (
@@ -281,7 +281,7 @@ const Contact = () => {
                     variant="flame"
                     size="lg"
                     disabled={isSubmitting}
-                    className="w-full h-14 text-lg bg-primary hover:bg-primary/90 rounded-xl transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-[0.98]"
+                    className="w-full h-14 text-lg bg-[#FF0000] hover:bg-[#FF0000]/90 rounded-xl transition-all duration-300 shadow-lg shadow-red-900/40 hover:shadow-red-600/60 active:scale-[0.98] text-white font-bold"
                   >
                     {isSubmitting ? (
                       "Sending..."
@@ -349,7 +349,7 @@ const Contact = () => {
                   ].map((item, index) => (
                     <div
                       key={index}
-                      className="glass-dark rounded-2xl px-2 py-5 text-center border border-primary/40 hover:border-primary transition-all group hover:ember-glow cursor-pointer flex flex-col items-center"
+                      className="glass-dark rounded-2xl px-2 py-5 text-center border-2 border-[#FF0000] hover:border-[#FF0000] transition-all group hover:ember-glow cursor-pointer flex flex-col items-center"
                     >
                       <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors mb-4">
                         <item.icon className="w-6 h-6" />

@@ -104,11 +104,12 @@ const About = () => {
               <div className="flex flex-col gap-8">
                 <div className="relative flex justify-center items-center">
                   <div className="relative group w-48 h-48 md:w-56 md:h-56 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-red-600/30 rounded-full blur-[50px] opacity-70 transition-opacity duration-700" />
-                    <div className="absolute inset-0 border-2 border-red-500 rounded-full scale-[1.02] shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-transform duration-700" />
-                    <div className="absolute inset-0 border-2 border-dashed border-red-500 rounded-full animate-[spin_60s_linear_infinite] scale-[1.12]" />
+                    <div className="absolute inset-0 bg-red-600/20 rounded-full blur-[40px] opacity-60 transition-opacity duration-700" />
+                    <div className="absolute inset-0 scale-[1.08]">
+                      <div className="w-full h-full border-2 border-dashed border-[#FF0000] rounded-full animate-[spin_15s_linear_infinite]" />
+                    </div>
 
-                    <div className="relative z-10 p-0 bg-black/40 backdrop-blur-xl rounded-full border-2 border-red-600 shadow-2xl transition-colors duration-500 w-full h-full flex items-center justify-center overflow-hidden">
+                    <div className="relative z-10 p-0 bg-black/40 backdrop-blur-xl rounded-full border-2 border-[#FF0000] shadow-2xl transition-colors duration-500 w-full h-full flex items-center justify-center overflow-hidden">
                       <img
                         src="https://res.cloudinary.com/dus3luhur/image/upload/v1770969671/486415839_1833976170708272_11642_v8y9cr.jpg"
                         alt="KLU Esports Origin Logo"
@@ -122,7 +123,7 @@ const About = () => {
                   {stats.map((stat, index) => (
                     <div
                       key={index}
-                      className="glass-dark rounded-xl p-4 text-center border border-red-600 hover:border-red-500 transition-all duration-300 hover:ember-glow group relative overflow-hidden"
+                      className="glass-dark rounded-xl p-4 text-center border-2 border-[#FF0000] hover:border-[#FF0000] transition-all duration-300 hover:ember-glow group relative overflow-hidden"
                     >
                       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       <div className="font-display font-bold text-2xl md:text-3xl text-white mb-1 relative z-10 group-hover:scale-110 transition-transform duration-300">
@@ -161,7 +162,7 @@ const About = () => {
 
                 {/* Left Side: Director Image */}
                 <div className="relative">
-                  <div className="max-h-[514px] rounded-2xl overflow-hidden border-2 border-red-600 relative group shadow-2xl shadow-primary/10 max-w-sm mx-auto">
+                  <div className="max-h-[522px] rounded-2xl overflow-hidden border-2 border-[#FF0000] relative group shadow-2xl shadow-primary/10 max-w-sm mx-auto">
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60" />
                     <img
                       src="https://res.cloudinary.com/dus3luhur/image/upload/v1770965211/Sai-Vijay-Sir_jqhnxu.jpg"
@@ -190,7 +191,7 @@ const About = () => {
                         href="https://www.linkedin.com/in/psaivijay/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600 hover:border-red-500 hover:shadow-[0_0_15px_rgba(220,38,38,0.3)] group/link"
+                        className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all border border-red-600/50 hover:border-red-500 hover:shadow-[0_0_15px_rgba(220,38,38,0.3)] group/link"
                         title="Connect on LinkedIn"
                       >
                         <img src="/Linkedin.svg" alt="LinkedIn" className="w-5 h-5 transition-transform group-hover/link:scale-110" />
@@ -208,7 +209,7 @@ const About = () => {
 
                     <div className="grid gap-3 mt-4">
                       {/* KL University */}
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-red-600 hover:border-red-500 hover:ember-glow transition-all duration-300">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border-2 border-[#FF0000] hover:border-[#FF0000] hover:ember-glow transition-all duration-300">
                         <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 flex items-center justify-center p-1">
                           <img
                             src="/PSVS/kluniversity_logo.jpeg"
@@ -224,7 +225,7 @@ const About = () => {
                       </div>
 
                       {/* Leadership Foundation */}
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-red-600 hover:border-red-500 hover:ember-glow transition-all duration-300">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border-2 border-[#FF0000] hover:border-[#FF0000] hover:ember-glow transition-all duration-300">
                         <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 flex items-center justify-center p-1">
                           <img
                             src="/PSVS/leadershipfoundation_logo.jpeg"
@@ -240,7 +241,7 @@ const About = () => {
                       </div>
 
                       {/* Aditya Institute */}
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-red-600 hover:border-red-500 hover:ember-glow transition-all duration-300">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border-2 border-[#FF0000] hover:border-[#FF0000] hover:ember-glow transition-all duration-300">
                         <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 flex items-center justify-center p-1">
                           <img
                             src="/PSVS/aitamofficial_logo.jpeg"
@@ -256,7 +257,7 @@ const About = () => {
                       </div>
 
                       {/* KIET */}
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-red-600 hover:border-red-500 hover:ember-glow transition-all duration-300">
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border-2 border-[#FF0000] hover:border-[#FF0000] hover:ember-glow transition-all duration-300">
                         <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 flex items-center justify-center p-1">
                           <img
                             src="/PSVS/KIET.jpeg"
@@ -299,7 +300,7 @@ const About = () => {
                 {values.map((value, index) => (
                   <div
                     key={index}
-                    className="glass-dark rounded-xl p-8 text-center border border-red-600 hover:border-red-500 transition-all group hover:ember-glow"
+                    className="glass-dark rounded-xl p-8 text-center border-2 border-[#FF0000] hover:border-[#FF0000] transition-all group hover:ember-glow"
                   >
                     <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors">
                       <value.icon className="w-8 h-8 text-primary" />

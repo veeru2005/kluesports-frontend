@@ -13,6 +13,7 @@ const placeholderTeam = [
   { id: "2200070011", name: "K. Pramod Kumar", role: "Mobile Vice Lead (2024-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770810039/Screenshot_2025-06-17_112132_jjuzvw.png", social_links: { linkedin: "https://www.linkedin.com/in/k-pramod-kumar-556517285/", instagram: "https://www.instagram.com/pramod_p_s_p_k/", email: "mailto:2200070011me@gmail.com" } },
   { id: "2300030282", name: "K. Ram Dattu", role: "PC Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770809431/IMG_20260211_165435_e3ss9i.jpg", social_links: { linkedin: "https://www.linkedin.com/in/ram-dattu-kadiyala-807039301?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", instagram: "https://www.instagram.com/ram_dattu_29?igsh=ZnE4emVmNGNmM2J6", email: "mailto:ramdattu54@gmail.com" } },
   { id: "2300033292", name: "Santosh Reddy", role: "BGMI Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770809392/IMG_6344_omlmyx.jpg", social_links: { linkedin: "https://www.linkedin.com/in/p-sri-santosh-reddy-0023741b1/", instagram: "https://www.instagram.com/_santu.exe/?utm_source=ig_web_button_share_sheet", email: "mailto:santoshreed@gmail.com" } },
+  { id: "2300090185", name: "Krishna Saran", role: "Student Council Vice President & Forza Origin 4 Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770984012/krishna_zeftkk.png", social_links: { linkedin: "https://www.linkedin.com/in/nc-krishna-saran-2b53342b3/", instagram: "https://www.instagram.com/krishna_saran_nc?igsh=cXVta2NxYmluNGMz", email: "mailto:krishnasarannc@gmail.com" } },
   { id: "2300031334", name: "M. Anji Reddy", role: "Free Fire Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770821751/IMG_20260211_202427_ujj0rw.jpg", social_links: { linkedin: "https://www.linkedin.com/in/anji-reddy-modugula-6689953ab?utm_source=share_via&utm_content=profile&utm_medium=member_ios", instagram: "https://www.instagram.com/_.bannu._10?igsh=NWJuMjhkd2txMjc5", email: "mailto:modugulaanjireddy000@gmail.com" } },
   { id: "2400031211", name: "B. Nayan", role: "Valorant Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770824448/1768636090408_iikhxw.jpg", social_links: { linkedin: "https://www.linkedin.com/in/nayan-balla-0b339534a/", instagram: "https://www.instagram.com/arya_satya_ananth_?igsh=bGU2OTRzams4Mm8=32", email: "mailto:ballasandhya1902@gmail.com" } },
   { id: "2400031114", name: "Deepak Kumar", role: "COD Lead (2025-Present)", avatar_url: "https://res.cloudinary.com/dus3luhur/image/upload/v1770823024/IMG_20260211_204600_az4gxp.jpg", social_links: { linkedin: "https://www.linkedin.com/in/deepak-kumar-707a07339?utm_source=share_via&utm_content=profile&utm_medium=member_android", instagram: "https://www.instagram.com/_deepakz.x?igsh=eTg2NWI3dTg2OHl1", email: "mailto:dky.deepak7361@gmail.com" } },
@@ -80,7 +81,7 @@ const Team = () => {
                 : displayTeam.map((member, index) => (
                   <div
                     key={member.id}
-                    className="glass-dark rounded-xl overflow-hidden border border-red-600 hover:border-red-500 transition-all group hover:ember-glow flex flex-col h-full"
+                    className="glass-dark rounded-xl overflow-hidden border-2 border-[#FF0000] hover:border-[#FF0000] transition-all group hover:ember-glow flex flex-col h-full"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Avatar/Image area - Square aspect ratio */}
@@ -102,7 +103,7 @@ const Team = () => {
                     </div>
 
                     {/* Separator line */}
-                    <div className="w-full h-[1px] bg-red-600/50"></div>
+                    <div className="w-full h-[1px] bg-[#FF0000]"></div>
 
                     <div className="p-3 sm:p-4 flex flex-col flex-1">
                       <div className="flex-1">
@@ -110,7 +111,12 @@ const Team = () => {
                           {member.name}
                         </h3>
                         <p className="text-primary font-display text-[10px] sm:text-xs uppercase tracking-wider mb-2">
-                          {member.role}
+                          {member.role.split('&').map((part, i, arr) => (
+                            <span key={i}>
+                              {part}
+                              {i < arr.length - 1 && <span className="text-white">&</span>}
+                            </span>
+                          ))}
                         </p>
                         <p className="text-muted-foreground font-body text-sm mb-1 line-clamp-1">
                           ID: {member.id}

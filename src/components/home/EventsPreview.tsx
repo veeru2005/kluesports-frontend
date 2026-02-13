@@ -65,7 +65,7 @@ export const EventsPreview = () => {
               return (
                 <div
                   key={event.id || event._id}
-                  className="glass-dark rounded-xl overflow-hidden border border-red-600/50 md:border-red-600 transition-all group w-[95%] md:w-full mx-auto"
+                  className="glass-dark rounded-xl overflow-hidden border-2 border-[#FF0000] transition-all group w-[95%] md:w-full mx-auto"
                 >
                   {/* Event header with gradient */}
                   <div className="h-2 bg-flame-gradient" />
@@ -77,7 +77,7 @@ export const EventsPreview = () => {
                         {format(new Date(event.event_date), "MMM dd, yyyy")}
                       </div>
                       {event.game && (
-                        <span className="px-3 py-1 rounded-full bg-primary border border-primary text-white text-[10px] font-bold font-display uppercase tracking-wider shadow-sm">
+                        <span className="px-3 py-1 rounded-full bg-[#FF0000] border border-[#FF0000] text-white text-[10px] font-bold font-display uppercase tracking-wider shadow-sm">
                           {event.game}
                         </span>
                       )}
@@ -108,7 +108,7 @@ export const EventsPreview = () => {
               );
             })
           ) : (
-            <div className="col-span-full md:col-span-2 lg:col-span-3 py-16 px-6 sm:px-12 text-center glass-dark rounded-3xl border-2 border-red-600 mx-auto w-[90%] sm:w-full max-w-3xl relative overflow-hidden my-8">
+            <div className="col-span-full md:col-span-2 lg:col-span-3 py-16 px-6 sm:px-12 text-center glass-dark rounded-3xl border-2 border-[#FF0000] mx-auto w-[90%] sm:w-full max-w-3xl relative overflow-hidden my-8">
               <div className="absolute inset-0 bg-red-600/5 blur-3xl" />
               <div className="relative z-10">
                 <Calendar className="w-12 h-12 sm:w-16 sm:h-16 text-primary mx-auto mb-4" />
