@@ -13,7 +13,7 @@ const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   inGameName: z.string().min(2, "In-game name must be at least 2 characters"),
   inGameId: z.string().min(2, "In-game ID must be at least 2 characters"),
-  collegeId: z.string().regex(/^\d{10}$/, "College ID must be exactly 10 digits"),
+  collegeId: z.string().min(4, "College ID must be at least 4 characters").max(20, "College ID must be at most 20 characters").regex(/^[a-zA-Z0-9]+$/, "College ID must be at least 4 characters"),
   gameYouPlay: z.enum(["Free Fire", "BGMI", "Valorant", "Call Of Duty"], {
     errorMap: () => ({ message: "Please select a game" }),
   }),
@@ -53,9 +53,13 @@ const Signup = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    // For mobile number and college ID, only allow digits
-    if (name === "mobile" || name === "collegeId") {
+    // For mobile number, only allow digits
+    if (name === "mobile") {
       const sanitized = value.replace(/\D/g, "").slice(0, 10);
+      setFormData((prev) => ({ ...prev, [name]: sanitized }));
+    } else if (name === "collegeId") {
+      // For college ID, allow alphanumeric characters up to 20
+      const sanitized = value.replace(/[^a-zA-Z0-9]/g, "").slice(0, 20);
       setFormData((prev) => ({ ...prev, [name]: sanitized }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -276,7 +280,7 @@ const Signup = () => {
                       value={formData.collegeId}
                       onChange={handleChange}
                       placeholder="Your College ID"
-                      maxLength={10}
+                      maxLength={20}
                       className={`bg-muted border-2 border-[#FF0000] rounded-xl focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-[#FF0000] outline-none ${errors.collegeId ? "border-destructive" : ""}`}
                     />
                     {errors.collegeId && (
