@@ -18,7 +18,7 @@ export const AboutPreview = () => {
   const sponsorsAnim = useScrollAnimation();
 
   return (
-    <section className="pt-8 pb-16 md:py-24 relative overflow-hidden">
+    <section className="pt-8 pb-14 md:pt-16 md:pb-20 relative overflow-hidden">
       {/* Background accent */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent" />
 
@@ -47,7 +47,7 @@ export const AboutPreview = () => {
               <Button
                 variant="flame-outline"
                 onClick={() => navigate("/about")}
-                className="group text-base px-5 py-2 h-auto mx-auto mb-8"
+                className="group text-base px-5 py-2 h-auto mx-auto mb-4"
               >
                 More About Us
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -57,9 +57,9 @@ export const AboutPreview = () => {
 
           {/* Bottom Features - Side by side */}
           {/* Sponsors Section */}
-          <div ref={sponsorsAnim.elementRef} className="space-y-8 text-center pt-8">
+          <div ref={sponsorsAnim.elementRef} className="space-y-8 text-center pt-2">
             <div className={`scroll-fade-up ${sponsorsAnim.isVisible ? 'scroll-visible' : ''} scroll-delay-100`}>
-              <h2 className="font-display font-bold text-3xl md:text-6xl mb-12 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-24 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+              <h2 className="font-display font-bold text-3xl md:text-6xl mb-8 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-24 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                 OUR <span className="flame-text">SPONSORS</span>
               </h2>
             </div>

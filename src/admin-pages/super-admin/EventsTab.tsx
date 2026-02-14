@@ -51,6 +51,10 @@ interface Event {
     end_time?: string;
     is_registration_open?: boolean;
     registrationCount?: number;
+    createdAt?: string;
+    created_at?: string;
+    updatedAt?: string;
+    updated_at?: string;
 }
 
 interface EventsTabProps {
@@ -87,7 +91,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
     const filteredEvents = (events?.filter((event) => {
         if (gameFilter === "all") return true;
         return event.game === gameFilter;
-    }) || []).sort((a: any, b: any) => {
+    }) || []).sort((a: Event, b: Event) => {
         const dateA = new Date(a.event_date).getTime();
         const dateB = new Date(b.event_date).getTime();
 
@@ -488,7 +492,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 <div className="pt-1 pb-2 px-3 bg-black/30 space-y-1.5">
                                     {(() => {
                                         const isCompleted = event.end_time && new Date(event.end_time) < new Date();
-                                        const summary = registrationSummaries?.find((s: any) => s._id === (event.id || event._id));
+                                        const summary = registrationSummaries?.find((s) => s._id === (event.id || event._id));
                                         const filled = summary?.count || event.registrationCount || 0;
                                         const total = event.max_participants || 1;
                                         const percentFilled = (filled / total) * 100;
@@ -526,8 +530,8 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 View Details
                                             </Button>
                                         </DialogTrigger>
-                                        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="glass-dark border-2 border-[#FF0000] w-[85vw] max-w-[500px] text-white px-4 sm:px-8 pb-4 sm:pb-8 pt-4 sm:pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_rgba(255,0,0,0.3)] [&>button]:hidden">
-                                            <div className="overflow-y-auto custom-scrollbar flex flex-col gap-5">
+                                        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} className="glass-dark border-2 border-[#FF0000] w-[92vw] max-w-[500px] text-white px-3 sm:px-8 pb-4 sm:pb-6 pt-4 sm:pt-6 max-h-[85vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_rgba(255,0,0,0.3)] [&>button]:hidden">
+                                            <div className="overflow-y-auto custom-scrollbar flex flex-col gap-4 sm:gap-5 flex-1 min-h-0">
                                                 <div className="flex items-center justify-center w-full">
                                                     <span className="bg-[#FF0000]/90 border border-[#FF0000] text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg">
                                                         {event.game}
@@ -538,7 +542,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                     <h2 className="text-2xl font-bold text-white font-display leading-tight text-left uppercase tracking-tight">
                                                         {event.title}
                                                     </h2>
-                                                    <p className="text-white/60 text-sm leading-relaxed text-left font-body">
+                                                    <p className="text-white/60 text-sm leading-relaxed text-left font-body whitespace-pre-line">
                                                         {event.description || "No description."}
                                                     </p>
                                                 </div>
@@ -564,33 +568,33 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                         <span className="font-display tracking-wide uppercase text-sm">{event.max_participants || "Unlim."} Slots</span>
                                                     </div>
                                                 </div>
+                                            </div>
 
-                                                <div className="flex gap-3 pt-2">
-
+                                            <div className="flex flex-col gap-2 pt-3 shrink-0">
+                                                <div className="flex gap-3">
                                                     <button
                                                         type="button"
-                                                        className="flex-1 h-12 rounded-full border-2 border-[#FF0000] bg-black/50 hover:bg-[#FF0000] hover:border-[#FF0000] text-white font-display text-sm uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
+                                                        className="flex-1 h-10 rounded-full border-2 border-[#FF0000] bg-black/50 hover:bg-[#FF0000] hover:border-[#FF0000] text-white font-display text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             handleEdit(event);
                                                         }}
                                                     >
-                                                        <Edit className="w-4 h-4" /> Edit
+                                                        <Edit className="w-3.5 h-3.5" /> Edit
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        className="flex-1 h-12 rounded-full border-2 border-[#FF0000] bg-black/50 hover:bg-[#FF0000] hover:border-[#FF0000] text-white font-display text-sm uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
+                                                        className="flex-1 h-10 rounded-full border-2 border-[#FF0000] bg-black/50 hover:bg-[#FF0000] hover:border-[#FF0000] text-white font-display text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all duration-300 outline-none ring-0 focus:ring-0"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             setDeletingEvent(event);
                                                         }}
                                                     >
-                                                        <Trash2 className="w-4 h-4" /> Delete
+                                                        <Trash2 className="w-3.5 h-3.5" /> Delete
                                                     </button>
                                                 </div>
-
                                                 <DialogClose asChild>
-                                                    <button className="w-full h-12 rounded-full border-2 border-[#FF0000] bg-black/50 hover:bg-[#FF0000] text-white font-display text-sm transition-all uppercase tracking-widest shadow-sm hover:shadow-lg flex items-center justify-center outline-none mt-2 duration-300 ring-0 focus:ring-0">
+                                                    <button className="w-full h-10 rounded-full border-2 border-[#FF0000] bg-black/50 hover:bg-[#FF0000] text-white font-display text-xs transition-all uppercase tracking-widest shadow-sm hover:shadow-lg flex items-center justify-center outline-none duration-300 ring-0 focus:ring-0">
                                                         Close
                                                     </button>
                                                 </DialogClose>
@@ -693,7 +697,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                             description: "Image uploaded successfully!",
                                                             variant: "success",
                                                         });
-                                                    } catch (error: any) {
+                                                    } catch (error) {
                                                         toast({
                                                             title: "Upload Failed",
                                                             description: error.message || "Failed to upload image.",
@@ -1143,7 +1147,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                             description: "Image uploaded successfully!",
                                                             variant: "success"
                                                         });
-                                                    } catch (error: any) {
+                                                    } catch (error) {
                                                         toast({
                                                             title: "Upload Failed",
                                                             description: error.message || "Failed to upload image.",

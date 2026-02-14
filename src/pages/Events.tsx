@@ -12,69 +12,31 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Loader } from "@/components/ui/Loader";
 import { useAuth } from "@/contexts/AuthContext";
 import { EventImage } from "@/components/ui/EventImage";
+import { User } from "@/contexts/AuthContext";
 
-const placeholderEvents = [
-  {
-    id: "1",
-    title: "Grand Championship Finals 2024",
-    description: "The ultimate showdown where the best of the best compete for the crown. Watch as top-tier players clash in an epic battle for supremacy.",
-    event_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    location: "Main Arena - Online",
-    max_participants: 64,
-    image_url: null,
-    game: "Valorant"
-  },
-  {
-    id: "2",
-    title: "Weekly Warzone Wednesday",
-    description: "Jump into the action every Wednesday with our signature battle royale event. Squad up and fight for victory!",
-    event_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-    location: "Discord Server",
-    max_participants: 100,
-    image_url: null,
-    game: "BGMI"
-  },
-  {
-    id: "3",
-    title: "Pro League Qualifiers",
-    description: "Your chance to prove yourself and qualify for the KLU ESPORTS Pro League. Top performers earn their spot among the elite.",
-    event_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-    location: "Competitive Arena",
-    max_participants: 32,
-    image_url: null,
-    game: "Free Fire"
-  },
-  {
-    id: "4",
-    title: "Rookie Rumble",
-    description: "New to competitive gaming? This beginner-friendly tournament is the perfect place to start your journey.",
-    event_date: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
-    location: "Training Grounds",
-    max_participants: 50,
-    image_url: null,
-    game: "Valorant"
-  },
-  {
-    id: "5",
-    title: "Midnight Mayhem",
-    description: "Late night gaming at its finest. Join us for an intense after-hours gaming session with exclusive rewards.",
-    event_date: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
-    location: "Night Arena",
-    max_participants: 80,
-    image_url: null,
-    game: "Free Fire"
-  },
-  {
-    id: "6",
-    title: "Community Game Night",
-    description: "A casual gathering for all members. Play your favorite games, meet new friends, and have fun!",
-    event_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-    location: "Community Hub",
-    max_participants: 200,
-    image_url: null,
-    game: "BGMI"
-  },
-];
+interface Event {
+  id?: string;
+  _id?: string;
+  title: string;
+  description: string;
+  event_date: string;
+  location: string;
+  max_participants: number;
+  game: string;
+  image_url?: string;
+  end_time?: string;
+  is_registration_open?: boolean;
+  registrationCount?: number;
+  createdAt?: string;
+  created_at?: string;
+}
+
+interface UserRegistration {
+  eventId: string;
+  // add other fields if needed
+}
+
+
 
 import {
   Dialog,
@@ -86,10 +48,10 @@ import {
 } from "@/components/ui/dialog";
 
 interface EventCardProps {
-  event: any;
+  event: Event;
   index: number;
   isPast?: boolean;
-  onRegister?: (event: any) => void;
+  onRegister?: (event: Event) => void;
   isRegistered?: boolean;
   userRole?: string;
 }
@@ -170,8 +132,8 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
         </DialogTrigger>
       </div>
     </div>
-    <DialogContent className="glass-dark border-2 border-primary w-[85vw] max-w-[500px] text-white px-8 pb-8 pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)] [&>button]:hidden">
-      <div className="overflow-y-auto custom-scrollbar flex flex-col gap-6">
+    <DialogContent className="glass-dark border-2 border-primary w-[92vw] max-w-[500px] text-white px-3 sm:px-8 pb-5 sm:pb-8 pt-4 sm:pt-6 max-h-[85vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)] [&>button]:hidden">
+      <div className="overflow-y-auto custom-scrollbar flex flex-col gap-4 sm:gap-6 pb-1">
 
         {/* Top Header Section */}
         <div className="flex items-center justify-between w-full">
@@ -204,14 +166,14 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
           <h2 className="text-2xl font-bold text-white font-display leading-tight text-left uppercase tracking-tight">
             {event.title}
           </h2>
-          <p className="text-white/60 text-sm leading-relaxed text-left font-body">
+          <p className="text-white/60 text-sm leading-relaxed text-left font-body whitespace-pre-line">
             {event.description}
           </p>
         </div>
 
 
         {/* Details List - Vertical Stack */}
-        <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
+        <div className="flex flex-col gap-4 sm:gap-5 text-sm text-white/90 bg-black/50 p-4 sm:p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
           <div className="flex items-center gap-4">
             <Calendar className="w-5 h-5 text-primary shrink-0" />
             <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
@@ -234,11 +196,11 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-row gap-3">
+        <div className="flex flex-row gap-8">
           <DialogClose asChild>
             <Button
               variant="flame-outline"
-              className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display hover:text-white"
+              className="h-10 flex-1 text-xs sm:text-sm uppercase tracking-wide leading-tight whitespace-normal font-display hover:text-white"
             >
               Close
             </Button>
@@ -247,28 +209,28 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
             <DialogClose asChild>
               {isRegistered ? (
                 <Button
-                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display bg-green-600 text-white border border-green-600 hover:bg-green-600 cursor-not-allowed shadow-[0_0_15px_-5px_rgba(34,197,94,0.5)]"
+                  className="h-10 flex-1 text-xs sm:text-sm uppercase tracking-wide leading-tight whitespace-normal font-display bg-green-600 text-white border border-green-600 hover:bg-green-600 cursor-not-allowed shadow-[0_0_15px_-5px_rgba(34,197,94,0.5)]"
                   disabled
                 >
                   Registered
                 </Button>
               ) : userRole && userRole !== 'user' ? (
                 <Button
-                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display bg-red-600/50 text-white border border-red-600/50 cursor-not-allowed"
+                  className="h-10 flex-1 text-xs sm:text-sm uppercase tracking-wide leading-tight whitespace-normal font-display bg-red-600/50 text-white border border-red-600/50 cursor-not-allowed"
                   disabled
                 >
                   Admin Restricted
                 </Button>
               ) : event.is_registration_open === false ? (
                 <Button
-                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display bg-gray-600 text-white border border-gray-600 cursor-not-allowed"
+                  className="h-10 flex-1 text-xs sm:text-sm uppercase tracking-wide leading-tight whitespace-normal font-display bg-gray-600 text-white border border-gray-600 cursor-not-allowed"
                   disabled
                 >
                   Registration Not Opened
                 </Button>
               ) : (event.max_participants && (event.registrationCount || 0) >= event.max_participants) ? (
                 <Button
-                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display bg-red-600 text-white border border-red-600 cursor-not-allowed shadow-[0_0_15px_-5px_rgba(220,38,38,0.5)]"
+                  className="h-10 flex-1 text-xs sm:text-sm uppercase tracking-wide leading-tight whitespace-normal font-display bg-red-600 text-white border border-red-600 cursor-not-allowed shadow-[0_0_15px_-5px_rgba(220,38,38,0.5)]"
                   disabled
                 >
                   Registrations Closed
@@ -276,7 +238,7 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
               ) : (
                 <Button
                   variant="flame"
-                  className="h-12 flex-1 text-sm sm:text-base uppercase tracking-wide leading-tight whitespace-normal font-display hover:text-white"
+                  className="h-10 flex-1 text-xs sm:text-sm uppercase tracking-wide leading-tight whitespace-normal font-display hover:text-white"
                   onClick={() => onRegister(event)}
                 >
                   Register Now
@@ -292,7 +254,7 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
 
 
 
-const PastEventCard = ({ event, index }: { event: any, index: number }) => (
+const PastEventCard = ({ event, index }: { event: Event, index: number }) => (
   <Dialog>
     <DialogTrigger asChild>
       <div
@@ -324,8 +286,8 @@ const PastEventCard = ({ event, index }: { event: any, index: number }) => (
         </div>
       </div>
     </DialogTrigger>
-    <DialogContent className="glass-dark border-2 border-primary w-[85vw] max-w-[500px] text-white px-8 pb-8 pt-6 overflow-hidden max-h-[90vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)] [&>button]:hidden">
-      <div className="overflow-y-auto custom-scrollbar flex flex-col gap-8">
+    <DialogContent className="glass-dark border-2 border-primary w-[92vw] max-w-[500px] text-white px-3 sm:px-8 pb-5 sm:pb-8 pt-4 sm:pt-6 max-h-[85vh] flex flex-col rounded-3xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)] [&>button]:hidden">
+      <div className="overflow-y-auto custom-scrollbar flex flex-col gap-4 sm:gap-6 pb-1">
 
         {/* Top Header Section */}
         <div className="flex items-center justify-between w-full">
@@ -349,14 +311,14 @@ const PastEventCard = ({ event, index }: { event: any, index: number }) => (
           <h2 className="text-2xl font-bold text-white font-display leading-tight text-left uppercase tracking-tight">
             {event.title}
           </h2>
-          <p className="text-white/60 text-sm leading-relaxed text-left font-body">
+          <p className="text-white/60 text-sm leading-relaxed text-left font-body whitespace-pre-line">
             {event.description}
           </p>
         </div>
 
 
         {/* Details List - Vertical Stack */}
-        <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
+        <div className="flex flex-col gap-4 sm:gap-5 text-sm text-white/90 bg-black/50 p-4 sm:p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
           <div className="flex items-center gap-4">
             <Calendar className="w-5 h-5 text-primary shrink-0" />
             <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
@@ -379,11 +341,11 @@ const PastEventCard = ({ event, index }: { event: any, index: number }) => (
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-4 flex flex-row gap-3">
+        <div className="pt-4 flex flex-row gap-4">
           <DialogClose asChild>
             <Button
               variant="flame-outline"
-              className="h-12 text-sm uppercase tracking-[0.2em] font-display hover:text-white w-full"
+              className="h-10 text-xs uppercase tracking-[0.2em] font-display hover:text-white w-full"
             >
               Close
             </Button>
@@ -420,9 +382,9 @@ const Events = () => {
         summaries = await summaryRes.json();
       }
 
-      return events.map((event: any) => {
+      return events.map((event: Event) => {
         const eventId = event._id?.toString() || event._id;
-        const summary = summaries.find((s: any) => {
+        const summary = summaries.find((s: { _id: string; count: number }) => {
           const summaryId = s._id?.toString() || s._id;
           return summaryId === eventId;
         });
@@ -453,11 +415,11 @@ const Events = () => {
     initialData: []
   });
 
-  const registeredEventIds = new Set(myRegistrations?.map((r: any) => r.eventId) || []);
+  const registeredEventIds = new Set(myRegistrations?.map((r: { eventId: string }) => r.eventId) || []);
 
   const displayEvents = events?.length ? events : [];
 
-  const handleRegister = (event: any) => {
+  const handleRegister = (event: Event) => {
     const eventId = event._id || event.id;
     const params = new URLSearchParams({
       eventId,

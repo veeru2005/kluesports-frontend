@@ -41,11 +41,11 @@ export const EventsPreview = () => {
   const displayEvents = events || [];
 
   return (
-    <section className="py-16 md:py-16 bg-card/50">
+    <section className="py-12 md:py-12 bg-card/50">
       <div className="container mx-auto px-4">
         <div
           ref={titleAnim.elementRef}
-          className={`text-center mb-16 scroll-fade-up ${titleAnim.isVisible ? 'scroll-visible' : ''}`}
+          className={`text-center mb-10 scroll-fade-up ${titleAnim.isVisible ? 'scroll-visible' : ''}`}
         >
           <span className="font-display text-primary uppercase tracking-widest text-base mb-4 block">
             Upcoming Battles
