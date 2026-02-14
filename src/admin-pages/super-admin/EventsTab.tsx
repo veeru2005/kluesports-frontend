@@ -36,6 +36,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { EventImage } from "@/components/ui/EventImage";
 
 interface Event {
     id?: string;
@@ -111,6 +112,15 @@ export const EventsTab = ({ events }: EventsTabProps) => {
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     };
 
+    // Convert a local datetime string (YYYY-MM-DDThh:mm) to a proper ISO string
+    // This ensures the server receives the exact time the user intended
+    const toISOString = (localDateStr: string | undefined) => {
+        if (!localDateStr) return localDateStr;
+        const date = new Date(localDateStr);
+        if (isNaN(date.getTime())) return localDateStr;
+        return date.toISOString();
+    };
+
     const handleAdd = () => {
         setFormData({
             title: "",
@@ -183,7 +193,11 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify(formData),
+                    body: JSON.stringify({
+                        ...formData,
+                        event_date: toISOString(formData.event_date),
+                        end_time: toISOString(formData.end_time),
+                    }),
                 }
             );
 
@@ -251,7 +265,11 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify(formData),
+                    body: JSON.stringify({
+                        ...formData,
+                        event_date: toISOString(formData.event_date),
+                        end_time: toISOString(formData.end_time),
+                    }),
                 }
             );
 
@@ -447,11 +465,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                             <div key={eventId} className="glass-dark rounded-xl overflow-hidden flame-card-style transition-all group flex flex-col h-full relative w-[90%] sm:w-full sm:max-w-[280px] mx-auto sm:mx-0">
                                 <div className="aspect-[3/4] w-full relative overflow-hidden flex items-center justify-center border-b border-white/5">
                                     {event.image_url ? (
-                                        <img
-                                            src={event.image_url}
-                                            alt={event.title}
-                                            className="w-full h-full object-cover"
-                                        />
+                                        <EventImage src={event.image_url} alt={event.title} />
                                     ) : (
                                         <div className="text-center p-6 flex flex-col items-center justify-center h-full w-full bg-black/40">
                                             <div className="text-primary font-display font-bold text-4xl mb-2">

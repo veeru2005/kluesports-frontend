@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Loader } from "@/components/ui/Loader";
 import { useAuth } from "@/contexts/AuthContext";
+import { EventImage } from "@/components/ui/EventImage";
 
 const placeholderEvents = [
   {
@@ -102,11 +103,7 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
       {/* Image section - not clickable */}
       <div className="aspect-[3/4] w-full relative overflow-hidden flex items-center justify-center">
         {event.image_url ? (
-          <img
-            src={event.image_url}
-            alt={event.title}
-            className="w-full h-full object-cover"
-          />
+          <EventImage src={event.image_url} alt={event.title} />
         ) : (
           <div className="text-center p-6 bg-black/20 w-full h-full flex flex-col items-center justify-center">
             <div className="text-primary/20 font-display font-bold text-3xl uppercase tracking-tighter">
@@ -304,11 +301,7 @@ const PastEventCard = ({ event, index }: { event: any, index: number }) => (
       >
         <div className="aspect-[3/4] w-full relative overflow-hidden flex items-center justify-center border-b border-white/5">
           {event.image_url ? (
-            <img
-              src={event.image_url}
-              alt={event.title}
-              className="w-full h-full object-cover"
-            />
+            <EventImage src={event.image_url} alt={event.title} />
           ) : (
             <div className="text-center p-6 bg-black/20 w-full h-full flex flex-col items-center justify-center">
               <div className="text-primary/20 font-display font-bold text-3xl uppercase tracking-tighter">
