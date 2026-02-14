@@ -176,7 +176,10 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
         <div className="flex flex-col gap-4 sm:gap-5 text-sm text-white/90 bg-black/50 p-4 sm:p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
           <div className="flex items-center gap-4">
             <Calendar className="w-5 h-5 text-primary shrink-0" />
-            <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
+            <span className="font-display tracking-wide uppercase text-xs sm:text-sm whitespace-nowrap">
+              {format(new Date(event.event_date), "MMM dd, yyyy")}
+              {event.end_time && format(new Date(event.end_time), "yyyy-MM-dd") !== format(new Date(event.event_date), "yyyy-MM-dd") && ` - ${format(new Date(event.end_time), "MMM dd, yyyy")}`}
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <Clock className="w-5 h-5 text-primary shrink-0" />
@@ -196,7 +199,7 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-row gap-8">
+        <div className="flex flex-row gap-8 pt-5 sm:pt-6">
           <DialogClose asChild>
             <Button
               variant="flame-outline"
@@ -321,7 +324,10 @@ const PastEventCard = ({ event, index }: { event: Event, index: number }) => (
         <div className="flex flex-col gap-4 sm:gap-5 text-sm text-white/90 bg-black/50 p-4 sm:p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
           <div className="flex items-center gap-4">
             <Calendar className="w-5 h-5 text-primary shrink-0" />
-            <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
+            <span className="font-display tracking-wide uppercase text-xs sm:text-sm whitespace-nowrap">
+              {format(new Date(event.event_date), "MMM dd, yyyy")}
+              {event.end_time && format(new Date(event.end_time), "yyyy-MM-dd") !== format(new Date(event.event_date), "yyyy-MM-dd") && ` - ${format(new Date(event.end_time), "MMM dd, yyyy")}`}
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <Clock className="w-5 h-5 text-primary shrink-0" />
@@ -341,7 +347,7 @@ const PastEventCard = ({ event, index }: { event: Event, index: number }) => (
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-4 flex flex-row gap-4">
+        <div className="pt-5 sm:pt-6 flex flex-row gap-4">
           <DialogClose asChild>
             <Button
               variant="flame-outline"

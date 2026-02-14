@@ -264,6 +264,16 @@ const EventRegistration = () => {
             return;
         }
 
+        // 2. Verify team logo is uploaded
+        if (!teamLogo) {
+            toast({
+                title: "Team Logo Required",
+                description: "Please upload a team logo before submitting.",
+                variant: "destructive"
+            });
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
@@ -463,7 +473,7 @@ const EventRegistration = () => {
                         {/* Team Logo Upload */}
                         <div className="space-y-2">
                             <Label className="text-red-500 font-display uppercase text-xs tracking-wider">
-                                Upload Team Logo (Optional)
+                                Upload Team Logo *
                             </Label>
                             <div className="flex items-center gap-4">
                                 <label className="flex-1 cursor-pointer">
@@ -518,12 +528,11 @@ const EventRegistration = () => {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label className="text-red-500 font-display uppercase text-xs tracking-wider">Discord ID *</Label>
+                                <Label className="text-red-500 font-display uppercase text-xs tracking-wider">Discord ID (Optional)</Label>
                                 <Input
                                     value={teamLead.discordId}
                                     onChange={(e) => setTeamLead({ ...teamLead, discordId: e.target.value })}
                                     className="bg-black border border-[#FF0000] focus:border-[#FF0000] text-white focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
-                                    required
                                 />
                             </div>
                             <div className="space-y-2">

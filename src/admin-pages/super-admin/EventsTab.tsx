@@ -550,7 +550,10 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 <div className="flex flex-col gap-5 text-sm text-white/90 bg-black/50 p-6 rounded-2xl border-2 border-[#FF0000] shadow-[0_0_15px_-5px_rgba(255,0,0,0.3)]">
                                                     <div className="flex items-center gap-4">
                                                         <Calendar className="w-5 h-5 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] shrink-0" />
-                                                        <span className="font-display tracking-wide uppercase text-sm">{format(new Date(event.event_date), "MMM dd, yyyy")}</span>
+                                                        <span className="font-display tracking-wide uppercase text-xs sm:text-sm whitespace-nowrap">
+                                                            {format(new Date(event.event_date), "MMM dd, yyyy")}
+                                                            {event.end_time && format(new Date(event.end_time), "yyyy-MM-dd") !== format(new Date(event.event_date), "yyyy-MM-dd") && ` - ${format(new Date(event.end_time), "MMM dd, yyyy")}`}
+                                                        </span>
                                                     </div>
                                                     <div className="flex items-center gap-4">
                                                         <Clock className="w-5 h-5 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)] shrink-0" />
@@ -570,7 +573,7 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 </div>
                                             </div>
 
-                                            <div className="flex flex-col gap-2 pt-3 shrink-0">
+                                            <div className="flex flex-col gap-3 pt-5 sm:pt-6 shrink-0">
                                                 <div className="flex gap-3">
                                                     <button
                                                         type="button"

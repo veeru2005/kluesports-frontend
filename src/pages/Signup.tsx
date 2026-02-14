@@ -89,6 +89,38 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
+      // Check for duplicate email and collegeId before sending OTP
+      const checkResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/check-signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email, collegeId: formData.collegeId }),
+      });
+
+      const checkData = await checkResponse.json();
+
+      if (!checkResponse.ok && checkData.errors) {
+        const fieldErrors: Record<string, string> = {};
+        const errorMessages: string[] = [];
+
+        if (checkData.errors.email) {
+          fieldErrors.email = checkData.errors.email;
+          errorMessages.push(checkData.errors.email);
+        }
+        if (checkData.errors.collegeId) {
+          fieldErrors.collegeId = checkData.errors.collegeId;
+          errorMessages.push(checkData.errors.collegeId);
+        }
+
+        setErrors(fieldErrors);
+        toast({
+          title: "Signup Failed",
+          description: errorMessages.join('. '),
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
       // Send OTP to email instead of mobile
       const otpResult = await sendOTP(formData.email, "signup");
 
