@@ -625,7 +625,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                     </div>
                                                     <div>
                                                         <Label className="text-xs text-muted-foreground">Joined</Label>
-                                                        <p>{viewMember?.created_at ? format(new Date(viewMember.created_at), "PPP") : "Unknown"}</p>
+                                                        <p>{(viewMember?.created_at || viewMember?.createdAt) ? format(new Date(viewMember.created_at || viewMember.createdAt), "PPP") : "Unknown"}</p>
                                                     </div>
                                                 </div>
                                             </div>

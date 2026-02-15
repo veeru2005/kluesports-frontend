@@ -439,6 +439,28 @@ const Profile = () => {
     }
   }, [user, authLoading, navigate]);
 
+  // Fetch fresh user data from backend if createdAt is missing (ensures "Member Since" is always available)
+  useEffect(() => {
+    if (!user?.id || user.createdAt) return;
+    const fetchFreshUserData = async () => {
+      try {
+        const token = localStorage.getItem("inferno_token");
+        if (!token) return;
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/${user.id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!response.ok) return;
+        const freshUser = await response.json();
+        if (freshUser?.createdAt) {
+          updateUser({ ...user, createdAt: freshUser.createdAt });
+        }
+      } catch {
+        // Silently fail - Member Since is non-critical
+      }
+    };
+    fetchFreshUserData();
+  }, [user?.id]);
+
   const handleSave = async () => {
     if (!user) return;
     setIsSaving(true);
@@ -728,17 +750,40 @@ const Profile = () => {
                   ))}
                   <div className="col-span-1 md:col-span-2 space-y-2">
                     <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Bio</Label>
-                    <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 transition-all h-20 flex items-start ${isEditing ? 'border-[#FF0000]' : 'border-[#FF0000]/30'}`}>
+                    <div className={`bg-black/90 p-2.5 px-3 rounded-lg border-2 transition-all ${isEditing ? 'border-[#FF0000]' : 'border-[#FF0000]/30'}`}>
                       {isEditing ? (
-                        <input
+                        <textarea
                           value={formData.bio}
-                          onChange={e => setFormData({ ...formData, bio: e.target.value })}
-                          maxLength={25}
-                          className="w-full bg-transparent border-none p-0 h-5 text-white focus:outline-none text-sm outline-none ring-0"
+                          onChange={e => {
+                            setFormData({ ...formData, bio: e.target.value });
+                            // Auto-resize textarea
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
+                          onFocus={e => {
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
+                          }}
+                          ref={el => {
+                            if (el) {
+                              el.style.height = 'auto';
+                              el.style.height = el.scrollHeight + 'px';
+                            }
+                          }}
+                          maxLength={160}
+                          rows={2}
+                          className="w-full bg-transparent border-none p-0 text-white focus:outline-none text-sm outline-none ring-0 resize-none overflow-hidden"
+                          style={{ minHeight: '40px' }}
                         />
                       ) : (
-                        <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center">{user.bio || "No bio yet"}</p>
+                        <p className="text-gray-300 font-display font-medium text-sm break-words whitespace-pre-wrap" style={{ minHeight: '20px' }}>{user.bio || "No bio yet"}</p>
                       )}
+                    </div>
+                  </div>
+                  <div className="col-span-1 md:col-span-2 space-y-2">
+                    <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Member Since</Label>
+                    <div className="bg-black/90 p-1.5 px-3 rounded-lg border-2 transition-all min-h-[44px] flex items-center border-[#FF0000]/30 opacity-80">
+                      <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center">{user.createdAt ? format(new Date(user.createdAt), "PPP") : "N/A"}</p>
                     </div>
                   </div>
                 </div>
