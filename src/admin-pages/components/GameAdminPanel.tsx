@@ -559,6 +559,7 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                             collegeId: member.collegeId || '',
                                                             email: member.email || '',
                                                             inGameName: member.inGameName || '',
+                                                            inGameId: member.inGameId || '',
                                                             bio: member.bio || '',
                                                             gameYouPlay: member.gameYouPlay || member.game || '',
                                                             createdAt: member.createdAt || member.created_at || ''
@@ -665,6 +666,13 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                         <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">In-Game Name</Label>
                                                         <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
                                                             <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.inGameName || "N/A"}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid gap-1.5 text-left col-span-1 md:col-span-2">
+                                                        <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">In-Game ID</Label>
+                                                        <div className="bg-zinc-900/40 p-1 px-3 rounded-lg border-2 border-red-900/40 transition-all min-h-[38px] flex items-center overflow-hidden cursor-not-allowed">
+                                                            <p className="text-gray-300 font-display font-medium text-sm h-5 flex items-center truncate">{editMember?.inGameId || "N/A"}</p>
                                                         </div>
                                                     </div>
 
