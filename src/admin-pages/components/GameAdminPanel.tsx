@@ -1262,24 +1262,37 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
 
                                                             <div className="space-y-2">
                                                                 <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Registration Status</Label>
-                                                                <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center ${newEvent.end_time && new Date(newEvent.end_time) < new Date() ? "opacity-50 cursor-not-allowed" : ""}`}>
-                                                                    <Select
-                                                                        disabled={!!(newEvent.end_time && new Date(newEvent.end_time) < new Date())}
-                                                                        value={newEvent.end_time && new Date(newEvent.end_time) < new Date() ? "false" : (newEvent.is_registration_open !== false ? "true" : "false")}
-                                                                        onValueChange={(val) => setNewEvent({ ...newEvent, is_registration_open: val === "true" })}
-                                                                    >
-                                                                        <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                                                            <SelectValue />
-                                                                        </SelectTrigger>
-                                                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                                                            <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
-                                                                            <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
-                                                                        </SelectContent>
-                                                                    </Select>
-                                                                </div>
-                                                                {newEvent.end_time && new Date(newEvent.end_time) < new Date() && (
-                                                                    <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider mt-1">Event Completed - Registration Closed</p>
-                                                                )}
+                                                                {(() => {
+                                                                    const now = new Date();
+                                                                    const isEventCompleted = newEvent.end_time && new Date(newEvent.end_time) < now;
+                                                                    const isEventStarted = newEvent.event_date && new Date(newEvent.event_date) <= now;
+                                                                    const isLocked = isEventCompleted || isEventStarted;
+                                                                    return (
+                                                                        <>
+                                                                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}>
+                                                                                <Select
+                                                                                    disabled={!!isLocked}
+                                                                                    value={isLocked ? "false" : (newEvent.is_registration_open !== false ? "true" : "false")}
+                                                                                    onValueChange={(val) => setNewEvent({ ...newEvent, is_registration_open: val === "true" })}
+                                                                                >
+                                                                                    <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                                                        <SelectValue />
+                                                                                    </SelectTrigger>
+                                                                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                                                        <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
+                                                                                        <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
+                                                                                    </SelectContent>
+                                                                                </Select>
+                                                                            </div>
+                                                                            {isEventCompleted && (
+                                                                                <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider mt-1">Event Completed - Registration Closed</p>
+                                                                            )}
+                                                                            {!isEventCompleted && isEventStarted && (
+                                                                                <p className="text-[10px] text-orange-500 font-bold uppercase tracking-wider mt-1">Event Started - Registrations Closed</p>
+                                                                            )}
+                                                                        </>
+                                                                    );
+                                                                })()}
                                                             </div>
 
                                                             <div className="space-y-2">
@@ -1337,32 +1350,38 @@ export const GameAdminPanel = ({ game, title }: GameAdminPanelProps) => {
                                                 {/* Slots Progress Section */}
                                                 <div className="pt-1 pb-2 px-3 bg-black/30 space-y-1.5">
                                                     {(() => {
+                                                        const now = new Date();
                                                         const summary = registrationSummaries?.find((s: any) => s._id === (event._id || event.id));
                                                         const filled = summary?.count || event.registrationCount || 0;
                                                         const total = event.max_participants ? parseInt(event.max_participants.toString()) : 1;
                                                         const percentFilled = (filled / total) * 100;
                                                         const isFull = filled >= total;
                                                         const isClosedManually = event.is_registration_open === false;
-                                                        const isCompleted = event.end_time && new Date(event.end_time) < new Date();
+                                                        const isCompleted = event.end_time && new Date(event.end_time) < now;
+                                                        const isStarted = new Date(event.event_date) <= now;
+                                                        const isRegsClosed = isStarted && !isCompleted;
 
                                                         // Color logic: < 70% Green, < 90% Orange, >= 90% Red
                                                         const colorClass = percentFilled < 70 ? "bg-green-500" : percentFilled < 90 ? "bg-orange-500" : "bg-red-600";
-                                                        const finalColor = isCompleted ? "bg-gray-500" : (isClosedManually ? "bg-gray-500" : (isFull ? "bg-red-600" : colorClass));
+                                                        const finalColor = isCompleted ? "bg-gray-500" : isRegsClosed ? "bg-orange-500" : (isClosedManually ? "bg-gray-500" : (isFull ? "bg-red-600" : colorClass));
+
+                                                        const statusLabel = isCompleted ? "COMPLETED" : isRegsClosed ? "REGISTRATIONS CLOSED" : (isClosedManually ? "CLOSED" : (isFull ? "FULL" : `${filled}/${total} slots filled`));
+                                                        const statusColor = isCompleted || isRegsClosed || isClosedManually ? 'text-gray-400' : isFull ? 'text-red-500' : 'text-white';
 
                                                         return (
                                                             <div className="space-y-1">
                                                                 <div className="flex items-center justify-between text-[10px] font-display uppercase tracking-wider">
-                                                                    <span className={`font-bold ${isCompleted || isClosedManually ? 'text-gray-400' : isFull ? 'text-red-500' : 'text-white'}`}>
-                                                                        {isCompleted ? "COMPLETED" : (isClosedManually ? "CLOSED" : (isFull ? "FULL" : `${filled}/${total} slots filled`))}
+                                                                    <span className={`font-bold ${statusColor}`}>
+                                                                        {statusLabel}
                                                                     </span>
-                                                                    {!isCompleted && !isClosedManually && !isFull && (
+                                                                    {!isCompleted && !isRegsClosed && !isClosedManually && !isFull && (
                                                                         <span className="text-white font-bold">{total - filled} left</span>
                                                                     )}
                                                                 </div>
                                                                 <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                                                                     <div
                                                                         className={`h-full ${finalColor} rounded-full transition-all duration-500`}
-                                                                        style={{ width: `${isCompleted ? 100 : Math.min(percentFilled, 100)}%` }}
+                                                                        style={{ width: `${isCompleted || isRegsClosed ? 100 : Math.min(percentFilled, 100)}%` }}
                                                                     />
                                                                 </div>
                                                             </div>

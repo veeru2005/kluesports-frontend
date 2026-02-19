@@ -88,25 +88,35 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
       <div className="pt-1 pb-2 px-3 bg-black/30 space-y-1.5">
         {/* Slots Progress Section */}
         {(() => {
+          const now = new Date();
           const filled = event.registrationCount || 0;
           const total = event.max_participants || 1;
           const percentFilled = (filled / total) * 100;
           const isFull = filled >= total;
           const isManuallyClosed = event.is_registration_open === false;
+          const isStarted = new Date(event.event_date) <= now;
+          const isRegsClosed = isStarted && !(event.end_time && new Date(event.end_time) < now);
           const colorClass = percentFilled < 50 ? "bg-green-500" : percentFilled < 80 ? "bg-orange-500" : "bg-red-500";
+          const finalColor = isRegsClosed ? "bg-orange-500" : isManuallyClosed ? 'bg-gray-500' : isFull ? 'bg-red-500' : colorClass;
 
           return (
             <div className="space-y-1">
               <div className="flex items-center justify-between text-[10px] font-display uppercase tracking-wider">
-                <span className="text-white font-bold">
-                  {`${filled}/${total} slots filled`}
-                </span>
-                <span className="text-white font-bold">{Math.max(0, total - filled)} left</span>
+                {isRegsClosed ? (
+                  <span className="text-gray-400 font-bold">REGISTRATIONS CLOSED</span>
+                ) : (
+                  <>
+                    <span className="text-white font-bold">
+                      {`${filled}/${total} slots filled`}
+                    </span>
+                    <span className="text-white font-bold">{Math.max(0, total - filled)} left</span>
+                  </>
+                )}
               </div>
               <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className={`h-full ${isManuallyClosed ? 'bg-gray-500' : isFull ? 'bg-red-500' : colorClass} rounded-full transition-all duration-500`}
-                  style={{ width: `${Math.min(percentFilled, 100)}%` }}
+                  className={`h-full ${finalColor} rounded-full transition-all duration-500`}
+                  style={{ width: `${isRegsClosed ? 100 : Math.min(percentFilled, 100)}%` }}
                 />
               </div>
             </div>
@@ -115,19 +125,21 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
 
         <DialogTrigger asChild>
           <Button
-            variant={event.is_registration_open === false ? "outline" : "flame"}
-            className={`w-full h-auto min-h-[2.25rem] py-2 whitespace-normal leading-tight text-[10px] font-bold tracking-widest uppercase cursor-pointer ${event.is_registration_open === false
+            variant={event.is_registration_open === false || (new Date(event.event_date) <= new Date()) ? "outline" : "flame"}
+            className={`w-full h-auto min-h-[2.25rem] py-2 whitespace-normal leading-tight text-[10px] font-bold tracking-widest uppercase cursor-pointer ${event.is_registration_open === false || (new Date(event.event_date) <= new Date())
               ? "bg-neutral-800 text-gray-400 border-neutral-700 hover:bg-neutral-800 hover:text-gray-400 hover:border-neutral-700"
               : (event.max_participants && (event.registrationCount || 0) >= event.max_participants)
                 ? "bg-red-900/50 text-red-200 border-red-900/50 hover:bg-red-900/50 shadow-none"
                 : ""
               }`}
           >
-            {event.is_registration_open === false
-              ? "Registration Not Opened"
-              : (event.max_participants && (event.registrationCount || 0) >= event.max_participants)
-                ? "Registrations Closed"
-                : "View Details & Register Now"}
+            {new Date(event.event_date) <= new Date()
+              ? "Registrations Closed"
+              : event.is_registration_open === false
+                ? "Registration Not Opened"
+                : (event.max_participants && (event.registrationCount || 0) >= event.max_participants)
+                  ? "Registrations Closed"
+                  : "View Details & Register Now"}
           </Button>
         </DialogTrigger>
       </div>
@@ -142,11 +154,12 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
               const slotsLeft = event.max_participants - (event.registrationCount || 0);
               const percentLeft = (slotsLeft / event.max_participants) * 100;
               const colorClass = percentLeft > 50 ? "bg-green-500" : percentLeft > 20 ? "bg-orange-500" : "bg-red-500";
-              const isClosed = event.is_registration_open === false || slotsLeft <= 0;
+              const isStarted = new Date(event.event_date) <= new Date();
+              const isClosed = isStarted || event.is_registration_open === false || slotsLeft <= 0;
 
               return (
                 <span className={`border ${isClosed ? 'bg-gray-600 border-gray-600' : `${colorClass} border-transparent`} text-white px-2 py-1 rounded-md text-[10px] font-bold font-display tracking-wider uppercase shadow-lg`}>
-                  {isClosed ? "REGISTRATION CLOSED" : `${slotsLeft} SLOTS LEFT`}
+                  {isStarted ? "REGISTRATIONS CLOSED" : (event.is_registration_open === false || slotsLeft <= 0) ? "REGISTRATION CLOSED" : `${slotsLeft} SLOTS LEFT`}
                 </span>
               );
             })()}
@@ -224,6 +237,13 @@ const EventCard = ({ event, index, isPast, onRegister, isRegistered, userRole }:
                 >
                   Admin Restricted
                 </Button>
+              ) : new Date(event.event_date) <= new Date() ? (
+                <Button
+                  className="h-10 flex-1 text-xs sm:text-sm uppercase tracking-wide leading-tight whitespace-normal font-display bg-orange-600 text-white border border-orange-600 cursor-not-allowed"
+                  disabled
+                >
+                  Registrations Closed
+                </Button>
               ) : event.is_registration_open === false ? (
                 <Button
                   className="h-10 flex-1 text-xs sm:text-sm uppercase tracking-wide leading-tight whitespace-normal font-display bg-gray-600 text-white border border-gray-600 cursor-not-allowed"
@@ -261,7 +281,7 @@ const PastEventCard = ({ event, index }: { event: Event, index: number }) => (
   <Dialog>
     <DialogTrigger asChild>
       <div
-        className="glass-dark rounded-xl overflow-hidden flame-card-style transition-all group flex flex-col h-full cursor-pointer relative w-[90%] sm:w-full mx-auto sm:mx-0"
+        className="glass-dark rounded-xl overflow-hidden flame-card-style transition-all group flex flex-col h-full cursor-pointer relative w-[90%] sm:w-full sm:max-w-[280px] mx-auto sm:mx-0"
         style={{ animationDelay: `${index * 0.1}s` }}
       >
         <div className="aspect-[3/4] w-full relative overflow-hidden flex items-center justify-center border-b border-white/5">
@@ -489,11 +509,16 @@ const Events = () => {
               {["all", "Free Fire", "BGMI", "Valorant", "Call Of Duty"].map((tab) => {
                 const now = new Date();
                 const upcoming = displayEvents
-                  .filter((e) => (tab === "all" || e.game === tab) && new Date(e.event_date) >= now)
+                  .filter((e) => {
+                    if (tab !== "all" && e.game !== tab) return false;
+                    // Event is upcoming if end_time hasn't passed (or no end_time, use event_date)
+                    const endDate = e.end_time ? new Date(e.end_time) : new Date(e.event_date);
+                    return endDate >= now;
+                  })
                   .sort((a, b) => {
-                    const dateA = new Date(a.createdAt || a.created_at || a.event_date).getTime();
-                    const dateB = new Date(b.createdAt || b.created_at || b.event_date).getTime();
-                    return dateB - dateA;
+                    const dateA = new Date(a.event_date).getTime();
+                    const dateB = new Date(b.event_date).getTime();
+                    return dateA - dateB;
                   });
 
                 return (
@@ -564,10 +589,15 @@ const Events = () => {
               {["all", "Free Fire", "BGMI", "Valorant", "Call Of Duty"].map((tab) => {
                 const now = new Date();
                 const past = displayEvents
-                  .filter((e) => (tab === "all" || e.game === tab) && new Date(e.event_date) < now)
+                  .filter((e) => {
+                    if (tab !== "all" && e.game !== tab) return false;
+                    // Event is completed only when end_time has passed (or no end_time, use event_date)
+                    const endDate = e.end_time ? new Date(e.end_time) : new Date(e.event_date);
+                    return endDate < now;
+                  })
                   .sort((a, b) => {
-                    const dateA = new Date(a.createdAt || a.created_at || a.event_date).getTime();
-                    const dateB = new Date(b.createdAt || b.created_at || b.event_date).getTime();
+                    const dateA = new Date(a.end_time || a.event_date).getTime();
+                    const dateB = new Date(b.end_time || b.event_date).getTime();
                     return dateB - dateA;
                   });
 

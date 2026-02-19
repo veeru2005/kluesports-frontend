@@ -491,7 +491,10 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 {/* Slots Progress Section */}
                                 <div className="pt-1 pb-2 px-3 bg-black/30 space-y-1.5">
                                     {(() => {
-                                        const isCompleted = event.end_time && new Date(event.end_time) < new Date();
+                                        const now = new Date();
+                                        const isCompleted = event.end_time && new Date(event.end_time) < now;
+                                        const isStarted = new Date(event.event_date) <= now;
+                                        const isRegsClosed = isStarted && !isCompleted;
                                         const summary = registrationSummaries?.find((s) => s._id === (event.id || event._id));
                                         const filled = summary?.count || event.registrationCount || 0;
                                         const total = event.max_participants || 1;
@@ -502,22 +505,25 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         // Color logic: < 70% Green, < 90% Orange, >= 90% Red
                                         const colorClass = percentFilled < 70 ? "bg-green-500" : percentFilled < 90 ? "bg-orange-500" : "bg-red-600";
 
-                                        const finalColor = isCompleted ? "bg-gray-500" : (isClosedManually ? "bg-gray-500" : (isFull ? "bg-red-600" : colorClass));
+                                        const finalColor = isCompleted ? "bg-gray-500" : isRegsClosed ? "bg-orange-500" : (isClosedManually ? "bg-gray-500" : (isFull ? "bg-red-600" : colorClass));
+
+                                        const statusLabel = isCompleted ? "COMPLETED" : isRegsClosed ? "REGISTRATIONS CLOSED" : (isClosedManually ? "CLOSED" : (isFull ? "FULL" : `${filled}/${total} slots filled`));
+                                        const statusColor = isCompleted || isRegsClosed || isClosedManually ? 'text-gray-400' : isFull ? 'text-red-500' : 'text-white';
 
                                         return (
                                             <div className="space-y-1">
                                                 <div className="flex items-center justify-between text-[10px] font-display uppercase tracking-wider">
-                                                    <span className={`font-bold ${isCompleted || isClosedManually ? 'text-gray-400' : isFull ? 'text-red-500' : 'text-white'}`}>
-                                                        {isCompleted ? "COMPLETED" : (isClosedManually ? "CLOSED" : (isFull ? "FULL" : `${filled}/${total} slots filled`))}
+                                                    <span className={`font-bold ${statusColor}`}>
+                                                        {statusLabel}
                                                     </span>
-                                                    {!isCompleted && !isClosedManually && !isFull && (
+                                                    {!isCompleted && !isRegsClosed && !isClosedManually && !isFull && (
                                                         <span className="text-white font-bold">{total - filled} left</span>
                                                     )}
                                                 </div>
                                                 <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                                                     <div
                                                         className={`h-full ${finalColor} rounded-full transition-all duration-500`}
-                                                        style={{ width: `${isCompleted ? 100 : Math.min(percentFilled, 100)}%` }}
+                                                        style={{ width: `${isCompleted || isRegsClosed ? 100 : Math.min(percentFilled, 100)}%` }}
                                                     />
                                                 </div>
                                             </div>
@@ -997,24 +1003,37 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                         <div className="grid gap-2 text-left">
                             <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Registration Status</Label>
-                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center ${formData.end_time && new Date(formData.end_time) < new Date() ? "opacity-50 cursor-not-allowed" : ""}`}>
-                                <Select
-                                    disabled={formData.end_time && new Date(formData.end_time) < new Date()}
-                                    value={formData.end_time && new Date(formData.end_time) < new Date() ? "false" : (formData.is_registration_open !== false ? "true" : "false")}
-                                    onValueChange={(val) => setFormData({ ...formData, is_registration_open: val === "true" })}
-                                >
-                                    <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                        <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
-                                        <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            {formData.end_time && new Date(formData.end_time) < new Date() && (
-                                <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider mt-1">Event Completed - Registration Closed</p>
-                            )}
+                            {(() => {
+                                const now = new Date();
+                                const isEventCompleted = formData.end_time && new Date(formData.end_time) < now;
+                                const isEventStarted = formData.event_date && new Date(formData.event_date) <= now;
+                                const isLocked = isEventCompleted || isEventStarted;
+                                return (
+                                    <>
+                                        <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}>
+                                            <Select
+                                                disabled={!!isLocked}
+                                                value={isLocked ? "false" : (formData.is_registration_open !== false ? "true" : "false")}
+                                                onValueChange={(val) => setFormData({ ...formData, is_registration_open: val === "true" })}
+                                            >
+                                                <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                    <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
+                                                    <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        {isEventCompleted && (
+                                            <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider mt-1">Event Completed - Registration Closed</p>
+                                        )}
+                                        {!isEventCompleted && isEventStarted && (
+                                            <p className="text-[10px] text-orange-500 font-bold uppercase tracking-wider mt-1">Event Started - Registrations Closed</p>
+                                        )}
+                                    </>
+                                );
+                            })()}
                         </div>
 
                         <div className="grid gap-2 text-left">
@@ -1452,24 +1471,37 @@ export const EventsTab = ({ events }: EventsTabProps) => {
 
                         <div className="grid gap-2 text-left">
                             <Label className="text-red-500 font-bold uppercase text-[11px] tracking-wider">Registration Status</Label>
-                            <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center ${formData.end_time && new Date(formData.end_time) < new Date() ? "opacity-50 cursor-not-allowed" : ""}`}>
-                                <Select
-                                    disabled={formData.end_time && new Date(formData.end_time) < new Date()}
-                                    value={formData.end_time && new Date(formData.end_time) < new Date() ? "false" : (formData.is_registration_open !== false ? "true" : "false")}
-                                    onValueChange={(val) => setFormData({ ...formData, is_registration_open: val === "true" })}
-                                >
-                                    <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                        <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
-                                        <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            {formData.end_time && new Date(formData.end_time) < new Date() && (
-                                <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider mt-1">Event Completed - Registration Closed</p>
-                            )}
+                            {(() => {
+                                const now = new Date();
+                                const isEventCompleted = formData.end_time && new Date(formData.end_time) < now;
+                                const isEventStarted = formData.event_date && new Date(formData.event_date) <= now;
+                                const isLocked = isEventCompleted || isEventStarted;
+                                return (
+                                    <>
+                                        <div className={`bg-black/90 p-1.5 px-3 rounded-lg border-2 border-red-600 transition-all min-h-[44px] flex items-center ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}>
+                                            <Select
+                                                disabled={!!isLocked}
+                                                value={isLocked ? "false" : (formData.is_registration_open !== false ? "true" : "false")}
+                                                onValueChange={(val) => setFormData({ ...formData, is_registration_open: val === "true" })}
+                                            >
+                                                <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                    <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
+                                                    <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        {isEventCompleted && (
+                                            <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider mt-1">Event Completed - Registration Closed</p>
+                                        )}
+                                        {!isEventCompleted && isEventStarted && (
+                                            <p className="text-[10px] text-orange-500 font-bold uppercase tracking-wider mt-1">Event Started - Registrations Closed</p>
+                                        )}
+                                    </>
+                                );
+                            })()}
                         </div>
 
                         <div className="grid gap-2 text-left">
