@@ -87,7 +87,7 @@ const About = () => {
                 </div>
 
                 {/* Updated: Border wraps all paragraphs now */}
-                <div className="space-y-6 font-body text-lg leading-relaxed border-l-4 border-[#FF0000] pl-6 py-4 bg-gradient-to-r from-red-600/10 to-transparent rounded-r-lg">
+                <div className="space-y-6 font-body text-lg leading-relaxed py-4">
                   <p className="text-xl text-white font-medium">
                     The <span className="text-primary font-bold">KLU ESPORTS CLUB</span> operates proudly under the dynamic banner of the <span className="text-white">KL University Student Activity Center (KL SAC), at KL University</span>.
                   </p>
@@ -150,7 +150,7 @@ const About = () => {
               {/* Centered Header */}
               <div className="text-center mb-16">
                 <span className="font-display text-primary uppercase tracking-widest text-sm mb-4 block">
-                  Visionary Leader
+                  Visionary Leadership
                 </span>
                 <h2 className="font-display font-bold text-3xl md:text-4xl relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-16 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
                   KL SAC <span className="flame-text">DIRECTOR</span>
@@ -158,11 +158,11 @@ const About = () => {
               </div>
 
               {/* Content Grid */}
-              <div className="grid lg:grid-cols-2 gap-12 items-start">
+              <div className="grid lg:grid-cols-2 gap-12 items-stretch">
 
                 {/* Left Side: Director Image */}
-                <div className="relative">
-                  <div className="max-h-[522px] rounded-2xl overflow-hidden border-2 border-[#FF0000] relative group shadow-2xl shadow-primary/10 max-w-sm mx-auto">
+                <div className="relative flex flex-col">
+                  <div className="flex-1 rounded-2xl overflow-hidden border-2 border-[#FF0000] relative group shadow-2xl shadow-primary/10 max-w-sm mx-auto">
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60" />
                     <img
                       src="https://res.cloudinary.com/dus3luhur/image/upload/v1770986833/svp_ryxrd0.jpg"
