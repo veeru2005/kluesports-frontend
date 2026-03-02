@@ -111,7 +111,7 @@ const About = () => {
 
                     <div className="relative z-10 p-0 bg-black/40 backdrop-blur-xl rounded-full border-2 border-[#FF0000] shadow-2xl transition-colors duration-500 w-full h-full flex items-center justify-center overflow-hidden">
                       <img
-                        src="https://res.cloudinary.com/djzocjzl7/image/upload/v1772464324/486415839_1833976170708272_11642_h9sekf.jpg"
+                        src="https://res.cloudinary.com/djzocjzl7/image/upload/v1772466733/Circle_Logo_u9de7e.png"
                         alt="KLU Esports Origin Logo"
                         className="w-full h-full object-cover rounded-full drop-shadow-[0_0_30px_rgba(220,38,38,0.8)] transition-all duration-500"
                       />
