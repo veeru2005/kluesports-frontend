@@ -72,7 +72,7 @@ const About = () => {
           <div className="container mx-auto px-4 z-10 relative">
             <div
               ref={originAnim.elementRef}
-              className={`grid lg:grid-cols-2 gap-16 items-center mb-8 scroll-fade-up ${originAnim.isVisible ? 'scroll-visible' : ''}`}
+              className={`grid lg:grid-cols-2 gap-8 items-center mb-0 scroll-fade-up ${originAnim.isVisible ? 'scroll-visible' : ''}`}
             >
 
               {/* Left Side: Text Content */}

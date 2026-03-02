@@ -6,7 +6,7 @@ export const HeroSection = () => {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   return (
-    <section className="relative w-full mt-20 md:mt-0 md:min-h-screen flex items-center justify-center overflow-hidden bg-black">
+    <section className="relative w-full mt-20 md:mt-0 md:min-h-[100dvh] flex items-center justify-center overflow-hidden bg-black">
       {/* Video Background */}
       <div className="relative w-full aspect-video md:absolute md:inset-0 md:aspect-auto z-0">
         {!isVideoLoaded && (
@@ -15,15 +15,17 @@ export const HeroSection = () => {
           </div>
         )}
         <video
-          className={`w - full h - full object - cover transition - opacity duration - 500 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'} `}
+          className={`w-full h-full object-cover transition-opacity duration-500 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}
           autoPlay
           muted
           loop
           playsInline
           preload="metadata"
           onCanPlay={() => setIsVideoLoaded(true)}
+          style={{ objectFit: 'cover', position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         >
-          <source src="https://res.cloudinary.com/djzocjzl7/video/upload/v1772463397/intro-final-3_be7sja.mov" type="video/mp4" />
+          <source src="https://res.cloudinary.com/djzocjzl7/video/upload/v1772463397/intro-final-3_be7sja.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/djzocjzl7/video/upload/v1772463397/intro-final-3_be7sja.mov" type="video/quicktime" />
           Your browser does not support the video tag.
         </video>
       </div>
@@ -37,7 +39,7 @@ export const HeroSection = () => {
           If mobile is short, maybe hide it or keep it? 
           User didn't ask to remove, but 'black spaces top and bottom' implies tight fit.
       */}
-      <div className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <div className="hidden md:block absolute bottom-2 left-1/2 -translate-x-1/2 animate-bounce">
         <ChevronDown className="w-8 h-8 text-white/60" />
       </div>
     </section>
