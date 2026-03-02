@@ -104,16 +104,27 @@ const About = () => {
               <div className="flex flex-col gap-8">
                 <div className="relative flex justify-center items-center">
                   <div className="relative group w-48 h-48 md:w-56 md:h-56 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-red-600/20 rounded-full blur-[40px] opacity-60 transition-opacity duration-700" />
-                    <div className="absolute inset-0 scale-[1.08]">
-                      <div className="w-full h-full border-2 border-dashed border-[#FF0000] rounded-full animate-[spin_15s_linear_infinite]" />
+                    <div className="absolute inset-0 rounded-full opacity-60" style={{ boxShadow: '0 0 40px 10px rgba(220, 38, 38, 0.2)' }} />
+                    <div className="absolute inset-[-14px]" style={{ animation: 'spin 8s linear infinite' }}>
+                      <svg className="w-full h-full" viewBox="0 0 100 100">
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="48"
+                          fill="none"
+                          stroke="#FF0000"
+                          strokeWidth="1.2"
+                          strokeDasharray="6 5"
+                          strokeLinecap="round"
+                        />
+                      </svg>
                     </div>
 
-                    <div className="relative z-10 p-0 bg-black/40 backdrop-blur-xl rounded-full border-2 border-[#FF0000] shadow-2xl transition-colors duration-500 w-full h-full flex items-center justify-center overflow-hidden">
+                    <div className="relative z-10 p-0 bg-black rounded-full border-2 border-[#FF0000] shadow-2xl transition-colors duration-500 w-full h-full flex items-center justify-center overflow-hidden" style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}>
                       <img
                         src="https://res.cloudinary.com/djzocjzl7/image/upload/v1772466733/Circle_Logo_u9de7e.png"
                         alt="KLU Esports Origin Logo"
-                        className="w-full h-full object-cover rounded-full drop-shadow-[0_0_30px_rgba(220,38,38,0.8)] transition-all duration-500"
+                        className="w-full h-full object-cover rounded-full transition-all duration-500"
                       />
                     </div>
                   </div>
