@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const sponsors = [
-  { name: "Dream Aspires", logo: "https://res.cloudinary.com/dus3luhur/image/upload/v1770983444/dream-aspires_vqfiz7.png" },
-  { name: "Arena of Mysteries", logo: "https://res.cloudinary.com/dus3luhur/image/upload/v1770980313/Arena-of-Mysteries_gyjuk0.jpg" },
-  { name: "PlayX", logo: "https://res.cloudinary.com/dus3luhur/image/upload/v1770980143/playx_wcdcbl.jpg" },
+  { name: "Dream Aspires", logo: "https://res.cloudinary.com/djzocjzl7/image/upload/v1772463432/dream-aspires_n4bw2f.png" },
+  { name: "Arena of Mysteries", logo: "https://res.cloudinary.com/djzocjzl7/image/upload/v1772463432/Arena-of-Mysteries_ww7mma.jpg" },
+  { name: "PlayX", logo: "https://res.cloudinary.com/djzocjzl7/image/upload/v1772463432/playx_busauj.jpg" },
 ];
 
 

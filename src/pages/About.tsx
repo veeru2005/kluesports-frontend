@@ -111,7 +111,7 @@ const About = () => {
 
                     <div className="relative z-10 p-0 bg-black/40 backdrop-blur-xl rounded-full border-2 border-[#FF0000] shadow-2xl transition-colors duration-500 w-full h-full flex items-center justify-center overflow-hidden">
                       <img
-                        src="https://res.cloudinary.com/dus3luhur/image/upload/v1770969671/486415839_1833976170708272_11642_v8y9cr.jpg"
+                        src="https://res.cloudinary.com/djzocjzl7/image/upload/v1772464324/486415839_1833976170708272_11642_h9sekf.jpg"
                         alt="KLU Esports Origin Logo"
                         className="w-full h-full object-cover rounded-full drop-shadow-[0_0_30px_rgba(220,38,38,0.8)] transition-all duration-500"
                       />
@@ -165,7 +165,7 @@ const About = () => {
                   <div className="flex-1 rounded-2xl overflow-hidden border-2 border-[#FF0000] relative group shadow-2xl shadow-primary/10 max-w-sm mx-auto">
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60" />
                     <img
-                      src="https://res.cloudinary.com/dus3luhur/image/upload/v1770986833/svp_ryxrd0.jpg"
+                      src="https://res.cloudinary.com/djzocjzl7/image/upload/v1772464291/Sai-Vijay-Sir_x7jdjq.jpg"
                       alt="Sai Vijay Pisini - Director SAC"
                       className="w-full h-full object-cover object-center"
                     />

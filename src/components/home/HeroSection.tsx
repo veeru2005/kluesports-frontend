@@ -23,7 +23,7 @@ export const HeroSection = () => {
           preload="metadata"
           onCanPlay={() => setIsVideoLoaded(true)}
         >
-          <source src="https://res.cloudinary.com/dus3luhur/video/upload/v1769537336/intro-final-3_hjq6mc.mov" type="video/mp4" />
+          <source src="https://res.cloudinary.com/djzocjzl7/video/upload/v1772463397/intro-final-3_be7sja.mov" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
