@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { LogOut, Shield, Users, Calendar, Mail, User } from "lucide-react";
+import { LogOut, Shield, Users, Mail, User, LayoutDashboard, ClipboardList, Gamepad2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -67,37 +67,42 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                         <div className="hidden md:flex items-center gap-8">
                             <button
                                 onClick={() => onTabChange ? onTabChange("dashboard") : navigate(`${baseUrl}?tab=dashboard`)}
-                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "dashboard" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors flex items-center gap-1.5 ${activeTab === "dashboard" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                             >
+                                <LayoutDashboard className="w-3.5 h-3.5" />
                                 Dashboard
                             </button>
 
                             <button
                                 onClick={() => onTabChange ? onTabChange("members") : navigate(`${baseUrl}?tab=members`)}
-                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "members" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors flex items-center gap-1.5 ${activeTab === "members" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                             >
+                                <Users className="w-3.5 h-3.5" />
                                 Members
                             </button>
 
                             <button
                                 onClick={() => onTabChange ? onTabChange("events") : navigate(`${baseUrl}?tab=events`)}
-                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "events" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors flex items-center gap-1.5 ${activeTab === "events" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                             >
+                                <Gamepad2 className="w-3.5 h-3.5" />
                                 Events
                             </button>
 
                             <button
                                 onClick={() => onTabChange ? onTabChange("registrations") : navigate(`${baseUrl}?tab=registrations`)}
-                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "registrations" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                className={`nav-link font-display text-sm uppercase tracking-wider transition-colors flex items-center gap-1.5 ${activeTab === "registrations" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                             >
+                                <ClipboardList className="w-3.5 h-3.5" />
                                 Registrations
                             </button>
 
                             {user?.role === 'super_admin' && (
                                 <button
                                     onClick={() => onTabChange ? onTabChange("admins") : navigate(`${baseUrl}?tab=admins`)}
-                                    className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "admins" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                    className={`nav-link font-display text-sm uppercase tracking-wider transition-colors flex items-center gap-1.5 ${activeTab === "admins" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                                 >
+                                    <Shield className="w-3.5 h-3.5" />
                                     Admins
                                 </button>
                             )}
@@ -105,8 +110,9 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                             {(user?.role === 'super_admin' || user?.role?.startsWith('admin_')) && (
                                 <button
                                     onClick={() => onTabChange ? onTabChange("messages") : navigate(`${baseUrl}?tab=messages`)}
-                                    className={`nav-link font-display text-sm uppercase tracking-wider transition-colors ${activeTab === "messages" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
+                                    className={`nav-link font-display text-sm uppercase tracking-wider transition-colors flex items-center gap-1.5 ${activeTab === "messages" ? "text-primary active" : "text-foreground/80 hover:text-primary"}`}
                                 >
+                                    <Mail className="w-3.5 h-3.5" />
                                     Messages
                                 </button>
                             )}
@@ -157,41 +163,47 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                             <div className="flex flex-col gap-1 text-center">
                                 <button
                                     onClick={() => { onTabChange ? onTabChange("dashboard") : navigate(`${baseUrl}?tab=dashboard`); setIsMobileMenuOpen(false); }}
-                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "dashboard" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
+                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "dashboard" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                                 >
+                                    <LayoutDashboard className="w-4 h-4" />
                                     Dashboard
                                 </button>
                                 <button
                                     onClick={() => { onTabChange ? onTabChange("members") : navigate(`${baseUrl}?tab=members`); setIsMobileMenuOpen(false); }}
-                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "members" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
+                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "members" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                                 >
+                                    <Users className="w-4 h-4" />
                                     Members
                                 </button>
                                 <button
                                     onClick={() => { onTabChange ? onTabChange("events") : navigate(`${baseUrl}?tab=events`); setIsMobileMenuOpen(false); }}
-                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "events" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
+                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "events" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                                 >
+                                    <Gamepad2 className="w-4 h-4" />
                                     Events
                                 </button>
                                 <button
                                     onClick={() => { onTabChange ? onTabChange("registrations") : navigate(`${baseUrl}?tab=registrations`); setIsMobileMenuOpen(false); }}
-                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "registrations" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
+                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "registrations" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                                 >
+                                    <ClipboardList className="w-4 h-4" />
                                     Registrations
                                 </button>
                                 {user?.role === 'super_admin' && (
                                     <button
                                         onClick={() => { onTabChange ? onTabChange("admins") : navigate(`${baseUrl}?tab=admins`); setIsMobileMenuOpen(false); }}
-                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "admins" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
+                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "admins" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                                     >
+                                        <Shield className="w-4 h-4" />
                                         Admins
                                     </button>
                                 )}
                                 {(user?.role === 'super_admin' || user?.role?.startsWith('admin_')) && (
                                     <button
                                         onClick={() => { onTabChange ? onTabChange("messages") : navigate(`${baseUrl}?tab=messages`); setIsMobileMenuOpen(false); }}
-                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all ${activeTab === "messages" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
+                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "messages" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
                                     >
+                                        <Mail className="w-4 h-4" />
                                         Messages
                                     </button>
                                 )}

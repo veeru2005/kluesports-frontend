@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LogIn, LogOut, User, Shield, Settings, Trophy } from "lucide-react";
+import { Menu, X, LogIn, LogOut, User, Shield, Settings, Trophy, Home, Info, Users, Gamepad2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,11 +15,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
-  { name: "Team", path: "/team" },
-  { name: "Events", path: "/events" },
-  { name: "Contact", path: "/contact" },
+  { name: "Home", path: "/", icon: Home },
+  { name: "About", path: "/about", icon: Info },
+  { name: "Team", path: "/team", icon: Users },
+  { name: "Events", path: "/events", icon: Gamepad2 },
+  { name: "Contact", path: "/contact", icon: Mail },
 ];
 
 export const Navbar = () => {
@@ -94,11 +94,12 @@ export const Navbar = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`nav-link font-display text-sm uppercase tracking-[0.1em] transition-colors ${location.pathname === link.path
+                  className={`nav-link font-display text-sm uppercase tracking-[0.1em] transition-colors flex items-center gap-1.5 ${location.pathname === link.path
                     ? "text-primary active"
                     : "text-foreground/80 hover:text-primary"
                     }`}
                 >
+                  <link.icon className="w-3.5 h-3.5" />
                   {link.name}
                 </Link>
               ))}
@@ -195,11 +196,12 @@ export const Navbar = () => {
                     key={link.path}
                     to={link.path}
                     onClick={() => setIsOpen(false)}
-                    className={`font-display text-base uppercase tracking-wider py-3 text-center rounded-lg transition-all ${location.pathname === link.path
+                    className={`font-display text-base uppercase tracking-wider py-3 text-center rounded-lg transition-all flex items-center justify-center gap-2 ${location.pathname === link.path
                       ? "text-primary border-2 border-[#FF0000] bg-red-600/10"
                       : "text-foreground/80 hover:text-primary"
                       }`}
                   >
+                    <link.icon className="w-4 h-4" />
                     {link.name}
                   </Link>
                 ))}
