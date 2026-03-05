@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LogIn, LogOut, User, Shield, Settings, Trophy, Home, Info, Users, Gamepad2, Mail } from "lucide-react";
+import { Menu, X, LogIn, LogOut, User, Shield, Settings, Trophy, Home, BookMarked, Users, Gamepad2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,7 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const navLinks = [
   { name: "Home", path: "/", icon: Home },
-  { name: "About", path: "/about", icon: Info },
+  { name: "About", path: "/about", icon: BookMarked },
   { name: "Team", path: "/team", icon: Users },
   { name: "Events", path: "/events", icon: Gamepad2 },
   { name: "Contact", path: "/contact", icon: Mail },

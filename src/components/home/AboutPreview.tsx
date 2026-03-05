@@ -9,6 +9,10 @@ const sponsors = [
   { name: "PlayX", logo: "https://res.cloudinary.com/djzocjzl7/image/upload/v1772463432/playx_busauj.jpg" },
 ];
 
+const partners = [
+  { name: "Jio", logo: "https://res.cloudinary.com/djzocjzl7/image/upload/v1772711189/jio-2_lnxetx.png"},
+];
+
 
 
 export const AboutPreview = () => {
@@ -16,6 +20,7 @@ export const AboutPreview = () => {
   const leftContent = useScrollAnimation();
 
   const sponsorsAnim = useScrollAnimation();
+  const partnersAnim = useScrollAnimation();
 
   return (
     <section className="pt-8 pb-14 md:pt-16 md:pb-20 relative overflow-hidden">
@@ -80,6 +85,36 @@ export const AboutPreview = () => {
                   <div className="bg-[#FF0000] px-3 md:px-6 py-2 rounded-lg shadow-lg w-full max-w-[140px] md:max-w-[220px] text-center">
                     <span className="text-white font-display font-bold text-[10px] md:text-sm uppercase tracking-tight md:tracking-wider block">
                       {sponsor.name}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Partners Section */}
+          <div ref={partnersAnim.elementRef} className="space-y-8 text-center pt-2 pb-4">
+            <div className={`scroll-fade-up ${partnersAnim.isVisible ? 'scroll-visible' : ''} scroll-delay-100`}>
+              <h2 className="font-display font-bold text-3xl md:text-6xl mb-8 relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-24 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
+                OUR <span className="flame-text">PARTNERS</span>
+              </h2>
+            </div>
+            <div className={`grid grid-cols-2 md:flex md:flex-wrap justify-center items-center gap-6 md:gap-24 max-w-7xl mx-auto px-4 md:px-0`}>
+              {partners.map((partner, index) => (
+                <div
+                  key={index}
+                  className={`flex flex-col items-center gap-4 group w-full md:w-auto scroll-fade-up ${partnersAnim.isVisible ? 'scroll-visible' : ''
+                    } scroll-delay-${(index + 1) * 100}`}
+                >
+                  <div className="relative w-24 h-24 md:w-36 md:h-36 flex items-center justify-center rounded-full overflow-hidden transition-all duration-500 border-2 border-[#FF0000] group-hover:shadow-[0_0_30px_rgba(255,0,0,0.6)] bg-white">
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
+                      className={`w-full h-full object-cover transition-all duration-500 ${partner.name === "Jio" ? "scale-125" : ""}`}
+                    />
+                  </div>
+                  <div className="bg-[#FF0000] px-3 md:px-6 py-2 rounded-lg shadow-lg w-full max-w-[140px] md:max-w-[220px] text-center">
+                    <span className="text-white font-display font-bold text-[10px] md:text-sm uppercase tracking-tight md:tracking-wider block">
+                      {partner.name}
                     </span>
                   </div>
                 </div>
