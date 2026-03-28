@@ -4,7 +4,6 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar } from "@/components/layout/Navbar";
 import { AdminNavbar } from "@/admin-pages/components/AdminNavbar";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -857,7 +856,6 @@ const Profile = () => {
         </DialogContent>
       </Dialog>
 
-      {!isAdmin && <Footer />}
     </div>
   );
 };

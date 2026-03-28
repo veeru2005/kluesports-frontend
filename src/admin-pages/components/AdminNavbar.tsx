@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { LogOut, Shield, Users, Mail, User, LayoutDashboard, ClipboardList, Gamepad2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,25 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
     const location = useLocation();
     const { toast } = useToast();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const adminNavLinks = [
+        { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+        { key: "members", label: "Members", icon: Users },
+        { key: "events", label: "Events", icon: Gamepad2 },
+        { key: "registrations", label: "Regs", icon: ClipboardList },
+        ...(user?.role === "super_admin" ? [{ key: "admins", label: "Admins", icon: Shield }] : []),
+    ];
+
+    useEffect(() => {
+        document.body.classList.add("has-mobile-bottom-nav");
+        return () => {
+            document.body.classList.remove("has-mobile-bottom-nav");
+        };
+    }, []);
+
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [location.pathname, location.search]);
 
     const handleLogout = async () => {
         await logout();
@@ -161,47 +180,10 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                     {isMobileMenuOpen && (
                         <div className="md:hidden py-3 border-t-2 border-[#FF0000] bg-background animate-in slide-in-from-top-5 -mx-4 px-4">
                             <div className="flex flex-col gap-1 text-center">
-                                <button
-                                    onClick={() => { onTabChange ? onTabChange("dashboard") : navigate(`${baseUrl}?tab=dashboard`); setIsMobileMenuOpen(false); }}
-                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "dashboard" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
-                                >
-                                    <LayoutDashboard className="w-4 h-4" />
-                                    Dashboard
-                                </button>
-                                <button
-                                    onClick={() => { onTabChange ? onTabChange("members") : navigate(`${baseUrl}?tab=members`); setIsMobileMenuOpen(false); }}
-                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "members" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
-                                >
-                                    <Users className="w-4 h-4" />
-                                    Members
-                                </button>
-                                <button
-                                    onClick={() => { onTabChange ? onTabChange("events") : navigate(`${baseUrl}?tab=events`); setIsMobileMenuOpen(false); }}
-                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "events" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
-                                >
-                                    <Gamepad2 className="w-4 h-4" />
-                                    Events
-                                </button>
-                                <button
-                                    onClick={() => { onTabChange ? onTabChange("registrations") : navigate(`${baseUrl}?tab=registrations`); setIsMobileMenuOpen(false); }}
-                                    className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "registrations" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
-                                >
-                                    <ClipboardList className="w-4 h-4" />
-                                    Registrations
-                                </button>
-                                {user?.role === 'super_admin' && (
-                                    <button
-                                        onClick={() => { onTabChange ? onTabChange("admins") : navigate(`${baseUrl}?tab=admins`); setIsMobileMenuOpen(false); }}
-                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "admins" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
-                                    >
-                                        <Shield className="w-4 h-4" />
-                                        Admins
-                                    </button>
-                                )}
                                 {(user?.role === 'super_admin' || user?.role?.startsWith('admin_')) && (
                                     <button
                                         onClick={() => { onTabChange ? onTabChange("messages") : navigate(`${baseUrl}?tab=messages`); setIsMobileMenuOpen(false); }}
-                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "messages" ? "text-primary border-2 border-red-600 bg-red-600/10" : "text-foreground/80"}`}
+                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "messages" ? "text-white border-2 border-[#FF0000] bg-[#FF0000] shadow-[0_0_18px_rgba(255,0,0,0.35)]" : "text-foreground/80"}`}
                                     >
                                         <Mail className="w-4 h-4" />
                                         Messages
@@ -231,6 +213,47 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                     )}
                 </div>
             </nav>
+
+            {/* Solid base so page content never shows behind admin mobile dock */}
+            <div
+                className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050505] border-t-2 border-[#FF0000] z-40"
+                style={{ height: "calc(env(safe-area-inset-bottom) + 6.50rem)" }}
+            />
+
+            {/* Mobile bottom dock navigation for admin/super admin */}
+            <div
+                className="md:hidden fixed left-4 right-4 z-50 pointer-events-none"
+                style={{ bottom: "calc(env(safe-area-inset-bottom) + 1.15rem)" }}
+            >
+                <div className="pointer-events-auto rounded-3xl border border-[#FF0000]/90 bg-[#050505] p-2 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
+                    <div
+                        className="grid gap-1"
+                        style={{ gridTemplateColumns: `repeat(${adminNavLinks.length}, minmax(0, 1fr))` }}
+                    >
+                        {adminNavLinks.map((link) => {
+                            const isActive = activeTab === link.key;
+                            const Icon = link.icon;
+
+                            return (
+                                <button
+                                    key={link.key}
+                                    type="button"
+                                    onClick={() => onTabChange ? onTabChange(link.key) : navigate(`${baseUrl}?tab=${link.key}`)}
+                                    className={`flex flex-col items-center justify-center gap-1 rounded-2xl py-2.5 px-1 transition-all duration-300 ${isActive
+                                        ? "bg-[#FF0000] text-white shadow-[0_0_18px_rgba(255,0,0,0.4)]"
+                                        : "text-foreground/75"
+                                        }`}
+                                >
+                                    <Icon className="w-4 h-4" />
+                                    <span className="font-body text-[10px] leading-none tracking-wide whitespace-nowrap">
+                                        {link.label}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
         </>
     );
 };

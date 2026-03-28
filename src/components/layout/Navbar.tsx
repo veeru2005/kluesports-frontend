@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LogIn, LogOut, User, Shield, Settings, Trophy, Home, BookMarked, Users, Gamepad2, Mail } from "lucide-react";
+import { Menu, LogIn, LogOut, User, Shield, Trophy, Home, BookMarked, Users, Gamepad2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,7 +23,7 @@ const navLinks = [
 
 export const Navbar = () => {
   const { user, isAdmin, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,6 +36,17 @@ export const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    document.body.classList.add("has-mobile-bottom-nav");
+    return () => {
+      document.body.classList.remove("has-mobile-bottom-nav");
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     await logout();
@@ -52,15 +62,15 @@ export const Navbar = () => {
 
   return (
     <>
-      {/* Overlay to close menu when clicking outside */}
-      {isOpen && (
+      {isMobileMenuOpen && (
         <div
           className="fixed inset-0 z-40 md:hidden"
-          onClick={() => setIsOpen(false)}
+          onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
+
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled || isOpen
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
           ? "bg-background border-b-2 border-[#FF0000] shadow-lg shadow-primary/10"
           : isHomePage
             ? "bg-transparent"
@@ -176,109 +186,112 @@ export const Navbar = () => {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile 3-line menu trigger */}
             <button
-              className="md:hidden text-foreground p-2 bg-transparent border-2 border-[#FF0000] rounded-lg"
-              onClick={() => setIsOpen(!isOpen)}
+              type="button"
+              className="md:hidden text-foreground p-1"
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+              aria-label="Open mobile actions"
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <Menu className="w-6 h-6" />
             </button>
           </div>
 
-          {/* Mobile Menu */}
-          {isOpen && (
-            <div className="md:hidden absolute top-20 left-0 right-0 bg-background border-b-2 border-[#FF0000] animate-slide-down">
-              {/* Red separator line */}
-              <div className="w-full h-[2px] bg-[#FF0000]"></div>
-              <div className="container px-4 py-3 flex flex-col gap-1">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => setIsOpen(false)}
-                    className={`font-display text-base uppercase tracking-wider py-3 text-center rounded-lg transition-all flex items-center justify-center gap-2 ${location.pathname === link.path
-                      ? "text-primary border-2 border-[#FF0000] bg-red-600/10"
-                      : "text-foreground/80 hover:text-primary"
-                      }`}
-                  >
-                    <link.icon className="w-4 h-4" />
-                    {link.name}
-                  </Link>
-                ))}
-                <div className="flex flex-col gap-1">
-                  {user ? (
-                    <>
-                      {isAdmin && (
-                        <button
-                          onClick={() => {
-                            navigate("/admin");
-                            setIsOpen(false);
-                          }}
-                          className="font-display text-lg uppercase tracking-wider py-3 mx-0 rounded-lg transition-all text-foreground/80 hover:text-primary text-center"
-                        >
-                          Admin Panel
-                        </button>
-                      )}
-                      <div className="w-full h-px bg-[#FF0000] mt-2"></div>
-                      <div className="flex flex-row gap-3 px-0 py-4 justify-center items-center">
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            navigate("/profile");
-                            setIsOpen(false);
-                          }}
-                          className="flex-1 gap-2 border border-[#FF0000] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
-                        >
-                          <User className="w-4 h-4" />
-                          Profile
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            handleLogout();
-                            setIsOpen(false);
-                          }}
-                          className="flex-1 gap-2 border border-[#FF0000] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          Logout
-                        </Button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-full h-px bg-[#FF0000] mt-2"></div>
-                      <div className="flex flex-row gap-3 px-0 py-4 justify-center items-center">
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            navigate("/login");
-                            setIsOpen(false);
-                          }}
-                          className="flex-1 gap-2 border border-[#FF0000] text-[15px] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300 py-3 h-auto"
-                        >
-                          <LogIn className="w-4 h-4" />
-                          Login
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => {
-                            navigate("/signup");
-                            setIsOpen(false);
-                          }}
-                          className="flex-1 gap-2 border border-[#FF0000] text-[15px] text-white bg-transparent hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300 py-3 h-auto"
-                        >
-                          Join Now
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                </div>
+          {isMobileMenuOpen && (
+            <div className="md:hidden absolute top-20 left-0 right-0 bg-[#050505] border-b-2 border-[#FF0000] z-50">
+              <div className="w-full h-[2px] bg-[#FF0000]" />
+              <div className="px-4 py-3 flex items-center gap-3">
+                {user ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        navigate("/profile");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex-1 gap-2 border border-[#FF0000] text-white bg-black hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
+                    >
+                      <User className="w-4 h-4" />
+                      Profile
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex-1 gap-2 border border-[#FF0000] text-white bg-black hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        navigate("/login");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex-1 gap-2 border border-[#FF0000] text-white bg-black hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
+                    >
+                      <LogIn className="w-4 h-4" />
+                      Login
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        navigate("/signup");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex-1 border border-[#FF0000] text-white bg-black hover:bg-red-600 hover:text-white hover:border-[#FF0000] transition-all duration-300"
+                    >
+                      Signup
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           )}
         </div>
       </nav>
+
+      {/* Solid base so page content never shows behind mobile dock */}
+      <div
+        className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050505] border-t-2 border-[#FF0000] z-40"
+        style={{ height: "calc(env(safe-area-inset-bottom) + 6.50rem)" }}
+      />
+
+      {/* Mobile bottom dock navigation */}
+      <div
+        className="md:hidden fixed left-4 right-4 z-50 pointer-events-none"
+        style={{ bottom: "calc(env(safe-area-inset-bottom) + 1.15rem)" }}
+      >
+        <div className="pointer-events-auto rounded-3xl border border-[#FF0000]/90 bg-[#050505] p-2 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
+          <div className="grid grid-cols-5 gap-1">
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.path;
+
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`flex flex-col items-center justify-center gap-1 rounded-2xl py-2.5 px-1 transition-all duration-300 ${isActive
+                    ? "bg-[#FF0000] text-white shadow-[0_0_18px_rgba(255,0,0,0.4)]"
+                    : "text-foreground/75"
+                    }`}
+                >
+                  <link.icon className="w-4 h-4" />
+                  <span className="font-body text-[10px] leading-none tracking-wide whitespace-nowrap">
+                    {link.name}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     </>
   );
 };

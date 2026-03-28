@@ -407,13 +407,13 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                 <SelectTrigger className="bg-black border-2 border-red-600 h-11 focus:ring-0 focus:ring-offset-0">
                                     <SelectValue placeholder="Filter by Game" />
                                 </SelectTrigger>
-                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                    <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">All Games</SelectItem>
-                                    <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
-                                    <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
-                                    <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
-                                    <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
-                                    <SelectItem value="OTHERS" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">OTHERS</SelectItem>
+                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                    <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">All Games</SelectItem>
+                                    <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire</SelectItem>
+                                    <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI</SelectItem>
+                                    <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant</SelectItem>
+                                    <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Call Of Duty</SelectItem>
+                                    <SelectItem value="OTHERS" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">OTHERS</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -435,13 +435,13 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                         <SelectTrigger className="bg-black border-2 border-red-600 h-11 focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder="Filter by Game" />
                         </SelectTrigger>
-                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                            <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">All Games</SelectItem>
-                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
-                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
-                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
-                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
-                            <SelectItem value="OTHERS" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">OTHERS</SelectItem>
+                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                            <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">All Games</SelectItem>
+                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire</SelectItem>
+                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI</SelectItem>
+                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant</SelectItem>
+                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Call Of Duty</SelectItem>
+                            <SelectItem value="OTHERS" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">OTHERS</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -859,9 +859,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="HH" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                             {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                                                <SelectItem key={h} value={h.toString()} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">
+                                                <SelectItem key={h} value={h.toString()} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">
                                                     {h}
                                                 </SelectItem>
                                             ))}
@@ -879,9 +879,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="MM" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                             {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
-                                                <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">
+                                                <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">
                                                     {m}
                                                 </SelectItem>
                                             ))}
@@ -908,9 +908,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="AM" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                            <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">AM</SelectItem>
-                                            <SelectItem value="PM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">PM</SelectItem>
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                            <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">AM</SelectItem>
+                                            <SelectItem value="PM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">PM</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -942,9 +942,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="HH" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                             {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                                                <SelectItem key={h} value={h.toString()} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">
+                                                <SelectItem key={h} value={h.toString()} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">
                                                     {h}
                                                 </SelectItem>
                                             ))}
@@ -963,9 +963,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="MM" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                             {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
-                                                <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">
+                                                <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">
                                                     {m}
                                                 </SelectItem>
                                             ))}
@@ -992,9 +992,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="AM" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                            <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">AM</SelectItem>
-                                            <SelectItem value="PM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">PM</SelectItem>
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                            <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">AM</SelectItem>
+                                            <SelectItem value="PM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">PM</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -1019,9 +1019,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                                     <SelectValue />
                                                 </SelectTrigger>
-                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                                    <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
-                                                    <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                                    <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Open</SelectItem>
+                                                    <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Closed</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </div>
@@ -1048,12 +1048,12 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                     <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                         <SelectValue placeholder="Select game" />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                        <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
-                                        <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
-                                        <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
-                                        <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
-                                        <SelectItem value="OTHERS" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">OTHERS</SelectItem>
+                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                        <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire</SelectItem>
+                                        <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI</SelectItem>
+                                        <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant</SelectItem>
+                                        <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Call Of Duty</SelectItem>
+                                        <SelectItem value="OTHERS" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">OTHERS</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -1325,9 +1325,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="HH" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                             {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                                                <SelectItem key={h} value={h.toString()} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">
+                                                <SelectItem key={h} value={h.toString()} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">
                                                     {h}
                                                 </SelectItem>
                                             ))}
@@ -1345,9 +1345,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="MM" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                             {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
-                                                <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">
+                                                <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">
                                                     {m}
                                                 </SelectItem>
                                             ))}
@@ -1374,9 +1374,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="AM" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                            <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">AM</SelectItem>
-                                            <SelectItem value="PM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">PM</SelectItem>
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                            <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">AM</SelectItem>
+                                            <SelectItem value="PM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">PM</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -1408,9 +1408,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="HH" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                             {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                                                <SelectItem key={h} value={h.toString()} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">
+                                                <SelectItem key={h} value={h.toString()} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">
                                                     {h}
                                                 </SelectItem>
                                             ))}
@@ -1429,9 +1429,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="MM" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                             {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
-                                                <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">
+                                                <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">
                                                     {m}
                                                 </SelectItem>
                                             ))}
@@ -1458,9 +1458,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                         <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                             <SelectValue placeholder="AM" />
                                         </SelectTrigger>
-                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                            <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">AM</SelectItem>
-                                            <SelectItem value="PM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">PM</SelectItem>
+                                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                            <SelectItem value="AM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">AM</SelectItem>
+                                            <SelectItem value="PM" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">PM</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -1487,9 +1487,9 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                                 <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                                     <SelectValue />
                                                 </SelectTrigger>
-                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                                    <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Open</SelectItem>
-                                                    <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Closed</SelectItem>
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                                    <SelectItem value="true" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Open</SelectItem>
+                                                    <SelectItem value="false" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Closed</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </div>
@@ -1516,12 +1516,12 @@ export const EventsTab = ({ events }: EventsTabProps) => {
                                     <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                         <SelectValue placeholder="Select game" />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                        <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
-                                        <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
-                                        <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
-                                        <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
-                                        <SelectItem value="OTHERS" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">OTHERS</SelectItem>
+                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                        <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire</SelectItem>
+                                        <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI</SelectItem>
+                                        <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant</SelectItem>
+                                        <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Call Of Duty</SelectItem>
+                                        <SelectItem value="OTHERS" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">OTHERS</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>

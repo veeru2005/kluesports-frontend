@@ -23,7 +23,7 @@ export const AboutPreview = () => {
   const partnersAnim = useScrollAnimation();
 
   return (
-    <section className="pt-8 pb-14 md:pt-16 md:pb-20 relative overflow-hidden">
+    <section className="pt-8 pb-14 md:pt-16 md:pb-14 relative overflow-hidden">
       {/* Background accent */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent" />
 

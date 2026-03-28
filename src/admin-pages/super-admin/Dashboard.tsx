@@ -206,7 +206,7 @@ const SuperAdminDashboard = () => {
                     <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                         {/* Dashboard Tab Content - Hero Section */}
                         <TabsContent value="dashboard" className="m-0 p-0 border-none outline-none">
-                            <div className="flex flex-col items-center justify-start md:justify-center min-h-[calc(100vh-5rem)] text-center relative overflow-hidden w-full glass-dark border-none rounded-none pt-16 md:pt-6 pb-24 md:pb-8">
+                            <div className="flex flex-col items-center justify-start md:justify-center min-h-[calc(100vh-5rem)] text-center relative overflow-hidden w-full glass-dark border-none rounded-none pt-8 md:pt-6 pb-24 md:pb-8">
                                 {/* Background glow */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-radial-gradient from-primary/10 to-transparent pointer-events-none" />
 
@@ -342,21 +342,34 @@ const SuperAdminDashboard = () => {
                             <div className="min-h-[calc(100vh-5rem)] w-full glass-dark border-none rounded-none px-4 sm:px-4 md:px-8 pt-6 md:pt-8 pb-24 md:pb-8">
                                 <div className="mx-auto w-full max-w-7xl">
                                     {/* Date Filter */}
-                                    <div className="flex flex-row justify-between items-center mb-6 gap-2 md:gap-4">
+                                    <div className="relative mb-6 flex items-start justify-between gap-2 pb-11 md:items-center md:gap-4 md:pb-0">
                                         <div className="flex items-center gap-3">
                                             <h2 className="font-display font-semibold text-xl md:text-3xl">Messages</h2>
                                         </div>
-                                        <div className="flex items-center justify-end gap-1 md:gap-3 overflow-x-auto scrollbar-hide min-w-0">
+                                        {(dayFilter || monthFilter || yearFilter) && (
+                                            <button
+                                                onClick={() => {
+                                                    setDayFilter("");
+                                                    setMonthFilter("");
+                                                    setYearFilter("");
+                                                }}
+                                                aria-label="Clear message date filters"
+                                                className="absolute bottom-0 right-0 flex h-9 w-9 items-center justify-center rounded-full border-2 border-red-600 bg-black text-red-500 transition-all hover:bg-red-600 hover:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        )}
+                                        <div className="ml-auto flex max-w-full items-center justify-start gap-1.5 overflow-x-auto scrollbar-hide pb-1 md:justify-end md:gap-3 md:pb-0">
                                             <Calendar className="w-4 h-4 md:w-5 md:h-5 text-red-500 flex-shrink-0" />
 
                                             {/* Day Select */}
                                             <Select value={dayFilter} onValueChange={setDayFilter}>
-                                                <SelectTrigger className="w-[65px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                                                <SelectTrigger className="w-[62px] md:w-[80px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                                                     <SelectValue placeholder="Day" />
                                                 </SelectTrigger>
-                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg max-h-[200px]">
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden max-h-[200px]">
                                                     {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
-                                                        <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white text-xs md:text-sm cursor-pointer rounded-md m-1">
+                                                        <SelectItem key={day} value={String(day).padStart(2, '0')} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white text-xs md:text-sm cursor-pointer rounded-md">
                                                             {day}
                                                         </SelectItem>
                                                     ))}
@@ -365,12 +378,12 @@ const SuperAdminDashboard = () => {
 
                                             {/* Month Select */}
                                             <Select value={monthFilter} onValueChange={setMonthFilter}>
-                                                <SelectTrigger className="w-[90px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                                                <SelectTrigger className="w-[79px] md:w-[130px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                                                     <SelectValue placeholder="Month" />
                                                 </SelectTrigger>
-                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                                     {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((m, idx) => (
-                                                        <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white text-xs md:text-sm cursor-pointer rounded-md m-1">
+                                                        <SelectItem key={m} value={m} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white text-xs md:text-sm cursor-pointer rounded-md">
                                                             {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][idx]}
                                                         </SelectItem>
                                                     ))}
@@ -379,12 +392,12 @@ const SuperAdminDashboard = () => {
 
                                             {/* Year Select */}
                                             <Select value={yearFilter} onValueChange={setYearFilter}>
-                                                <SelectTrigger className="w-[75px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+                                                <SelectTrigger className="w-[68px] md:w-[100px] bg-black border-2 border-red-600 text-white rounded-lg hover:bg-red-600/10 transition-all text-[11px] md:text-sm h-9 md:h-11 flex-shrink-0 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
                                                     <SelectValue placeholder="Year" />
                                                 </SelectTrigger>
-                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
+                                                <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
                                                     {["2024", "2025", "2026", "2027", "2028"].map((year) => (
-                                                        <SelectItem key={year} value={year} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white text-xs md:text-sm cursor-pointer rounded-md m-1">
+                                                        <SelectItem key={year} value={year} className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white text-xs md:text-sm cursor-pointer rounded-md">
                                                             {year}
                                                         </SelectItem>
                                                     ))}
@@ -398,9 +411,10 @@ const SuperAdminDashboard = () => {
                                                         setMonthFilter("");
                                                         setYearFilter("");
                                                     }}
-                                                    className="flex items-center justify-center p-2 text-red-500 hover:text-red-400 transition-colors flex-shrink-0"
+                                                    aria-label="Clear message date filters"
+                                                    className="hidden h-10 w-10 items-center justify-center rounded-full border-2 border-red-600 bg-black text-red-500 transition-all hover:bg-red-600 hover:text-white focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 flex-shrink-0 md:flex"
                                                 >
-                                                    <X className="w-4 h-4" />
+                                                    <X className="w-5 h-5" />
                                                 </button>
                                             )}
                                         </div>

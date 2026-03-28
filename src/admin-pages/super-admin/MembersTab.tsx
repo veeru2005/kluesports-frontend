@@ -71,13 +71,33 @@ export const MembersTab = ({ members }: MembersTabProps) => {
     const queryClient = useQueryClient();
     const { user } = useAuth();
 
-
-    const filteredMembers = (normalizedMembers?.filter((member: any) => {
+    const baseMembers = normalizedMembers.filter((member: any) => {
         // Exclude current user
         if (member.email === user?.email || member.id === user?.id) return false;
 
-        // Exclude all admins and super admins from members tab
+        // Exclude all admins and super admins from members tab/stats
         if (member.role && (member.role === 'super_admin' || member.role.startsWith('admin_'))) return false;
+
+        return true;
+    });
+
+    const gameNameOf = (member: any) => String(member.gameYouPlay || member.game || "").toLowerCase().trim();
+    const allGamesCount = baseMembers.length;
+    const freeFireCount = baseMembers.filter((member: any) => gameNameOf(member) === "free fire").length;
+    const bgmiCount = baseMembers.filter((member: any) => gameNameOf(member) === "bgmi").length;
+    const valorantCount = baseMembers.filter((member: any) => gameNameOf(member) === "valorant").length;
+    const callOfDutyCount = baseMembers.filter((member: any) => gameNameOf(member) === "call of duty").length;
+
+    const memberStats = [
+        { label: "All Games", count: allGamesCount },
+        { label: "Free Fire", count: freeFireCount },
+        { label: "BGMI", count: bgmiCount },
+        { label: "Valorant", count: valorantCount },
+        { label: "COD", count: callOfDutyCount },
+    ];
+
+
+    const filteredMembers = (baseMembers?.filter((member: any) => {
 
         // Apply search filter
         if (searchQuery) {
@@ -195,12 +215,12 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         <SelectTrigger className="w-[150px] bg-black border-2 border-red-600 h-11 focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder="All Games" />
                         </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Games</SelectItem>
-                            <SelectItem value="Free Fire">Free Fire</SelectItem>
-                            <SelectItem value="BGMI">BGMI</SelectItem>
-                            <SelectItem value="Valorant">Valorant</SelectItem>
-                            <SelectItem value="Call Of Duty">Call Of Duty</SelectItem>
+                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                            <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">All Games</SelectItem>
+                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire</SelectItem>
+                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI</SelectItem>
+                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant</SelectItem>
+                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">COD</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -213,12 +233,12 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                         <SelectTrigger className="w-[140px] bg-black border-2 border-red-600 h-10 focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder="All Games" />
                         </SelectTrigger>
-                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                            <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">All Games</SelectItem>
-                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
-                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
-                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
-                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
+                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                            <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">All Games</SelectItem>
+                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire</SelectItem>
+                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI</SelectItem>
+                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant</SelectItem>
+                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">COD</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -232,6 +252,16 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                     />
                 </div>
             </div>
+
+            <div className="grid grid-cols-5 md:grid-cols-3 xl:grid-cols-5 gap-1.5 md:gap-4 pb-1">
+                {memberStats.map((stat) => (
+                    <div key={stat.label} className="bg-black/80 border-2 border-red-600 rounded-lg md:rounded-xl p-1.5 md:p-4 shadow-[0_0_14px_rgba(220,38,38,0.14)]">
+                        <p className="text-[8px] md:text-xs uppercase tracking-[0.06em] md:tracking-widest text-gray-400 font-display leading-tight">{stat.label}</p>
+                        <p className="text-base md:text-2xl leading-none font-display font-bold text-white mt-1">{stat.count}</p>
+                    </div>
+                ))}
+            </div>
+
             {filteredMembers && filteredMembers.length > 0 ? (
                 <div
                     className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"
@@ -346,11 +376,11 @@ export const MembersTab = ({ members }: MembersTabProps) => {
                                     <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                         <SelectValue placeholder="Select game" />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                        <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
-                                        <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
-                                        <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
-                                        <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
+                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                        <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire</SelectItem>
+                                        <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI</SelectItem>
+                                        <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant</SelectItem>
+                                        <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Call Of Duty</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>

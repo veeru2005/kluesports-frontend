@@ -3,7 +3,7 @@ import { ArrowRight, MapPin, Mail, Phone, ChevronRight, Briefcase } from "lucide
 
 export const Footer = () => {
   return (
-    <footer className="bg-black/95 border-t-2 border-red-600 pt-16 pb-14 md:pb-8 relative overflow-hidden">
+    <footer className="bg-black/95 border-t-2 border-red-600 pt-16 pb-10 md:pb-8 relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute top-0 left-1/4 w-1/2 h-full bg-red-900/5 blur-[120px] pointer-events-none" />
 
@@ -121,11 +121,11 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/25 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm md:text-base text-center md:text-left font-medium">
             © {new Date().getFullYear()} KLU ESPORTS CLUB. All rights reserved.
           </p>
-          <div className="text-gray-400 text-xs sm:text-sm md:text-base flex items-center justify-center md:justify-end gap-1.5 font-medium whitespace-nowrap">
+          <div className="text-gray-400 text-[13.5px] sm:text-[15.5px] md:text-base flex items-center justify-center md:justify-end gap-1.5 font-medium whitespace-nowrap">
             <span>Designed and Developed by</span>
             <a
               href="https://www.linkedin.com/in/veerendra-chowdary-sunkavalli-513b58309/"
@@ -133,7 +133,7 @@ export const Footer = () => {
               rel="noopener noreferrer"
               className="transition-colors flex items-center gap-1 group"
             >
-              <img src="/Linkedin.svg" alt="In" className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <img src="/Linkedin.svg" alt="In" className="w-[18px] h-[18px] group-hover:scale-110 transition-transform" />
               <span className="flame-text font-semibold">S. Veerendra Chowdary</span>
             </a>
           </div>

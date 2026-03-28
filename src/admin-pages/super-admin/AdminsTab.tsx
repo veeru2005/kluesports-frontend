@@ -278,12 +278,12 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                         <SelectTrigger className="w-full md:w-[200px] bg-black border-2 border-red-600 h-11 focus:ring-0 focus:ring-offset-0">
                             <SelectValue placeholder="Filter by Game" />
                         </SelectTrigger>
-                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                            <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">All Games</SelectItem>
-                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire</SelectItem>
-                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI</SelectItem>
-                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant</SelectItem>
-                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty</SelectItem>
+                        <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                            <SelectItem value="all" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">All Games</SelectItem>
+                            <SelectItem value="Free Fire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire</SelectItem>
+                            <SelectItem value="BGMI" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI</SelectItem>
+                            <SelectItem value="Valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant</SelectItem>
+                            <SelectItem value="Call Of Duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Call Of Duty</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -432,11 +432,11 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                                     <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                         <SelectValue placeholder="Select Game" />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                        <SelectItem value="admin_freefire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire Admin</SelectItem>
-                                        <SelectItem value="admin_bgmi" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI Admin</SelectItem>
-                                        <SelectItem value="admin_valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant Admin</SelectItem>
-                                        <SelectItem value="admin_call_of_duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty Admin</SelectItem>
+                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                        <SelectItem value="admin_freefire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire Admin</SelectItem>
+                                        <SelectItem value="admin_bgmi" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI Admin</SelectItem>
+                                        <SelectItem value="admin_valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant Admin</SelectItem>
+                                        <SelectItem value="admin_call_of_duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Call Of Duty Admin</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -559,11 +559,11 @@ export const AdminsTab = ({ admins }: AdminsTabProps) => {
                                     <SelectTrigger className="w-full bg-transparent border-0 p-0 text-white h-5 focus:ring-0 focus:ring-offset-0 text-sm shadow-none ring-0 outline-none !border-0 !shadow-none">
                                         <SelectValue placeholder="Select role" />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg">
-                                        <SelectItem value="admin_freefire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Free Fire Admin</SelectItem>
-                                        <SelectItem value="admin_bgmi" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">BGMI Admin</SelectItem>
-                                        <SelectItem value="admin_valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Valorant Admin</SelectItem>
-                                        <SelectItem value="admin_call_of_duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md m-1">Call Of Duty Admin</SelectItem>
+                                    <SelectContent className="bg-black border-2 border-red-600 rounded-lg overflow-hidden">
+                                        <SelectItem value="admin_freefire" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Free Fire Admin</SelectItem>
+                                        <SelectItem value="admin_bgmi" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">BGMI Admin</SelectItem>
+                                        <SelectItem value="admin_valorant" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Valorant Admin</SelectItem>
+                                        <SelectItem value="admin_call_of_duty" className="text-white hover:bg-red-600/10 focus:bg-red-600/10 focus:text-white data-[state=checked]:bg-[#ff4d00] data-[state=checked]:text-white cursor-pointer rounded-md">Call Of Duty Admin</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>

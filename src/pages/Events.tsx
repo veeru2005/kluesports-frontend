@@ -482,11 +482,11 @@ const Events = () => {
         </section>
 
         {/* Upcoming Events Section */}
-        <section className="py-12">
+        <section className="pt-10 pb-12">
           <div className="container mx-auto px-4">
             <div
               ref={upcomingHeaderAnim.elementRef}
-              className={`flex items-center justify-center gap-4 mb-12 scroll-fade-up ${upcomingHeaderAnim.isVisible ? 'scroll-visible' : ''}`}
+              className={`flex items-center justify-center gap-4 mb-10 scroll-fade-up ${upcomingHeaderAnim.isVisible ? 'scroll-visible' : ''}`}
             >
               <div className="h-[1px] flex-1 bg-gradient-to-l from-primary/50 to-transparent" />
               <h2 className="font-display font-bold text-2xl md:text-4xl uppercase tracking-widest text-center relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-24 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
@@ -562,11 +562,11 @@ const Events = () => {
         </section>
 
         {/* Conducted Events Section */}
-        <section className="pt-12 pb-24">
+        <section className="pt-6 pb-24">
           <div className="container mx-auto px-4">
             <div
               ref={conductedHeaderAnim.elementRef}
-              className={`flex items-center justify-center gap-4 mb-12 scroll-fade-up ${conductedHeaderAnim.isVisible ? 'scroll-visible' : ''}`}
+              className={`flex items-center justify-center gap-4 mb-8 scroll-fade-up ${conductedHeaderAnim.isVisible ? 'scroll-visible' : ''}`}
             >
               <div className="h-[1px] flex-1 bg-gradient-to-l from-primary/50 to-transparent" />
               <h2 className="font-display font-bold text-2xl md:text-4xl uppercase tracking-widest text-center relative inline-block after:content-[''] after:absolute after:-bottom-4 after:left-0 after:w-24 after:h-1.5 after:bg-gradient-to-r after:from-primary after:to-transparent">
