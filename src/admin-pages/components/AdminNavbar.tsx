@@ -26,6 +26,7 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
         { key: "events", label: "Events", icon: Gamepad2 },
         { key: "registrations", label: "Regs", icon: ClipboardList },
         ...(user?.role === "super_admin" ? [{ key: "admins", label: "Admins", icon: Shield }] : []),
+        ...(user?.role !== "super_admin" && user?.role?.startsWith("admin_") ? [{ key: "messages", label: "Messages", icon: Mail }] : []),
     ];
 
     useEffect(() => {
@@ -180,16 +181,18 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
                     {isMobileMenuOpen && (
                         <div className="md:hidden py-3 border-t-2 border-[#FF0000] bg-background animate-in slide-in-from-top-5 -mx-4 px-4">
                             <div className="flex flex-col gap-1 text-center">
-                                {(user?.role === 'super_admin' || user?.role?.startsWith('admin_')) && (
-                                    <button
-                                        onClick={() => { onTabChange ? onTabChange("messages") : navigate(`${baseUrl}?tab=messages`); setIsMobileMenuOpen(false); }}
-                                        className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "messages" ? "text-white border-2 border-[#FF0000] bg-[#FF0000] shadow-[0_0_18px_rgba(255,0,0,0.35)]" : "text-foreground/80"}`}
-                                    >
-                                        <Mail className="w-4 h-4" />
-                                        Messages
-                                    </button>
+                                {user?.role === 'super_admin' && (
+                                    <>
+                                        <button
+                                            onClick={() => { onTabChange ? onTabChange("messages") : navigate(`${baseUrl}?tab=messages`); setIsMobileMenuOpen(false); }}
+                                            className={`font-display text-lg uppercase tracking-wider py-3 mx-4 rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === "messages" ? "text-white border-2 border-[#FF0000] bg-[#FF0000] shadow-[0_0_18px_rgba(255,0,0,0.35)]" : "text-foreground/80"}`}
+                                        >
+                                            <Mail className="w-4 h-4" />
+                                            Messages
+                                        </button>
+                                        <div className="w-full h-px bg-[#FF0000] mt-2 -mx-4" style={{ width: 'calc(100% + 2rem)' }}></div>
+                                    </>
                                 )}
-                                <div className="w-full h-px bg-[#FF0000] mt-2 -mx-4" style={{ width: 'calc(100% + 2rem)' }}></div>
                                 <div className="flex flex-row gap-3 px-4 py-4 justify-center items-center">
                                     <Button
                                         variant="outline"
@@ -217,13 +220,13 @@ export const AdminNavbar = ({ title, baseUrl, showMessages = false, activeTab, o
             {/* Solid base so page content never shows behind admin mobile dock */}
             <div
                 className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050505] border-t-2 border-[#FF0000] z-40"
-                style={{ height: "calc(env(safe-area-inset-bottom) + 6.50rem)" }}
+                style={{ height: "calc(env(safe-area-inset-bottom) + 6rem)" }}
             />
 
             {/* Mobile bottom dock navigation for admin/super admin */}
             <div
                 className="md:hidden fixed left-4 right-4 z-50 pointer-events-none"
-                style={{ bottom: "calc(env(safe-area-inset-bottom) + 1.15rem)" }}
+                style={{ bottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
             >
                 <div className="pointer-events-auto rounded-3xl border border-[#FF0000]/90 bg-[#050505] p-2 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
                     <div

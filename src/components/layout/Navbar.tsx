@@ -260,13 +260,13 @@ export const Navbar = () => {
       {/* Solid base so page content never shows behind mobile dock */}
       <div
         className="md:hidden fixed bottom-0 left-0 right-0 bg-[#050505] border-t-2 border-[#FF0000] z-40"
-        style={{ height: "calc(env(safe-area-inset-bottom) + 6.50rem)" }}
+        style={{ height: "calc(env(safe-area-inset-bottom) + 6rem)" }}
       />
 
       {/* Mobile bottom dock navigation */}
       <div
         className="md:hidden fixed left-4 right-4 z-50 pointer-events-none"
-        style={{ bottom: "calc(env(safe-area-inset-bottom) + 1.15rem)" }}
+        style={{ bottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
       >
         <div className="pointer-events-auto rounded-3xl border border-[#FF0000]/90 bg-[#050505] p-2 shadow-[0_0_30px_rgba(255,0,0,0.12)]">
           <div className="grid grid-cols-5 gap-1">
