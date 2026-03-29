@@ -3,7 +3,7 @@ import { ArrowRight, MapPin, Mail, Phone, ChevronRight, Briefcase } from "lucide
 
 export const Footer = () => {
   return (
-    <footer className="bg-black/95 border-t-2 border-red-600 pt-16 pb-10 md:pb-8 relative overflow-hidden">
+    <footer className="bg-black/95 border-t-2 border-red-600 pt-16 pb-6 md:pb-6 relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute top-0 left-1/4 w-1/2 h-full bg-red-900/5 blur-[120px] pointer-events-none" />
 
@@ -121,7 +121,7 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/25 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/25 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm md:text-base text-center md:text-left font-medium">
             © {new Date().getFullYear()} KLU ESPORTS CLUB. All rights reserved.
           </p>
