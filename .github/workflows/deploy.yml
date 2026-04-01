@@ -51,3 +51,4 @@ jobs:
             echo "🔄 Reloading Nginx..."
             sudo nginx -t && sudo systemctl reload nginx
             echo "✅ Frontend deployment complete!"
+
