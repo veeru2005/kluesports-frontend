@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 const navLinks = [
-  { name: "Home", path: "/", icon: Home },
+  { name: "Hom", path: "/", icon: Home },
   { name: "About", path: "/about", icon: BookMarked },
   { name: "Team", path: "/team", icon: Users },
   { name: "Events", path: "/events", icon: Gamepad2 },
