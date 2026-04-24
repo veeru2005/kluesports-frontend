@@ -128,12 +128,12 @@ export const Footer = () => {
           <div className="text-gray-400 text-[13.5px] sm:text-[15.5px] md:text-base flex items-center justify-center md:justify-end gap-1.5 font-medium whitespace-nowrap">
             <span>Designed and Developed by</span>
             <a
-              href="https://www.linkedin.com/in/veerendra-chowdary-sunkavalli-513b58309/"
+              href="https://www.veerendra-portfolio.in/"
               target="_blank"
               rel="noopener noreferrer"
               className="transition-colors flex items-center gap-1 group"
             >
-              <img src="/Linkedin.svg" alt="In" className="w-[18px] h-[18px] group-hover:scale-110 transition-transform" />
+              <img src="/portfolio.png" alt="In" className="w-[18px] h-[18px] group-hover:scale-110 transition-transform" />
               <span className="flame-text font-semibold">S. Veerendra Chowdary</span>
             </a>
           </div>
